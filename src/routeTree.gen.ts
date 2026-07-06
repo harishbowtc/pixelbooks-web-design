@@ -10,8 +10,10 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SupportRouteImport } from './routes/support'
+import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as SalesReportRouteImport } from './routes/sales-report'
 import { Route as PromoCodesRouteImport } from './routes/promo-codes'
+import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as NotificationsRouteImport } from './routes/notifications'
 import { Route as MarginReportRouteImport } from './routes/margin-report'
 import { Route as CatalogueImportRouteImport } from './routes/catalogue-import'
@@ -31,6 +33,11 @@ const SupportRoute = SupportRouteImport.update({
   path: '/support',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SettingsRoute = SettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SalesReportRoute = SalesReportRouteImport.update({
   id: '/sales-report',
   path: '/sales-report',
@@ -39,6 +46,11 @@ const SalesReportRoute = SalesReportRouteImport.update({
 const PromoCodesRoute = PromoCodesRouteImport.update({
   id: '/promo-codes',
   path: '/promo-codes',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProfileRoute = ProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
   getParentRoute: () => rootRouteImport,
 } as any)
 const NotificationsRoute = NotificationsRouteImport.update({
@@ -115,8 +127,10 @@ export interface FileRoutesByFullPath {
   '/catalogue-import': typeof CatalogueImportRoute
   '/margin-report': typeof MarginReportRoute
   '/notifications': typeof NotificationsRoute
+  '/profile': typeof ProfileRoute
   '/promo-codes': typeof PromoCodesRoute
   '/sales-report': typeof SalesReportRoute
+  '/settings': typeof SettingsRoute
   '/support': typeof SupportRoute
   '/bundles/new': typeof BundlesNewRoute
   '/catalogue-import/$fileName': typeof CatalogueImportFileNameRoute
@@ -133,8 +147,10 @@ export interface FileRoutesByTo {
   '/catalogue-import': typeof CatalogueImportRoute
   '/margin-report': typeof MarginReportRoute
   '/notifications': typeof NotificationsRoute
+  '/profile': typeof ProfileRoute
   '/promo-codes': typeof PromoCodesRoute
   '/sales-report': typeof SalesReportRoute
+  '/settings': typeof SettingsRoute
   '/support': typeof SupportRoute
   '/bundles/new': typeof BundlesNewRoute
   '/catalogue-import/$fileName': typeof CatalogueImportFileNameRoute
@@ -152,8 +168,10 @@ export interface FileRoutesById {
   '/catalogue-import': typeof CatalogueImportRoute
   '/margin-report': typeof MarginReportRoute
   '/notifications': typeof NotificationsRoute
+  '/profile': typeof ProfileRoute
   '/promo-codes': typeof PromoCodesRoute
   '/sales-report': typeof SalesReportRoute
+  '/settings': typeof SettingsRoute
   '/support': typeof SupportRoute
   '/bundles_/new': typeof BundlesNewRoute
   '/catalogue-import_/$fileName': typeof CatalogueImportFileNameRoute
@@ -172,8 +190,10 @@ export interface FileRouteTypes {
     | '/catalogue-import'
     | '/margin-report'
     | '/notifications'
+    | '/profile'
     | '/promo-codes'
     | '/sales-report'
+    | '/settings'
     | '/support'
     | '/bundles/new'
     | '/catalogue-import/$fileName'
@@ -190,8 +210,10 @@ export interface FileRouteTypes {
     | '/catalogue-import'
     | '/margin-report'
     | '/notifications'
+    | '/profile'
     | '/promo-codes'
     | '/sales-report'
+    | '/settings'
     | '/support'
     | '/bundles/new'
     | '/catalogue-import/$fileName'
@@ -208,8 +230,10 @@ export interface FileRouteTypes {
     | '/catalogue-import'
     | '/margin-report'
     | '/notifications'
+    | '/profile'
     | '/promo-codes'
     | '/sales-report'
+    | '/settings'
     | '/support'
     | '/bundles_/new'
     | '/catalogue-import_/$fileName'
@@ -227,8 +251,10 @@ export interface RootRouteChildren {
   CatalogueImportRoute: typeof CatalogueImportRoute
   MarginReportRoute: typeof MarginReportRoute
   NotificationsRoute: typeof NotificationsRoute
+  ProfileRoute: typeof ProfileRoute
   PromoCodesRoute: typeof PromoCodesRoute
   SalesReportRoute: typeof SalesReportRoute
+  SettingsRoute: typeof SettingsRoute
   SupportRoute: typeof SupportRoute
   BundlesNewRoute: typeof BundlesNewRoute
   CatalogueImportFileNameRoute: typeof CatalogueImportFileNameRoute
@@ -247,6 +273,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SupportRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/settings': {
+      id: '/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof SettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/sales-report': {
       id: '/sales-report'
       path: '/sales-report'
@@ -259,6 +292,13 @@ declare module '@tanstack/react-router' {
       path: '/promo-codes'
       fullPath: '/promo-codes'
       preLoaderRoute: typeof PromoCodesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/profile': {
+      id: '/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof ProfileRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/notifications': {
@@ -363,8 +403,10 @@ const rootRouteChildren: RootRouteChildren = {
   CatalogueImportRoute: CatalogueImportRoute,
   MarginReportRoute: MarginReportRoute,
   NotificationsRoute: NotificationsRoute,
+  ProfileRoute: ProfileRoute,
   PromoCodesRoute: PromoCodesRoute,
   SalesReportRoute: SalesReportRoute,
+  SettingsRoute: SettingsRoute,
   SupportRoute: SupportRoute,
   BundlesNewRoute: BundlesNewRoute,
   CatalogueImportFileNameRoute: CatalogueImportFileNameRoute,

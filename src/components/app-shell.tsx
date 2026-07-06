@@ -270,11 +270,15 @@ function ProfileDropdown() {
       <DropdownMenuContent side="bottom" align="end" className="w-56">
         <DropdownMenuLabel>My account</DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuItem>
-          <UserCircle size={16} className="mr-2" /> Profile
+        <DropdownMenuItem asChild>
+          <Link to="/profile">
+            <UserCircle size={16} className="mr-2" /> Profile
+          </Link>
         </DropdownMenuItem>
-        <DropdownMenuItem>
-          <Settings size={16} className="mr-2" /> Settings
+        <DropdownMenuItem asChild>
+          <Link to="/settings">
+            <Settings size={16} className="mr-2" /> Settings
+          </Link>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem>

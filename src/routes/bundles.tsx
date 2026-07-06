@@ -124,7 +124,7 @@ function BundlesPage() {
     <AppShell title="eBook Bundles" subtitle="Group multiple titles into curated bundles.">
       <div className="space-y-6 p-4 md:p-8">
         {/* Toolbar */}
-        <div className="flex flex-col gap-3 md:flex-row md:items-center">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
           <div className="relative flex-1">
             <Search
               size={17}
@@ -134,19 +134,19 @@ function BundlesPage() {
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Search"
-              className="h-12 w-full rounded-xl border border-border bg-card pl-11 pr-4 text-sm outline-none transition-colors placeholder:text-muted-foreground focus:border-[var(--brand)]"
+              className="h-11 w-full rounded-lg border border-border bg-card pl-11 pr-4 text-sm outline-none transition-colors placeholder:text-muted-foreground focus:border-[var(--brand)]"
             />
           </div>
           <div className="relative">
             <button
               onClick={() => setFilterOpen((v) => !v)}
-              className="flex h-12 w-full items-center justify-between gap-6 rounded-xl border border-border bg-card px-4 text-sm font-medium md:w-52"
+              className="flex h-11 min-w-[130px] items-center justify-between gap-3 rounded-lg border border-border bg-card px-4 text-sm font-medium"
             >
               <span>{filter}</span>
               <ChevronDown size={16} className="text-muted-foreground" />
             </button>
             {filterOpen && (
-              <div className="absolute right-0 z-20 mt-2 w-full overflow-hidden rounded-xl border border-border bg-card shadow-lg md:w-52">
+              <div className="absolute right-0 z-20 mt-2 w-40 overflow-hidden rounded-lg border border-border bg-card shadow-lg">
                 {filters.map((f) => (
                   <button
                     key={f}
@@ -166,7 +166,7 @@ function BundlesPage() {
           </div>
           <Link
             to="/bundles/new"
-            className="inline-flex h-12 items-center justify-center gap-2 rounded-xl px-5 text-sm font-semibold shadow-sm transition-opacity hover:opacity-90"
+            className="flex h-11 items-center gap-2 rounded-lg px-5 text-sm font-semibold shadow-sm transition-opacity hover:opacity-90"
             style={{ backgroundColor: "var(--brand)", color: "var(--brand-contrast)" }}
           >
             <Plus size={17} strokeWidth={2.4} />
