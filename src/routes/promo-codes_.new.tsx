@@ -1,0 +1,263 @@
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { useState } from "react";
+import { ArrowLeft, Calendar, ChevronDown, Sparkles } from "lucide-react";
+import { AppShell } from "@/components/app-shell";
+
+export const Route = createFileRoute("/promo-codes_/new")({
+  head: () => ({
+    meta: [
+      { title: "Create New Promo Code — PixelBooks" },
+      {
+        name: "description",
+        content: "Create a new discount promo code for your eBook storefront.",
+      },
+    ],
+  }),
+  component: CreatePromoCodePage,
+});
+
+function SectionCard({ children }: { children: React.ReactNode }) {
+  return (
+    <section className="rounded-2xl border border-border bg-card p-5 md:p-7">{children}</section>
+  );
+}
+
+function Field({
+  label,
+  required,
+  children,
+}: {
+  label: string;
+  required?: boolean;
+  children: React.ReactNode;
+}) {
+  return (
+    <label className="block">
+      <span className="mb-1.5 block text-sm font-medium text-foreground">
+        {label}
+        {required && <span className="ml-0.5 text-rose-500">*</span>}
+      </span>
+      {children}
+    </label>
+  );
+}
+
+function TextInput(props: React.InputHTMLAttributes<HTMLInputElement>) {
+  const { className = "", ...rest } = props;
+  return (
+    <input
+      {...rest}
+      className={`h-14 w-full rounded-xl border border-border bg-card px-4 text-sm outline-none transition-colors placeholder:text-muted-foreground focus:border-[var(--brand)] ${className}`}
+    />
+  );
+}
+
+function Textarea(props: React.TextareaHTMLAttributes<HTMLTextAreaElement>) {
+  const { className = "", ...rest } = props;
+  return (
+    <textarea
+      {...rest}
+      className={`w-full rounded-xl border border-border bg-card px-4 py-3 text-sm outline-none transition-colors placeholder:text-muted-foreground focus:border-[var(--brand)] ${className}`}
+    />
+  );
+}
+
+function SelectInput(
+  props: React.SelectHTMLAttributes<HTMLSelectElement> & { children: React.ReactNode },
+) {
+  const { className = "", children, ...rest } = props;
+  return (
+    <div className="relative">
+      <select
+        {...rest}
+        className={`h-14 w-full appearance-none rounded-xl border border-border bg-card px-4 pr-9 text-sm outline-none transition-colors focus:border-[var(--brand)] ${className}`}
+      >
+        {children}
+      </select>
+      <ChevronDown
+        size={16}
+        className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground"
+      />
+    </div>
+  );
+}
+
+function DatePickerField({
+  label,
+  required,
+  value,
+  onChange,
+  placeholder,
+}: {
+  label: string;
+  required?: boolean;
+  value: string;
+  onChange: (v: string) => void;
+  placeholder?: string;
+}) {
+  return (
+    <Field label={label} required={required}>
+      <div className="relative">
+        <input
+          type="date"
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          placeholder={placeholder}
+          className="h-14 w-full rounded-xl border border-border bg-card px-4 pr-11 text-sm outline-none transition-colors placeholder:text-muted-foreground focus:border-[var(--brand)]"
+        />
+        <Calendar
+          size={18}
+          className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground"
+        />
+      </div>
+    </Field>
+  );
+}
+
+const MOCK_EBOOKS = [
+  "Harry Potter and the Philosopher's Stone",
+  "A Promised Land",
+  "The Great Gatsby",
+  "To Kill a Mockingbird",
+  "1984",
+];
+
+function generatePromoCode() {
+  const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+  let code = "";
+  for (let i = 0; i < 10; i++) {
+    code += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return code;
+}
+
+function CreatePromoCodePage() {
+  const [ebook, setEbook] = useState("");
+  const [promoCode, setPromoCode] = useState("");
+  const [percentage, setPercentage] = useState("");
+  const [minimumAmount, setMinimumAmount] = useState("1");
+  const [dateRange, setDateRange] = useState("");
+  const [description, setDescription] = useState("");
+
+  return (
+    <AppShell title="" subtitle="">
+      <div className="mx-auto max-w-4xl p-4 pb-8 md:p-8">
+        {/* Back link + title */}
+        <div className="mb-6 flex items-center gap-3">
+          <Link
+            to="/promo-codes"
+            className="flex h-10 w-10 items-center justify-center rounded-lg border border-border bg-card text-muted-foreground transition-colors hover:text-foreground"
+          >
+            <ArrowLeft size={18} />
+          </Link>
+          <h1 className="text-xl font-semibold tracking-tight md:text-2xl">
+            Create New Promo Code
+          </h1>
+        </div>
+
+        <div className="space-y-6">
+          <SectionCard>
+            <div className="grid gap-x-6 gap-y-5 md:grid-cols-2">
+              <Field label="Choose eBook" required>
+                <SelectInput value={ebook} onChange={(e) => setEbook(e.target.value)}>
+                  <option value="" disabled>
+                    Choose eBook
+                  </option>
+                  {MOCK_EBOOKS.map((book) => (
+                    <option key={book} value={book}>
+                      {book}
+                    </option>
+                  ))}
+                </SelectInput>
+              </Field>
+
+              <Field label="Promo Code" required>
+                <div className="flex items-center gap-3">
+                  <div className="flex-1">
+                    <TextInput
+                      value={promoCode}
+                      onChange={(e) => setPromoCode(e.target.value.toUpperCase())}
+                      placeholder="PROMO CODE"
+                      className="font-mono uppercase tracking-wider"
+                    />
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setPromoCode(generatePromoCode())}
+                    className="flex h-14 items-center gap-2 rounded-xl px-4 text-sm font-semibold shadow-sm transition-opacity hover:opacity-90"
+                    style={{
+                      backgroundColor: "var(--brand)",
+                      color: "var(--brand-contrast)",
+                    }}
+                  >
+                    <Sparkles size={15} />
+                    Generate Code
+                  </button>
+                </div>
+              </Field>
+
+              <Field label="Percentage %" required>
+                <TextInput
+                  type="number"
+                  min={1}
+                  max={100}
+                  value={percentage}
+                  onChange={(e) => setPercentage(e.target.value)}
+                  placeholder="Enter Percentage"
+                />
+              </Field>
+
+              <Field label="Minimum Amount" required>
+                <TextInput
+                  type="number"
+                  min={0}
+                  value={minimumAmount}
+                  onChange={(e) => setMinimumAmount(e.target.value)}
+                  placeholder="Enter Minimum Amount"
+                />
+              </Field>
+
+              <DatePickerField
+                label="Date Range"
+                required
+                value={dateRange}
+                onChange={setDateRange}
+                placeholder="Choose Date"
+              />
+            </div>
+
+            <div className="mt-5">
+              <Field label="Promo Code Description" required>
+                <Textarea
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  placeholder="Enter Description"
+                  rows={5}
+                />
+              </Field>
+            </div>
+
+            <div className="mt-6 flex items-center justify-end gap-3 border-t border-border pt-6">
+              <Link
+                to="/promo-codes"
+                className="inline-flex h-12 items-center justify-center rounded-xl border border-border bg-background px-6 text-sm font-semibold text-foreground transition-colors hover:bg-secondary"
+              >
+                Cancel
+              </Link>
+              <button
+                type="button"
+                className="inline-flex h-12 items-center justify-center gap-2 rounded-xl px-6 text-sm font-semibold shadow-sm transition-opacity hover:opacity-90 disabled:opacity-40"
+                style={{
+                  backgroundColor: "var(--brand)",
+                  color: "var(--brand-contrast)",
+                }}
+              >
+                Create Promo Code
+              </button>
+            </div>
+          </SectionCard>
+        </div>
+      </div>
+    </AppShell>
+  );
+}
