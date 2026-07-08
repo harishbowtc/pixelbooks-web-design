@@ -203,7 +203,7 @@ function EBookDetailPage() {
           <div className="flex flex-col gap-6 sm:flex-row sm:items-start">
             {/* Cover */}
             <div
-              className="flex h-32 w-24 shrink-0 items-center justify-center self-start rounded-xl text-base font-bold text-white shadow-md"
+              className="flex h-64 w-48 shrink-0 items-center justify-center self-start rounded-xl text-base font-bold text-white shadow-md"
               style={{ background: book.cover }}
             >
               {book.initials}

@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   ArrowLeft,
   BookOpen,
@@ -22,6 +22,7 @@ import {
   HardDrive,
   Info,
   Tag,
+  Check as CheckIcon,
   CheckCircle,
 } from "lucide-react";
 import { AppShell } from "@/components/app-shell";
@@ -552,203 +553,463 @@ function EBookDetailsSection() {
 /*  Section: Authors                                                           */
 /* -------------------------------------------------------------------------- */
 
-type AuthorMatch = { name: string; books: number };
-type AuthorBlock = {
+type AuthorMatch = {
   id: string;
-  query: string;
-  matches: AuthorMatch[];
-  selected: number | null;
-  addAsNew: boolean;
+  name: string;
+  books: number;
+  avatar?: string;
 };
 
-function AuthorMatchCard({
+type SelectedAuthor = {
+  id: string;
+  sourceId?: string;
+  name: string;
+  books: number;
+  avatar?: string;
+  addAsNew: boolean;
+  profileSlug: string;
+};
+
+const AUTHOR_DIRECTORY: AuthorMatch[] = [
+  { id: "a-1", name: "Mark Twain", books: 3 },
+  { id: "a-2", name: "Arun", books: 0 },
+  { id: "a-3", name: "Arundhati Roy", books: 30, avatar: "https://i.pravatar.cc/80?img=47" },
+  { id: "a-4", name: "Charles Dickens", books: 4 },
+  { id: "a-5", name: "Haruki Murakami", books: 4 },
+];
+
+const AUTHOR_BOOK_LISTS: Record<string, string[]> = {
+  "Arundhati Roy": [
+    "The God of Small Things",
+    "The Ministry of Utmost Happiness",
+    "Capitalism: A Ghost Story",
+    "Walking with the Comrades",
+    "My Seditious Heart",
+  ],
+  "Mark Twain": [
+    "The Adventures of Tom Sawyer",
+    "Adventures of Huckleberry Finn",
+    "A Connecticut Yankee in King Arthur's Court",
+  ],
+  "Charles Dickens": [
+    "Great Expectations",
+    "A Tale of Two Cities",
+    "Oliver Twist",
+    "David Copperfield",
+  ],
+  "Haruki Murakami": [
+    "Kafka on the Shore",
+    "Norwegian Wood",
+    "1Q84",
+    "The Wind-Up Bird Chronicle",
+  ],
+};
+
+const TAKEN_AUTHOR_SLUGS = new Set(["mark-twain"]);
+
+function slugify(value: string) {
+  return value
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9\s-]/g, "")
+    .replace(/\s+/g, "-")
+    .replace(/-+/g, "-");
+}
+
+function initials(name: string) {
+  return (
+    name
+      .split(" ")
+      .map((part) => part[0])
+      .filter(Boolean)
+      .slice(0, 2)
+      .join("")
+      .toUpperCase() || "?"
+  );
+}
+
+function AuthorSearchResultCard({
   match,
-  active,
-  onClick,
+  onAdd,
+  isSelected,
 }: {
   match: AuthorMatch;
-  active: boolean;
-  onClick: () => void;
+  onAdd: () => void;
+  isSelected: boolean;
 }) {
   return (
     <button
       type="button"
-      onClick={onClick}
-      className="flex items-center gap-3 rounded-xl border px-4 py-3 text-left transition-all"
-      style={{
-        borderColor: active ? "var(--brand)" : "var(--border)",
-        boxShadow: active ? "0 0 0 3px color-mix(in oklab, var(--brand) 18%, transparent)" : undefined,
-      }}
+      onClick={onAdd}
+      disabled={isSelected}
+      className={`flex items-center gap-3 rounded-xl border px-3 py-2.5 text-left transition-colors ${
+        isSelected
+          ? "cursor-default border-border/70 bg-secondary/30 text-muted-foreground"
+          : "border-border bg-background hover:bg-secondary/50"
+      }`}
     >
-      <span className="flex h-9 w-9 items-center justify-center rounded-full bg-secondary text-muted-foreground">
-        <UserRound size={16} />
-      </span>
-      <span>
-        <span className="block text-sm font-medium">{match.name}</span>
+      {match.avatar ? (
+        <img
+          src={match.avatar}
+          alt={match.name}
+          className={`h-8 w-8 rounded-full object-cover ${isSelected ? "opacity-70" : ""}`}
+        />
+      ) : (
+        <span className="flex h-8 w-8 items-center justify-center rounded-full bg-secondary text-[11px] font-semibold text-muted-foreground">
+          {initials(match.name)}
+        </span>
+      )}
+      <span className="min-w-0 flex-1">
+        <span className={`block truncate text-sm font-semibold ${isSelected ? "text-muted-foreground" : ""}`}>
+          {match.name}
+        </span>
         <span className="mt-0.5 flex items-center gap-1 text-[11px] text-muted-foreground">
           <BookOpen size={11} />
           {match.books} Books
         </span>
       </span>
+      {isSelected && (
+        <span className="ml-1 text-muted-foreground" aria-label="Selected author">
+          <CheckIcon size={14} />
+        </span>
+      )}
     </button>
   );
 }
 
-function AuthorEditor({
-  block,
+function SelectedAuthorCard({
+  author,
   onChange,
   onRemove,
+  unavailable,
 }: {
-  block: AuthorBlock;
-  onChange: (b: AuthorBlock) => void;
+  author: SelectedAuthor;
+  onChange: (next: SelectedAuthor) => void;
   onRemove: () => void;
+  unavailable: boolean;
 }) {
+  const [showBooksPopup, setShowBooksPopup] = useState(false);
+  const booksPopupRef = useRef<HTMLDivElement | null>(null);
+  const books = AUTHOR_BOOK_LISTS[author.name] ?? [];
+
+  useEffect(() => {
+    const onOutsideClick = (event: MouseEvent) => {
+      if (!booksPopupRef.current) return;
+      if (!booksPopupRef.current.contains(event.target as Node)) {
+        setShowBooksPopup(false);
+      }
+    };
+
+    if (showBooksPopup) {
+      document.addEventListener("mousedown", onOutsideClick);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", onOutsideClick);
+    };
+  }, [showBooksPopup]);
+
   return (
     <div className="rounded-xl border border-border p-4">
-      <div className="relative">
-        <Search
-          size={16}
-          className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-muted-foreground"
-        />
-        <TextInput
-          value={block.query}
-          onChange={(e) => onChange({ ...block, query: e.target.value })}
-          placeholder="Search author"
-          className="pl-10 pr-10"
-        />
-        <button
-          type="button"
-          onClick={() => onChange({ ...block, query: "" })}
-          className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-        >
-          <X size={15} />
-        </button>
-      </div>
-
-      <div className="mt-3 flex items-center justify-between text-[12px]">
-        <span className="font-medium">{block.matches.length} matching authors found</span>
-        <span className="text-muted-foreground">Select one to link</span>
-      </div>
-
-      <div className="mt-3 grid gap-3 sm:grid-cols-3">
-        {block.matches.map((m, i) => (
-          <AuthorMatchCard
-            key={i}
-            match={m}
-            active={block.selected === i}
-            onClick={() =>
-              onChange({ ...block, selected: block.selected === i ? null : i })
-            }
-          />
-        ))}
-      </div>
-
-      <div
-        className="mt-3 flex items-center gap-3 rounded-xl px-4 py-3"
-        style={{ backgroundColor: "var(--secondary)" }}
-      >
-        <span
-          className="flex h-9 w-9 items-center justify-center rounded-full text-xs font-semibold"
-          style={{ backgroundColor: "color-mix(in oklab, var(--brand) 16%, transparent)", color: "var(--brand)" }}
-        >
-          {block.query
-            .split(" ")
-            .map((w) => w[0])
-            .filter(Boolean)
-            .slice(0, 2)
-            .join("")
-            .toUpperCase() || "?"}
-        </span>
-        <span className="flex-1 text-sm font-medium">
-          {block.query || "Not the right author?"}
-        </span>
-        <Check
-          checked={block.addAsNew}
-          onChange={(v) => onChange({ ...block, addAsNew: v })}
-          label={
-            <span className="text-sm">
-              Add {block.query || "author"} as a new author
+      <div className="flex items-start justify-between gap-3">
+        <div className="flex items-center gap-3">
+          <label className="group relative cursor-pointer">
+            {author.avatar ? (
+              <img src={author.avatar} alt={author.name} className="h-12 w-12 rounded-full object-cover" />
+            ) : (
+              <span className="flex h-12 w-12 items-center justify-center rounded-full bg-secondary text-sm font-semibold text-muted-foreground">
+                {initials(author.name)}
+              </span>
+            )}
+            <span className="absolute -bottom-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full border border-border bg-background text-muted-foreground transition-colors group-hover:text-foreground">
+              <Pencil size={11} />
             </span>
-          }
-        />
-      </div>
+            <input
+              type="file"
+              accept="image/*"
+              className="sr-only"
+              onChange={(e) => {
+                const file = e.target.files && e.target.files[0];
+                if (!file) return;
+                const preview = URL.createObjectURL(file);
+                onChange({ ...author, avatar: preview });
+              }}
+            />
+          </label>
+          <div className="min-w-0">
+            <div className="flex flex-wrap items-center gap-2">
+              <p className="text-sm font-semibold">{author.name}</p>
+                <div className="rounded-md border border-border/70 px-3 py-1">
+                <label className="flex cursor-pointer items-center gap-1.5 text-xs font-medium">
+                <span
+                  role="checkbox"
+                  aria-checked={author.addAsNew}
+                  onClick={() => onChange({ ...author, addAsNew: !author.addAsNew })}
+                  className="flex h-4 w-4 shrink-0 items-center justify-center rounded-[4px] border border-border bg-transparent"
+                >
+                  {author.addAsNew && (
+                    <svg viewBox="0 0 12 12" className="h-3 w-3 text-[var(--brand)]" fill="none">
+                      <path
+                        d="M2.5 6.5L5 9L9.5 3.5"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  )}
+                </span>
+                <span>Add {author.name} as a new author</span>
+                <input
+                  type="checkbox"
+                  checked={author.addAsNew}
+                  onChange={(e) => onChange({ ...author, addAsNew: e.target.checked })}
+                  className="sr-only"
+                />
+              </label>
+            </div>
+            </div>
+            <div ref={booksPopupRef} className="relative mt-0.5">
+              <button
+                type="button"
+                onClick={() => setShowBooksPopup((v) => !v)}
+                className="inline-flex items-center gap-1 text-[11px] text-muted-foreground hover:text-foreground"
+              >
+                <BookOpen size={11} />
+                <span className="underline-offset-2 hover:underline">{author.books} Books</span>
+              </button>
 
-      <div className="mt-3 flex justify-end">
+              {showBooksPopup && (
+                <div className="absolute left-0 top-[calc(100%+8px)] z-20 w-[280px] overflow-hidden rounded-lg border border-border bg-card shadow-lg">
+                  <div className="border-b border-border px-3 py-2">
+                    <p className="text-sm font-semibold">Books by {author.name}</p>
+                    <p className="text-xs text-muted-foreground">{author.books} total</p>
+                  </div>
+
+                  {books.length > 0 ? (
+                    <ul className="max-h-64 overflow-y-auto">
+                      {books.map((title) => (
+                        <li key={title} className="border-t border-border first:border-t-0">
+                          <div className="flex items-center gap-2 px-3 py-2.5 text-sm">
+                            <BookOpen size={13} className="text-muted-foreground" />
+                            <span>{title}</span>
+                          </div>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p className="px-3 py-3 text-sm text-muted-foreground">
+                      No books available for this author.
+                    </p>
+                  )}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
         <button
           type="button"
           onClick={onRemove}
-          className="text-sm font-semibold text-rose-600 underline-offset-4 hover:underline"
+          className="inline-flex items-center gap-1 text-sm font-semibold text-rose-600 hover:underline"
         >
-          Remove Author
+          <Trash2 size={14} />
+          Remove
         </button>
+      </div>
+
+      <div className="mt-3">
+        <Field
+          label="Author Profile URL"
+          required
+          error={unavailable ? "This URL is already in use. Please try a different one." : undefined}
+          hint={!unavailable ? "The URL is available" : undefined}
+        >
+          <div className="flex overflow-hidden rounded-lg border border-border bg-background">
+            <span className="flex items-center bg-secondary/60 px-3 text-xs text-muted-foreground">
+              https://azdevlibcustomer.pixelbooksapp.com/author/
+            </span>
+            <input
+              value={author.profileSlug}
+              onChange={(e) => onChange({ ...author, profileSlug: slugify(e.target.value) })}
+              className="h-11 flex-1 bg-background px-3 text-sm outline-none"
+            />
+          </div>
+        </Field>
       </div>
     </div>
   );
 }
 
 function AuthorsSection() {
-  const [authors, setAuthors] = useState<AuthorBlock[]>([
-    {
-      id: "a1",
-      query: "Barack Obama",
-      matches: [
-        { name: "Barack Obama", books: 4 },
-        { name: "Barack Obama", books: 3 },
-        { name: "Barack Obama", books: 3 },
-      ],
-      selected: null,
-      addAsNew: true,
-    },
-    {
-      id: "a2",
-      query: "Barack Obama",
-      matches: [
-        { name: "Barack Obama", books: 4 },
-        { name: "Barack Obama", books: 3 },
-        { name: "Barack Obama", books: 3 },
-      ],
-      selected: 2,
-      addAsNew: false,
-    },
-  ]);
+  const [query, setQuery] = useState("");
+  const [selectedAuthors, setSelectedAuthors] = useState<SelectedAuthor[]>([]);
+
+  const matches = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    if (!q) return [];
+    return AUTHOR_DIRECTORY.filter((a) => a.name.toLowerCase().includes(q));
+  }, [query]);
+
+  const addDirectoryAuthor = (author: AuthorMatch) => {
+    setSelectedAuthors((prev) => {
+      if (prev.some((x) => x.sourceId === author.id)) return prev;
+      return [
+        ...prev,
+        {
+          id: `sa-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+          sourceId: author.id,
+          name: author.name,
+          books: author.books,
+          avatar: author.avatar,
+          addAsNew: false,
+          profileSlug: slugify(author.name),
+        },
+      ];
+    });
+  };
+
+  const addAsNewFromQuery = () => {
+    const name = query.trim();
+    if (!name) return;
+    setSelectedAuthors((prev) => [
+      ...prev,
+      {
+        id: `sa-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+        name,
+        books: 0,
+        addAsNew: true,
+        profileSlug: slugify(name),
+      },
+    ]);
+  };
+
+  const slugCounts = useMemo(() => {
+    const counts: Record<string, number> = {};
+    selectedAuthors.forEach((author) => {
+      const key = author.profileSlug.trim().toLowerCase();
+      if (!key) return;
+      counts[key] = (counts[key] || 0) + 1;
+    });
+    return counts;
+  }, [selectedAuthors]);
+
+  const hasQuery = query.trim().length > 0;
+  const selectedSourceIds = useMemo(
+    () => new Set(selectedAuthors.map((author) => author.sourceId).filter(Boolean)),
+    [selectedAuthors],
+  );
 
   return (
     <SectionCard
       title="Author(s) Details"
-      description="We auto-filled the author from your book. Confirm the match or create a new one."
-      right={<AutoDetectedBadge />}
+      description="Search the author directory for the best matching author. If no suitable match is found, create a new author."
     >
-      <div className="space-y-4">
-        {authors.map((a, i) => (
-          <AuthorEditor
-            key={a.id}
-            block={a}
-            onChange={(b) =>
-              setAuthors((all) => all.map((x, idx) => (idx === i ? b : x)))
-            }
-            onRemove={() => setAuthors((all) => all.filter((_, idx) => idx !== i))}
+      <div className="rounded-xl border border-border p-4">
+        <p className="text-sm font-semibold">Find an author</p>
+
+        <div className="relative mt-2">
+          <Search
+            size={16}
+            className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-muted-foreground"
           />
-        ))}
+          <TextInput
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Search by name..."
+            className="h-11 pl-10 pr-10"
+          />
+          {hasQuery && (
+            <button
+              type="button"
+              onClick={() => setQuery("")}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+            >
+              <X size={15} />
+            </button>
+          )}
+        </div>
+
+        {hasQuery && (
+          <>
+            <div className="mt-3 flex items-center justify-between text-[12px]">
+              <span className="font-medium">{matches.length} matching authors found</span>
+              <span className="text-muted-foreground">Click to add</span>
+            </div>
+
+            <div className="mt-2 grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
+              {matches.map((match) => (
+                <AuthorSearchResultCard
+                  key={match.id}
+                  match={match}
+                  isSelected={selectedSourceIds.has(match.id)}
+                  onAdd={() => addDirectoryAuthor(match)}
+                />
+              ))}
+            </div>
+
+            <div className="mt-3 flex items-center justify-between rounded-xl bg-secondary/40 px-3 py-2.5 text-sm">
+              <span className="text-muted-foreground">
+                Can&apos;t find them? Add &quot;{query || "author"}&quot; as a new author.
+              </span>
+              <button
+                type="button"
+                onClick={addAsNewFromQuery}
+                className="inline-flex h-9 items-center rounded-lg border border-border bg-background px-3 text-sm font-medium hover:bg-secondary"
+              >
+                Add as new
+              </button>
+            </div>
+          </>
+        )}
       </div>
-      <div className="mt-4 flex justify-end">
-        <button
-          type="button"
-          onClick={() =>
-            setAuthors((all) => [
-              ...all,
-              {
-                id: `a${Date.now()}`,
-                query: "",
-                matches: [],
-                selected: null,
-                addAsNew: false,
-              },
-            ])
-          }
-          className="inline-flex h-10 items-center gap-2 rounded-lg border border-border bg-background px-4 text-sm font-medium hover:bg-secondary"
-        >
-          <Plus size={15} /> Add Another Author
-        </button>
+
+      <div className="mt-5">
+        <div className="mb-2 flex items-center justify-between">
+          <h3 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+            Selected authors
+          </h3>
+          <span className="text-xs font-semibold text-muted-foreground">
+            {selectedAuthors.length} added
+          </span>
+        </div>
+
+        {selectedAuthors.length === 0 ? (
+          <div className="flex min-h-[160px] flex-col items-center justify-center rounded-2xl border border-dashed border-border px-4 py-8 text-center">
+            <span className="mb-2 flex h-10 w-10 items-center justify-center rounded-full bg-secondary text-muted-foreground">
+              <UserRound size={20} />
+            </span>
+            <p className="text-lg font-semibold">No authors yet</p>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Use the search above to link existing authors or create new ones.
+            </p>
+          </div>
+        ) : (
+          <div className="space-y-3">
+            {selectedAuthors.map((author) => {
+              const slug = author.profileSlug.trim().toLowerCase();
+              const duplicate = slug ? (slugCounts[slug] || 0) > 1 : false;
+              const unavailable = duplicate || TAKEN_AUTHOR_SLUGS.has(slug);
+
+              return (
+                <SelectedAuthorCard
+                  key={author.id}
+                  author={author}
+                  unavailable={unavailable}
+                  onChange={(next) =>
+                    setSelectedAuthors((prev) =>
+                      prev.map((item) => (item.id === author.id ? next : item)),
+                    )
+                  }
+                  onRemove={() =>
+                    setSelectedAuthors((prev) =>
+                      prev.filter((item) => item.id !== author.id),
+                    )
+                  }
+                />
+              );
+            })}
+          </div>
+        )}
       </div>
     </SectionCard>
   );
@@ -771,27 +1032,6 @@ function BookUrlSection() {
         </SelectInput>
       </Field>
 
-      <div className="mt-4">
-        <Field label="Author Profile URL" hint="This URL is available">
-          <div className="flex gap-2">
-            <div className="flex flex-1 overflow-hidden rounded-lg border border-border bg-background">
-              <span className="flex items-center bg-secondary/60 px-3 text-xs text-muted-foreground">
-                https://pixelbooks.com/author/
-              </span>
-              <input
-                defaultValue="author-name"
-                className="h-11 flex-1 bg-background px-3 text-sm outline-none"
-              />
-            </div>
-            <button
-              type="button"
-              className="inline-flex h-11 items-center gap-1.5 rounded-lg border border-border bg-background px-4 text-sm font-medium hover:bg-secondary"
-            >
-              <CopyIcon size={14} /> Copy
-            </button>
-          </div>
-        </Field>
-      </div>
 
       <div className="mt-4">
         <Field

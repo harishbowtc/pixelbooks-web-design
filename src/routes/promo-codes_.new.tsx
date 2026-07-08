@@ -140,7 +140,7 @@ function CreatePromoCodePage() {
   const [description, setDescription] = useState("");
 
   return (
-    <AppShell title="" subtitle="">
+    <AppShell title="Promo Codes" subtitle="Create and manage discount codes for your storefront.">
       <div className="mx-auto max-w-4xl p-4 pb-8 md:p-8">
         {/* Back link + title */}
         <div className="mb-6 flex items-center gap-3">
