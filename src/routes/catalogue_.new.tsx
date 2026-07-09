@@ -739,35 +739,7 @@ function SelectedAuthorCard({
           <div className="min-w-0">
             <div className="flex flex-wrap items-center gap-2">
               <p className="text-sm font-semibold">{author.name}</p>
-                <div className="rounded-md border border-border/70 px-3 py-1">
-                <label className="flex cursor-pointer items-center gap-1.5 text-xs font-medium">
-                <span
-                  role="checkbox"
-                  aria-checked={author.addAsNew}
-                  onClick={() => onChange({ ...author, addAsNew: !author.addAsNew })}
-                  className="flex h-4 w-4 shrink-0 items-center justify-center rounded-[4px] border border-border bg-transparent"
-                >
-                  {author.addAsNew && (
-                    <svg viewBox="0 0 12 12" className="h-3 w-3 text-[var(--brand)]" fill="none">
-                      <path
-                        d="M2.5 6.5L5 9L9.5 3.5"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
-                  )}
-                </span>
-                <span>Add {author.name} as a new author</span>
-                <input
-                  type="checkbox"
-                  checked={author.addAsNew}
-                  onChange={(e) => onChange({ ...author, addAsNew: e.target.checked })}
-                  className="sr-only"
-                />
-              </label>
-            </div>
+       
             </div>
             <div ref={booksPopupRef} className="relative mt-0.5">
               <button
@@ -954,7 +926,8 @@ function AuthorsSection() {
               <button
                 type="button"
                 onClick={addAsNewFromQuery}
-                className="inline-flex h-9 items-center rounded-lg border border-border bg-background px-3 text-sm font-medium hover:bg-secondary"
+                className="inline-flex h-9 items-center rounded-lg border px-3 text-sm font-medium text-white transition-opacity hover:opacity-90"
+style={{ backgroundColor: "#008585", borderColor: "#008585" }}
               >
                 Add as new
               </button>
@@ -1882,7 +1855,7 @@ function AddEBookPage() {
           <ArrowLeft size={15} /> Back to Catalogue
         </Link>
 
-        <div className="space-y-6 pb-24">
+        <div className="space-y-6 pb-6">
           <UploadRow />
           <GuidelinesSection />
           <EBookDetailsSection />

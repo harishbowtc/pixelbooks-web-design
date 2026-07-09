@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import {
   ArrowLeft,
@@ -7,6 +8,8 @@ import {
   XCircle,
   CircleOff,
   Tag,
+  Copy,
+  Check,
 } from "lucide-react";
 import { AppShell } from "@/components/app-shell";
 import { seedBooks, type Status } from "@/lib/catalogue-data";
@@ -155,6 +158,48 @@ function MetaRow({
   );
 }
 
+function CopyBookUrlButton({ bookId }: { bookId: string }) {
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = async () => {
+    const url = `${window.location.origin}/catalogue/${bookId}`;
+    try {
+      await navigator.clipboard.writeText(url);
+    } catch {
+      const textarea = document.createElement("textarea");
+      textarea.value = url;
+      textarea.style.position = "fixed";
+      textarea.style.opacity = "0";
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand("copy");
+      document.body.removeChild(textarea);
+    }
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  return (
+    <button
+      type="button"
+      onClick={handleCopy}
+      className="inline-flex items-center gap-2 rounded-lg border border-border bg-card px-5 py-2.5 text-sm font-semibold text-foreground transition-colors hover:bg-secondary"
+    >
+      {copied ? (
+        <>
+          <Check size={15} className="text-emerald-500" />
+          Copied!
+        </>
+      ) : (
+        <>
+          <Copy size={15} />
+          Copy Book URL
+        </>
+      )}
+    </button>
+  );
+}
+
 /* ------------------------------------------------------------------ */
 /*  Page                                                               */
 /* ------------------------------------------------------------------ */
@@ -281,6 +326,7 @@ function EBookDetailPage() {
                     <button className="rounded-lg border border-border bg-card px-5 py-2.5 text-sm font-semibold text-foreground transition-colors hover:bg-secondary">
                       Preview Sample eBook
                     </button>
+                    <CopyBookUrlButton bookId={book.id} />
                   </div>
                 </div>
 
