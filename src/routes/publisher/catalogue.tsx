@@ -9,6 +9,7 @@ import {
   CheckCircle2,
   XCircle,
   CircleOff,
+  FileX2,
 } from "lucide-react";
 import { AppShell } from "@/components/app-shell";
 import {
@@ -20,7 +21,7 @@ import {
 } from "@/components/ui/pagination";
 import { seedBooks, type Book, type Status } from "@/lib/catalogue-data";
 
-export const Route = createFileRoute("/catalogue")({
+export const Route = createFileRoute("/publisher/catalogue")({
   component: CataloguePage,
 });
 
@@ -31,31 +32,20 @@ const PAGE_SIZE = 8;
 
 function StatusPill({ status }: { status: Status }) {
   const map = {
-    Published: {
-      Icon: CheckCircle2,
-      text: "text-emerald-700 dark:text-emerald-300",
-      bg: "bg-emerald-500/10",
-      dot: "text-emerald-500",
-    },
-    Rejected: {
-      Icon: XCircle,
-      text: "text-rose-700 dark:text-rose-300",
-      bg: "bg-rose-500/10",
-      dot: "text-rose-500",
-    },
-    Unpublished: {
-      Icon: CircleOff,
-      text: "text-muted-foreground",
-      bg: "bg-muted",
-      dot: "text-muted-foreground",
-    },
+    Published: { color: "var(--success)", Icon: CheckCircle2 },
+    Rejected: { color: "var(--danger)", Icon: FileX2 },
+    Unpublished: { color: "#6b7280", Icon: CircleOff },
   } as const;
-  const s = map[status];
+  const { color, Icon } = map[status];
   return (
     <span
-      className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium ${s.bg} ${s.text}`}
+      className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium"
+      style={{
+        backgroundColor: `color-mix(in oklch, ${color} 12%, transparent)`,
+        color,
+      }}
     >
-      <s.Icon size={13} className={s.dot} />
+      <Icon size={14} />
       {status}
     </span>
   );
@@ -85,9 +75,8 @@ function StatusFilter({ value, onChange }: { value: string; onChange: (v: typeof
                 onChange(s);
                 setOpen(false);
               }}
-              className={`block w-full px-4 py-2 text-left text-sm hover:bg-secondary ${
-                s === value ? "text-foreground font-medium" : "text-muted-foreground"
-              }`}
+              className={`block w-full px-4 py-2 text-left text-sm hover:bg-secondary ${s === value ? "text-foreground font-medium" : "text-muted-foreground"
+                }`}
             >
               {s}
             </button>
@@ -163,7 +152,7 @@ function CataloguePage() {
             }}
           />
           <Link
-            to="/catalogue/new"
+            to="/publisher/catalogue/new"
             className="flex h-11 items-center gap-2 rounded-lg px-5 text-sm font-semibold shadow-sm transition-opacity hover:opacity-90"
             style={{ backgroundColor: "var(--brand)", color: "var(--brand-contrast)" }}
           >

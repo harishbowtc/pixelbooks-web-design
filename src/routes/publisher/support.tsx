@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Mail, Send } from "lucide-react";
 import { AppShell } from "@/components/app-shell";
 
-export const Route = createFileRoute("/support")({
+export const Route = createFileRoute("/publisher/support")({
   head: () => ({
     meta: [
       { title: "Support — PixelBooks" },
@@ -106,7 +106,7 @@ function SupportPage() {
 
           <div className="mt-6 flex items-center justify-end gap-3 border-t border-border pt-6">
             <Link
-              to="/"
+              to="/publisher"
               className="inline-flex h-12 items-center justify-center rounded-xl border border-border bg-background px-6 text-sm font-semibold text-foreground transition-colors hover:bg-secondary"
             >
               Cancel

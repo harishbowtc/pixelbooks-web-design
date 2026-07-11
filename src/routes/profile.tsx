@@ -94,7 +94,7 @@ function SectionCard({
 }
 
 function ProfilePage() {
-  const profileBaseUrl = "azdevlibcustomer.pixelbooksapp.com//";
+  const profileBaseUrl = "azdevlibcustomer.pixelbooksapp.com/";
   const [publisherName, setPublisherName] = useState("PixelBooks");
   const [gst, setGst] = useState("32AAGCE9532N1ZB");
   const [pan, setPan] = useState("AAGCE9532N");
@@ -129,20 +129,12 @@ function ProfilePage() {
           <div className="space-y-6">
             <div className="flex items-center gap-6">
               <div className="relative h-24 w-24 shrink-0">
-                <div className="flex h-full w-full items-center justify-center rounded-full border border-border bg-secondary/50">
-                  <div
-                    className="flex h-16 w-16 items-center justify-center rounded-full"
-                    style={{ backgroundColor: "var(--brand)", color: "var(--brand-contrast)" }}
-                  >
-                    <span className="text-2xl font-bold">P</span>
-                  </div>
-                </div>
-                <button
-                  className="absolute bottom-0 right-0 flex h-8 w-8 items-center justify-center rounded-full border border-border bg-background shadow-sm transition-colors hover:bg-secondary text-muted-foreground hover:text-foreground"
-                  title="Edit Logo"
+                <div
+                  className="flex h-full w-full items-center justify-center rounded-full border border-border"
+                  style={{ backgroundColor: "var(--brand)", color: "var(--brand-contrast)" }}
                 >
-                  <Pencil size={14} />
-                </button>
+                  <span className="text-3xl font-bold">P</span>
+                </div>
               </div>
               <div>
                 <h3 className="text-base font-semibold text-foreground">Logo</h3>
@@ -151,7 +143,7 @@ function ProfilePage() {
                 </p>
                 <div className="mt-4 flex items-center gap-3">
                   <button className="inline-flex h-9 items-center justify-center rounded-lg border border-border bg-background px-4 text-sm font-medium text-foreground transition-colors hover:bg-secondary">
-                    Upload New Image
+                    Upload Logo...
                   </button>
                   <button className="inline-flex h-9 items-center justify-center rounded-lg px-4 text-sm font-medium text-destructive transition-colors hover:bg-destructive/10">
                     Remove
@@ -229,43 +221,43 @@ function ProfilePage() {
         {/* Account & Commission */}
         <SectionCard title="Account & Commission Details">
           <div className="grid grid-cols-1 gap-x-8 gap-y-8 md:grid-cols-2">
-          <section className="space-y-5">
-            <h2 className="text-base font-semibold text-foreground">Account Details</h2>
-            <div className="rounded-lg border border-border bg-card p-5">
-              <div className="mb-4 flex items-center gap-2">
-                <CheckCircle2 size={16} style={{ color: "var(--success)" }} />
-                <span className="text-sm font-semibold text-foreground">Active Bank Account</span>
+            <section className="space-y-5">
+              <h2 className="text-base font-semibold text-foreground">Account Details</h2>
+              <div className="rounded-lg border border-border bg-card p-5">
+                <div className="mb-4 flex items-center gap-2">
+                  <CheckCircle2 size={16} style={{ color: "var(--success)" }} />
+                  <span className="text-sm font-semibold text-foreground">Active Bank Account</span>
+                </div>
+                <div className="space-y-2 text-sm">
+                  <p className="text-muted-foreground">
+                    <span className="font-medium text-foreground">Account Holder Name : </span>
+                    PixelBooks
+                  </p>
+                  <p className="text-muted-foreground">
+                    <span className="font-medium text-foreground">Bank Account Number : </span>
+                    626705500430
+                  </p>
+                  <p className="text-muted-foreground">
+                    <span className="font-medium text-foreground">IFSC Code: </span>
+                    ICIC0006267
+                  </p>
+                  <p className="text-muted-foreground">
+                    <span className="font-medium text-foreground">Bank Name : </span>
+                    ICICI BANK LIMITED,KOTTAYAM
+                  </p>
+                </div>
+                <button className="mt-5 inline-flex h-9 items-center rounded-lg border border-border bg-card px-4 text-sm font-medium text-foreground hover:bg-secondary">
+                  Manage Bank Account
+                </button>
               </div>
-              <div className="space-y-2 text-sm">
-                <p className="text-muted-foreground">
-                  <span className="font-medium text-foreground">Account Holder Name : </span>
-                  PixelBooks
-                </p>
-                <p className="text-muted-foreground">
-                  <span className="font-medium text-foreground">Bank Account Number : </span>
-                  626705500430
-                </p>
-                <p className="text-muted-foreground">
-                  <span className="font-medium text-foreground">IFSC Code: </span>
-                  ICIC0006267
-                </p>
-                <p className="text-muted-foreground">
-                  <span className="font-medium text-foreground">Bank Name : </span>
-                  ICICI BANK LIMITED,KOTTAYAM
-                </p>
-              </div>
-              <button className="mt-5 inline-flex h-9 items-center rounded-lg border border-border bg-card px-4 text-sm font-medium text-foreground hover:bg-secondary">
-                Manage Bank Account
-              </button>
-            </div>
-          </section>
+            </section>
 
-          <section className="space-y-5">
-            <h2 className="text-base font-semibold text-foreground">Commission Details</h2>
-            <div className="max-w-md">
-              <Field label="Commission Rate %" value={commission} onChange={setCommission} />
-            </div>
-          </section>
+            <section className="space-y-5">
+              <h2 className="text-base font-semibold text-foreground">Commission Details</h2>
+              <div className="max-w-md">
+                <Field label="Commission Rate %" value={commission} onChange={setCommission} />
+              </div>
+            </section>
           </div>
         </SectionCard>
 

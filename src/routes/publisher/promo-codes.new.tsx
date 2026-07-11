@@ -1,9 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
-import { ArrowLeft, Calendar, ChevronDown, Sparkles } from "lucide-react";
+import { ArrowLeft, ChevronDown, Sparkles } from "lucide-react";
 import { AppShell } from "@/components/app-shell";
 
-export const Route = createFileRoute("/promo-codes_/new")({
+export const Route = createFileRoute("/publisher/promo-codes/new")({
   head: () => ({
     meta: [
       { title: "Create New Promo Code — PixelBooks" },
@@ -105,10 +105,6 @@ function DatePickerField({
           placeholder={placeholder}
           className="h-14 w-full rounded-xl border border-border bg-card px-4 pr-11 text-sm outline-none transition-colors placeholder:text-muted-foreground focus:border-[var(--brand)]"
         />
-        <Calendar
-          size={18}
-          className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground"
-        />
       </div>
     </Field>
   );
@@ -145,12 +141,12 @@ function CreatePromoCodePage() {
         {/* Back link + title */}
         <div className="mb-6 flex items-center gap-3">
           <Link
-            to="/promo-codes"
+            to="/publisher/promo-codes"
             className="flex h-10 w-10 items-center justify-center rounded-lg border border-border bg-card text-muted-foreground transition-colors hover:text-foreground"
           >
             <ArrowLeft size={18} />
           </Link>
-          <h1 className="text-xl font-semibold tracking-tight md:text-2xl">
+          <h1 className="text-lg font-semibold leading-tight">
             Create New Promo Code
           </h1>
         </div>
@@ -239,7 +235,7 @@ function CreatePromoCodePage() {
 
             <div className="mt-6 flex items-center justify-end gap-3 border-t border-border pt-6">
               <Link
-                to="/promo-codes"
+                to="/publisher/promo-codes"
                 className="inline-flex h-12 items-center justify-center rounded-xl border border-border bg-background px-6 text-sm font-semibold text-foreground transition-colors hover:bg-secondary"
               >
                 Cancel

@@ -4,7 +4,6 @@ import {
   Tag,
   Clock,
   BookOpen,
-  Calendar,
   ChevronDown,
   Download,
   ChevronLeft,
@@ -21,7 +20,7 @@ import {
   PaginationEllipsis,
 } from "@/components/ui/pagination";
 
-export const Route = createFileRoute("/margin-report")({
+export const Route = createFileRoute("/publisher/margin-report")({
   head: () => ({
     meta: [
       { title: "Margin Report — PixelBooks" },
@@ -608,7 +607,6 @@ function MarginReportPage() {
               )}
             </div>
             <label className="relative flex h-11 items-center rounded-lg border border-border bg-card px-3 sm:w-44">
-              <Calendar size={15} className="mr-2 text-muted-foreground" />
               <input
                 type="date"
                 value={from}
@@ -617,7 +615,6 @@ function MarginReportPage() {
               />
             </label>
             <label className="relative flex h-11 items-center rounded-lg border border-border bg-card px-3 sm:w-44">
-              <Calendar size={15} className="mr-2 text-muted-foreground" />
               <input
                 type="date"
                 value={to}

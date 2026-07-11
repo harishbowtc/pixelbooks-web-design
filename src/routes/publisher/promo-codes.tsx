@@ -11,6 +11,8 @@ import {
   Clock,
   Pencil,
   Trash2,
+  XCircle,
+  Ban,
 } from "lucide-react";
 import { AppShell } from "@/components/app-shell";
 import {
@@ -21,7 +23,7 @@ import {
   PaginationEllipsis,
 } from "@/components/ui/pagination";
 
-export const Route = createFileRoute("/promo-codes")({
+export const Route = createFileRoute("/publisher/promo-codes")({
   head: () => ({
     meta: [
       { title: "Promo Codes — PixelBooks" },
@@ -33,7 +35,12 @@ export const Route = createFileRoute("/promo-codes")({
   component: PromoCodesPage,
 });
 
-type PromoStatus = "Active" | "Expired" | "Scheduled";
+type PromoStatus =
+  | "Pending for Admin Approval"
+  | "Approved"
+  | "Rejected"
+  | "Disabled"
+  | "Expired";
 type Activation = "Available" | "Not available";
 
 type Promo = {
@@ -50,22 +57,31 @@ type Promo = {
 
 const seed: Promo[] = [
   { id: "1", code: "FQSGFQX799", start: "Dec 09", end: "Dec 09, 2025", status: "Expired", discount: 10, title: "All", activation: "Not available", active: false },
-  { id: "2", code: "MONSOON25", start: "Jul 01", end: "Aug 31, 2026", status: "Active", discount: 25, title: "Monsoon Reads", activation: "Available", active: true },
-  { id: "3", code: "KIDS15", start: "Jun 15", end: "Dec 31, 2026", status: "Active", discount: 15, title: "Kids Collection", activation: "Available", active: true },
-  { id: "4", code: "WELCOME5", start: "Jan 01", end: "Dec 31, 2026", status: "Active", discount: 5, title: "New Users", activation: "Available", active: true },
-  { id: "5", code: "AUG40", start: "Aug 01", end: "Aug 15, 2026", status: "Scheduled", discount: 40, title: "Independence Sale", activation: "Not available", active: false },
-  { id: "6", code: "FLASH20", start: "Mar 10", end: "Mar 12, 2026", status: "Expired", discount: 20, title: "Flash Weekend", activation: "Not available", active: false },
+  { id: "2", code: "MONSOON25", start: "Jul 01", end: "Aug 31, 2026", status: "Approved", discount: 25, title: "Monsoon Reads", activation: "Available", active: true },
+  { id: "3", code: "KIDS15", start: "Jun 15", end: "Dec 31, 2026", status: "Approved", discount: 15, title: "Kids Collection", activation: "Available", active: true },
+  { id: "4", code: "WELCOME5", start: "Jan 01", end: "Dec 31, 2026", status: "Pending for Admin Approval", discount: 5, title: "New Users", activation: "Not available", active: false },
+  { id: "5", code: "AUG40", start: "Aug 01", end: "Aug 15, 2026", status: "Disabled", discount: 40, title: "Independence Sale", activation: "Not available", active: false },
+  { id: "6", code: "FLASH20", start: "Mar 10", end: "Mar 12, 2026", status: "Rejected", discount: 20, title: "Flash Weekend", activation: "Not available", active: false },
 ];
 
-const filters = ["All", "Active", "Scheduled", "Expired"] as const;
+const filters = [
+  "All",
+  "Pending for Admin Approval",
+  "Approved",
+  "Rejected",
+  "Disabled",
+  "Expired",
+] as const;
 type Filter = (typeof filters)[number];
 const PAGE_SIZE = 8;
 
 function StatusPill({ status }: { status: PromoStatus }) {
   const map = {
-    Active: { color: "var(--success)", Icon: CheckCircle2 },
+    "Pending for Admin Approval": { color: "var(--warning)", Icon: Clock },
+    Approved: { color: "var(--success)", Icon: CheckCircle2 },
+    Rejected: { color: "var(--danger)", Icon: XCircle },
+    Disabled: { color: "var(--muted-foreground)", Icon: Ban },
     Expired: { color: "var(--muted-foreground)", Icon: AlertCircle },
-    Scheduled: { color: "var(--brand)", Icon: Clock },
   } as const;
   const { color, Icon } = map[status];
   return (
@@ -180,7 +196,7 @@ function PromoCodesPage() {
             )}
           </div>
           <Link
-            to="/promo-codes/new"
+            to="/publisher/promo-codes/new"
             className="flex h-11 items-center gap-2 rounded-lg px-5 text-sm font-semibold shadow-sm transition-opacity hover:opacity-90"
             style={{ backgroundColor: "var(--brand)", color: "var(--brand-contrast)" }}
           >

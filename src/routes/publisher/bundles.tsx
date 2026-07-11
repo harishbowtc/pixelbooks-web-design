@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import {
   Search,
@@ -20,45 +20,25 @@ import {
   PaginationEllipsis,
 } from "@/components/ui/pagination";
 
-export const Route = createFileRoute("/bundles")({
+export const Route = createFileRoute("/publisher/bundles")({
   head: () => ({
     meta: [
       { title: "eBook Bundles — PixelBooks" },
-      { name: "description", content: "Create and manage curated eBook bundles for your catalogue." },
+      {
+        name: "description",
+        content: "Create and manage curated eBook bundles for your catalogue.",
+      },
       { property: "og:title", content: "eBook Bundles — PixelBooks" },
-      { property: "og:description", content: "Create and manage curated eBook bundles for your catalogue." },
+      {
+        property: "og:description",
+        content: "Create and manage curated eBook bundles for your catalogue.",
+      },
     ],
   }),
   component: BundlesPage,
 });
 
-type BundleStatus = "Rejected" | "Approved" | "Pending";
-type Bundle = {
-  id: string;
-  title: string;
-  bookCount: number;
-  status: BundleStatus;
-  pricing: number;
-  active: boolean;
-  cover: string;
-  initials: string;
-};
-
-const gradients = [
-  "linear-gradient(160deg, oklch(0.55 0.14 240), oklch(0.32 0.09 240))",
-  "linear-gradient(160deg, oklch(0.45 0.09 145), oklch(0.28 0.06 145))",
-  "linear-gradient(160deg, oklch(0.5 0.13 30), oklch(0.32 0.08 30))",
-  "linear-gradient(160deg, oklch(0.55 0.12 300), oklch(0.32 0.08 300))",
-  "linear-gradient(160deg, oklch(0.5 0.1 60), oklch(0.32 0.06 60))",
-];
-
-const seed: Bundle[] = [
-  { id: "1", title: "Test eBook bundle", bookCount: 1, status: "Rejected", pricing: 0, active: true, cover: gradients[0], initials: "TST" },
-  { id: "2", title: "Monsoon Reads Collection", bookCount: 5, status: "Approved", pricing: 499, active: true, cover: gradients[1], initials: "MRC" },
-  { id: "3", title: "Kids Storytime Pack", bookCount: 8, status: "Approved", pricing: 799, active: false, cover: gradients[2], initials: "KSP" },
-  { id: "4", title: "Business Essentials", bookCount: 4, status: "Pending", pricing: 1299, active: true, cover: gradients[3], initials: "BUS" },
-  { id: "5", title: "Poetry Corner", bookCount: 3, status: "Rejected", pricing: 249, active: false, cover: gradients[4], initials: "POE" },
-];
+import { getBundles, saveBundles, type Bundle, type BundleStatus } from "@/lib/bundles-data";
 
 const filters = ["All", "Approved", "Pending", "Rejected"] as const;
 type Filter = (typeof filters)[number];
@@ -68,7 +48,7 @@ function StatusPill({ status }: { status: BundleStatus }) {
   const map = {
     Rejected: { color: "var(--danger)", Icon: FileX2 },
     Approved: { color: "var(--success)", Icon: CheckCircle2 },
-    Pending: { color: "var(--brand)", Icon: Clock },
+    Pending: { color: "#6b7280", Icon: Clock },
   } as const;
   const { color, Icon } = map[status];
   return (
@@ -86,10 +66,11 @@ function StatusPill({ status }: { status: BundleStatus }) {
 }
 
 function BundlesPage() {
+  const navigate = useNavigate();
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState<Filter>("All");
   const [filterOpen, setFilterOpen] = useState(false);
-  const [bundles, setBundles] = useState<Bundle[]>(seed);
+  const [bundles, setBundles] = useState<Bundle[]>(() => getBundles());
   const [page, setPage] = useState(1);
 
   const filtered = useMemo(() => {
@@ -117,8 +98,13 @@ function BundlesPage() {
     return nums;
   }, [totalPages, currentPage]);
 
-  const toggleActive = (id: string) =>
-    setBundles((prev) => prev.map((b) => (b.id === id ? { ...b, active: !b.active } : b)));
+  const toggleActive = (id: string) => {
+    setBundles((prev) => {
+      const updated = prev.map((b) => (b.id === id ? { ...b, active: !b.active } : b));
+      saveBundles(updated);
+      return updated;
+    });
+  };
 
   return (
     <AppShell title="eBook Bundles" subtitle="Group multiple titles into curated bundles.">
@@ -165,7 +151,7 @@ function BundlesPage() {
             )}
           </div>
           <Link
-            to="/bundles/new"
+            to="/publisher/bundles/new"
             className="flex h-11 items-center gap-2 rounded-lg px-5 text-sm font-semibold shadow-sm transition-opacity hover:opacity-90"
             style={{ backgroundColor: "var(--brand)", color: "var(--brand-contrast)" }}
           >
@@ -198,7 +184,10 @@ function BundlesPage() {
                 {pageItems.map((b) => (
                   <tr
                     key={b.id}
-                    className="border-b border-border/60 transition-colors last:border-0 hover:bg-secondary/40"
+                    onClick={() =>
+                      navigate({ to: "/bundles/$bundleId", params: { bundleId: b.id } })
+                    }
+                    className="group cursor-pointer border-b border-border/60 transition-colors last:border-0 hover:bg-secondary/50"
                   >
                     <td className="py-5 pl-6 pr-4">
                       <div className="flex items-center gap-4">
@@ -209,7 +198,9 @@ function BundlesPage() {
                           {b.initials}
                         </div>
                         <div>
-                          <div className="font-medium text-foreground">{b.title}</div>
+                          <div className="font-medium text-foreground">
+                            {b.title}
+                          </div>
                           <span
                             className="mt-1 inline-block rounded-full px-2.5 py-0.5 text-[11px] font-medium"
                             style={{
@@ -225,13 +216,16 @@ function BundlesPage() {
                     <td className="py-5 pr-4 text-center">
                       <StatusPill status={b.status} />
                     </td>
-                    <td className="py-5 pr-4 text-center font-medium">{b.pricing}</td>
+                    <td className="py-5 pr-4 text-center font-medium">₹{b.pricing}</td>
                     <td className="py-5 pr-4">
                       <div className="flex items-center justify-center gap-3">
                         <button
                           role="switch"
                           aria-checked={b.active}
-                          onClick={() => toggleActive(b.id)}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            toggleActive(b.id);
+                          }}
                           className="relative inline-flex h-6 w-11 items-center rounded-full transition-colors"
                           style={{
                             backgroundColor: b.active ? "var(--brand)" : "var(--muted)",
@@ -248,13 +242,12 @@ function BundlesPage() {
                       </div>
                     </td>
                     <td className="py-5 pr-6 text-right">
-                      <Link
-                        to="/bundles"
+                      <span
                         aria-label="View bundle"
-                        className="inline-flex h-8 w-8 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
+                        className="inline-flex h-8 w-8 items-center justify-center rounded-md text-muted-foreground transition-colors group-hover:bg-secondary group-hover:text-foreground"
                       >
                         <ChevRight size={16} />
-                      </Link>
+                      </span>
                     </td>
                   </tr>
                 ))}
@@ -265,7 +258,11 @@ function BundlesPage() {
           {/* Mobile cards */}
           <ul className="divide-y divide-border/60 md:hidden">
             {pageItems.map((b) => (
-              <li key={b.id} className="flex items-start gap-3 p-4">
+              <li
+                key={b.id}
+                onClick={() => navigate({ to: "/bundles/$bundleId", params: { bundleId: b.id } })}
+                className="flex cursor-pointer items-start gap-3 p-4 hover:bg-secondary/40 transition-colors"
+              >
                 <div
                   className="flex h-14 w-11 shrink-0 items-center justify-center rounded-md text-[10px] font-bold text-white shadow-sm"
                   style={{ background: b.cover }}
@@ -279,7 +276,10 @@ function BundlesPage() {
                     <StatusPill status={b.status} />
                     <span className="text-xs font-medium">₹{b.pricing}</span>
                     <button
-                      onClick={() => toggleActive(b.id)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        toggleActive(b.id);
+                      }}
                       className="ml-auto text-xs font-medium"
                       style={{ color: b.active ? "var(--success)" : "var(--muted-foreground)" }}
                     >
@@ -325,7 +325,11 @@ function BundlesPage() {
                         href="#"
                         style={
                           n === currentPage
-                            ? { backgroundColor: "var(--brand)", color: "var(--brand-contrast)", borderColor: "transparent" }
+                            ? {
+                                backgroundColor: "var(--brand)",
+                                color: "var(--brand-contrast)",
+                                borderColor: "transparent",
+                              }
                             : undefined
                         }
                       >

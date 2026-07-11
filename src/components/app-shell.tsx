@@ -18,6 +18,14 @@ import {
   LogOut,
   Settings,
   UserCircle,
+  ShoppingBag,
+  Store,
+  FileEdit,
+  Users,
+  GraduationCap,
+  Building2,
+  Inbox,
+  Image as ImageIcon
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { useEffect, useState, type ReactNode } from "react";
@@ -45,48 +53,84 @@ type NavSection = { heading: string; items: NavItem[] };
 
 function isActivePath(pathname: string, to: string) {
   if (to === "/") return pathname === "/";
+  if (to === "/library-admin" || to === "/publisher") {
+    return pathname === to;
+  }
   return pathname === to || pathname.startsWith(`${to}/`);
 }
 
-const sections: NavSection[] = [
-  {
-    heading: "Main",
-    items: [
-      { label: "Dashboard", icon: LayoutDashboard, to: "/" },
-      { label: "My Catalogue", icon: BookMarked, to: "/catalogue" },
-      { label: "Catalogue Import", icon: FileUp, to: "/catalogue-import" },
-      { label: "eBook Bundles", icon: Library, to: "/bundles", badge: "New" },
-      { label: "Promo Codes", icon: TicketPercent, to: "/promo-codes" },
-    ],
-  },
-  {
-    heading: "Reports",
-    items: [
-      { label: "Margin Report", icon: TrendingUp, to: "/margin-report" },
-      { label: "Sales Report", icon: BarChart3, to: "/sales-report" },
-    ],
-  },
-  {
-    heading: "Payment",
-    items: [{ label: "Bank Accounts", icon: Landmark, to: "/bank-accounts" }],
-  },
-  {
-    heading: "Utilities",
-    items: [{ label: "Support", icon: LifeBuoy, to: "/support" }],
-  },
-];
+function getSections(pathname: string): NavSection[] {
+  if (pathname.startsWith("/library-admin")) {
+    return [
+      {
+        heading: "Main",
+        items: [
+          { label: "Dashboard", icon: LayoutDashboard, to: "/library-admin" },
+          { label: "Catalogue", icon: BookMarked, to: "/library-admin/catalogue" },
+          { label: "Orders", icon: ShoppingBag, to: "/library-admin#orders" },
+          { label: "Book Store", icon: Store, to: "/library-admin#book-store" },
+          { label: "Manage eBook", icon: FileEdit, to: "/library-admin#manage-ebook" },
+          { label: "Library Users", icon: Users, to: "/library-admin#users" },
+        ],
+      },
+      {
+        heading: "Academic",
+        items: [
+          { label: "Courses", icon: GraduationCap, to: "/library-admin#courses" },
+          { label: "Departments", icon: Building2, to: "/library-admin#departments" },
+        ],
+      },
+      {
+        heading: "Requests & Ads",
+        items: [
+          { label: "Requests", icon: Inbox, to: "/library-admin#requests" },
+          { label: "Banners", icon: ImageIcon, to: "/library-admin#banners" },
+        ],
+      },
+      {
+        heading: "Reports & Utilities",
+        items: [
+          { label: "Reports", icon: BarChart3, to: "/library-admin#reports" },
+          { label: "Support", icon: LifeBuoy, to: "/library-admin#support" },
+        ],
+      },
+    ];
+  }
+
+  return [
+    {
+      heading: "Main",
+      items: [
+        { label: "Dashboard", icon: LayoutDashboard, to: "/publisher" },
+        { label: "My Catalogue", icon: BookMarked, to: "/publisher/catalogue" },
+        { label: "Catalogue Import", icon: FileUp, to: "/publisher/catalogue-import" },
+        { label: "eBook Bundles", icon: Library, to: "/publisher/bundles", badge: "New" },
+        { label: "Promo Codes", icon: TicketPercent, to: "/publisher/promo-codes" },
+      ],
+    },
+    {
+      heading: "Reports",
+      items: [
+        { label: "Margin Report", icon: TrendingUp, to: "/publisher/margin-report" },
+        { label: "Sales Report", icon: BarChart3, to: "/publisher/sales-report" },
+      ],
+    },
+    {
+      heading: "Payment",
+      items: [{ label: "Bank Accounts", icon: Landmark, to: "/publisher/bank-accounts" }],
+    },
+    {
+      heading: "Utilities",
+      items: [{ label: "Support", icon: LifeBuoy, to: "/publisher/support" }],
+    },
+  ];
+}
 
 function Logo() {
   return (
-    <svg width="28" height="28" viewBox="0 0 32 32" fill="none" aria-hidden>
-      <path
-        d="M6 6h12a6 6 0 0 1 6 6v14H12a6 6 0 0 1-6-6V6Z"
-        stroke="var(--brand)"
-        strokeWidth="2.5"
-        strokeLinejoin="round"
-      />
-      <path d="M12 12h8M12 17h6" stroke="var(--brand)" strokeWidth="2.5" strokeLinecap="round" />
-    </svg>
+    <div className="w-[31px] h-[31px] overflow-hidden relative flex items-center justify-start shrink-0">
+      <img src="/logo.png" alt="PixelBooks Logo Icon" className="h-[26px] max-w-none" />
+    </div>
   );
 }
 
@@ -105,6 +149,8 @@ function useCollapsed() {
 }
 
 function SidebarBrand({ collapsed }: { collapsed: boolean }) {
+  const { pathname } = useLocation();
+  const isLibraryAdmin = pathname.startsWith("/library-admin");
   return (
     <div
       className={[
@@ -112,21 +158,27 @@ function SidebarBrand({ collapsed }: { collapsed: boolean }) {
         collapsed ? "justify-center px-3" : "px-6",
       ].join(" ")}
     >
-      <Logo />
-      {!collapsed && (
+      {collapsed ? (
+        <Link to="/" id="sidebar-logo-link-collapsed" className="flex items-center justify-center shrink-0">
+          <Logo />
+        </Link>
+      ) : (
         <div className="flex min-w-0 items-center gap-2">
-          <span className="truncate text-lg font-semibold tracking-tight">
-            <span style={{ color: "var(--brand)" }}>Pixel</span>
-            <span>Books</span>
-          </span>
+          <Link to="/" id="sidebar-logo-link-expanded" className="flex shrink-0">
+            <img src="/logo.png" alt="PixelBooks Logo" className="h-[31px] object-contain" />
+          </Link>
           <span
-            className="shrink-0 rounded-md px-2 py-0.5 text-[11px] font-medium"
+            className="shrink-0 rounded-md px-2 py-0.5 text-[11px] font-semibold"
             style={{
-              backgroundColor: "var(--sidebar-highlight)",
-              color: "var(--sidebar-accent-foreground)",
+              backgroundColor: isLibraryAdmin
+                ? "color-mix(in oklab, oklch(0.55 0.13 260) 12%, transparent)"
+                : "var(--sidebar-highlight)",
+              color: isLibraryAdmin
+                ? "oklch(0.55 0.13 260)"
+                : "var(--sidebar-accent-foreground)",
             }}
           >
-            Publisher
+            {isLibraryAdmin ? "Library Admin" : "Publisher"}
           </span>
         </div>
       )}
@@ -210,10 +262,11 @@ function NavRow({
 
 function SidebarBody({ collapsed, onNavigate }: { collapsed: boolean; onNavigate?: () => void }) {
   const { pathname } = useLocation();
+  const currentSections = getSections(pathname);
   return (
     <TooltipProvider delayDuration={100}>
       <nav className="flex-1 overflow-y-auto px-3">
-        {sections.map((section) => (
+        {currentSections.map((section) => (
           <div key={section.heading} className="mb-6">
             {!collapsed ? (
               <div className="flex items-center gap-2 px-3 pb-2">
@@ -245,6 +298,8 @@ function SidebarBody({ collapsed, onNavigate }: { collapsed: boolean; onNavigate
 }
 
 function ProfileDropdown() {
+  const { pathname } = useLocation();
+  const isLibraryAdmin = pathname.startsWith("/library-admin");
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -262,7 +317,9 @@ function ProfileDropdown() {
             <span className="block truncate text-sm font-semibold text-foreground">
               Anya Ramanathan
             </span>
-            <span className="block truncate text-[11px] text-muted-foreground">Publisher · Pro</span>
+            <span className="block truncate text-[11px] text-muted-foreground">
+              {isLibraryAdmin ? "Library Admin · Pro" : "Publisher · Pro"}
+            </span>
           </span>
           <ChevronDown size={14} className="hidden text-muted-foreground sm:block" />
         </button>
@@ -278,6 +335,11 @@ function ProfileDropdown() {
         <DropdownMenuItem asChild>
           <Link to="/settings">
             <Settings size={16} className="mr-2" /> Settings
+          </Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem asChild>
+          <Link to="/" id="profile-dropdown-btn-switch-workspace">
+            <LayoutDashboard size={16} className="mr-2" /> Switch Workspace
           </Link>
         </DropdownMenuItem>
         <DropdownMenuSeparator />

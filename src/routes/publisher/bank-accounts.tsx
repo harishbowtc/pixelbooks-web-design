@@ -14,7 +14,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 
-export const Route = createFileRoute("/bank-accounts")({
+export const Route = createFileRoute("/publisher/bank-accounts")({
   head: () => ({
     meta: [
       { title: "Bank Accounts — PixelBooks" },
@@ -105,16 +105,7 @@ function BankAccountsPage() {
     <AppShell title="Bank Accounts" subtitle="Manage your bank accounts for royalty payouts.">
       <div className="space-y-6 p-4 md:p-8">
         {/* Toolbar */}
-        <div className="flex items-center justify-end">
-          <button
-            onClick={() => setDialogOpen(true)}
-            className="inline-flex h-12 items-center justify-center gap-2 rounded-xl px-5 text-sm font-semibold shadow-sm transition-opacity hover:opacity-90"
-            style={{ backgroundColor: "var(--brand)", color: "var(--brand-contrast)" }}
-          >
-            <Plus size={17} strokeWidth={2.4} />
-            Add New Bank Account
-          </button>
-        </div>
+        
 
         <AddBankAccountDialog open={dialogOpen} onOpenChange={setDialogOpen} onAdd={handleAdd} />
 
@@ -216,6 +207,30 @@ function BankAccountsPage() {
               </div>
             </div>
           ))}
+
+          {accounts.length > 0 && (
+            <button
+              type="button"
+              onClick={() => setDialogOpen(true)}
+              className="flex min-h-[220px] flex-col items-center justify-center gap-3 rounded-xl border border-dashed border-border bg-card/50 p-5 text-center transition-colors hover:border-[var(--brand)] hover:bg-secondary/40"
+            >
+              <span
+                className="flex h-12 w-12 items-center justify-center rounded-full"
+                style={{
+                  backgroundColor: "color-mix(in oklch, var(--brand) 12%, transparent)",
+                  color: "var(--brand)",
+                }}
+              >
+                <Plus size={22} />
+              </span>
+              <div>
+                <p className="text-sm font-semibold text-foreground">Add New Bank Account</p>
+                <p className="mt-1 text-xs text-muted-foreground">
+                  Add another account to receive royalty payouts.
+                </p>
+              </div>
+            </button>
+          )}
         </div>
 
         {lastRemoved && (

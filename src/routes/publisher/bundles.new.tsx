@@ -13,7 +13,7 @@ import {
 import { AppShell } from "@/components/app-shell";
 import { WizardStepper } from "@/components/wizard-stepper";
 
-export const Route = createFileRoute("/bundles_/new")({
+export const Route = createFileRoute("/publisher/bundles/new")({
   head: () => ({
     meta: [
       { title: "Add New Bundle — PixelBooks" },
@@ -139,7 +139,7 @@ function NewBundleWizardPage() {
       <div className="space-y-6 p-4 md:p-8">
         <div className="flex items-center justify-between">
           <Link
-            to="/bundles"
+            to="/publisher/bundles"
             className="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
           >
             <ArrowLeft size={16} />

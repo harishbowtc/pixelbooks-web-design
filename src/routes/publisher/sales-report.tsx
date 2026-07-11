@@ -2,7 +2,6 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import {
   BookOpen,
-  Calendar,
   ChevronDown,
   Download,
   ChevronLeft,
@@ -28,7 +27,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-export const Route = createFileRoute("/sales-report")({
+export const Route = createFileRoute("/publisher/sales-report")({
   head: () => ({
     meta: [
       { title: "Sales Report — PixelBooks" },
@@ -62,7 +61,7 @@ type SalesRow = {
 const PRESETS = ["MTD", "QTD", "YTD", "Last 30 days", "Custom"] as const;
 type Preset = (typeof PRESETS)[number];
 
-const VIEW_MODES = ["Detailed", "Summary"] as const;
+const VIEW_MODES = ["Detailed", "Consolidated"] as const;
 type ViewMode = (typeof VIEW_MODES)[number];
 
 const SALE_TYPES = ["Sale & Rental", "Sale only", "Rental only"] as const;
@@ -317,7 +316,6 @@ function SalesReportPage() {
           </Select>
 
           <label className="relative flex h-11 items-center rounded-lg border border-border bg-card px-3 md:w-40">
-            <Calendar size={15} className="mr-2 text-muted-foreground" />
             <input
               type="date"
               value={from}
@@ -327,7 +325,6 @@ function SalesReportPage() {
             />
           </label>
           <label className="relative flex h-11 items-center rounded-lg border border-border bg-card px-3 md:w-40">
-            <Calendar size={15} className="mr-2 text-muted-foreground" />
             <input
               type="date"
               value={to}
@@ -577,10 +574,10 @@ function SalesReportPage() {
                         style={
                           n === currentPage
                             ? {
-                                backgroundColor: "var(--brand)",
-                                color: "var(--brand-contrast)",
-                                borderColor: "transparent",
-                              }
+                              backgroundColor: "var(--brand)",
+                              color: "var(--brand-contrast)",
+                              borderColor: "transparent",
+                            }
                             : undefined
                         }
                       >

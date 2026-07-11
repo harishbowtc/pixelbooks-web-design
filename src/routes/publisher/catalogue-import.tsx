@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import {
   Upload,
@@ -9,7 +9,7 @@ import {
 } from "lucide-react";
 import { AppShell } from "@/components/app-shell";
 
-export const Route = createFileRoute("/catalogue-import")({
+export const Route = createFileRoute("/publisher/catalogue-import")({
   component: CatalogueImportPage,
 });
 
@@ -22,21 +22,82 @@ type ImportRow = {
 };
 
 const seed: ImportRow[] = [
-  { fileName: "BulkImport_20260323_094636.xlsx", date: "23 Mar 2026", total: 2, uploaded: 0, failed: 2 },
-  { fileName: "BulkImport_20260318_142201.xlsx", date: "18 Mar 2026", total: 24, uploaded: 22, failed: 2 },
-  { fileName: "BulkImport_20260311_101055.xlsx", date: "11 Mar 2026", total: 10, uploaded: 10, failed: 0 },
-  { fileName: "BulkImport_20260228_183914.xlsx", date: "28 Feb 2026", total: 48, uploaded: 45, failed: 3 },
-  { fileName: "BulkImport_20260214_090412.xlsx", date: "14 Feb 2026", total: 15, uploaded: 15, failed: 0 },
-  { fileName: "BulkImport_20260202_162308.xlsx", date: "02 Feb 2026", total: 7, uploaded: 5, failed: 2 },
-  { fileName: "BulkImport_20260121_113045.xlsx", date: "21 Jan 2026", total: 30, uploaded: 28, failed: 2 },
-  { fileName: "BulkImport_20260108_154722.xlsx", date: "08 Jan 2026", total: 12, uploaded: 12, failed: 0 },
-  { fileName: "BulkImport_20251222_074511.xlsx", date: "22 Dec 2025", total: 5, uploaded: 4, failed: 1 },
-  { fileName: "BulkImport_20251210_130800.xlsx", date: "10 Dec 2025", total: 18, uploaded: 17, failed: 1 },
+  {
+    fileName: "BulkImport_20260323_094636.xlsx",
+    date: "23 Mar 2026",
+    total: 2,
+    uploaded: 0,
+    failed: 2,
+  },
+  {
+    fileName: "BulkImport_20260318_142201.xlsx",
+    date: "18 Mar 2026",
+    total: 24,
+    uploaded: 22,
+    failed: 2,
+  },
+  {
+    fileName: "BulkImport_20260311_101055.xlsx",
+    date: "11 Mar 2026",
+    total: 10,
+    uploaded: 10,
+    failed: 0,
+  },
+  {
+    fileName: "BulkImport_20260228_183914.xlsx",
+    date: "28 Feb 2026",
+    total: 48,
+    uploaded: 45,
+    failed: 3,
+  },
+  {
+    fileName: "BulkImport_20260214_090412.xlsx",
+    date: "14 Feb 2026",
+    total: 15,
+    uploaded: 15,
+    failed: 0,
+  },
+  {
+    fileName: "BulkImport_20260202_162308.xlsx",
+    date: "02 Feb 2026",
+    total: 7,
+    uploaded: 5,
+    failed: 2,
+  },
+  {
+    fileName: "BulkImport_20260121_113045.xlsx",
+    date: "21 Jan 2026",
+    total: 30,
+    uploaded: 28,
+    failed: 2,
+  },
+  {
+    fileName: "BulkImport_20260108_154722.xlsx",
+    date: "08 Jan 2026",
+    total: 12,
+    uploaded: 12,
+    failed: 0,
+  },
+  {
+    fileName: "BulkImport_20251222_074511.xlsx",
+    date: "22 Dec 2025",
+    total: 5,
+    uploaded: 4,
+    failed: 1,
+  },
+  {
+    fileName: "BulkImport_20251210_130800.xlsx",
+    date: "10 Dec 2025",
+    total: 18,
+    uploaded: 17,
+    failed: 1,
+  },
 ];
 
 const PAGE_SIZE = 6;
 
 function CatalogueImportPage() {
+  const navigate = useNavigate();
   const [page, setPage] = useState(1);
   const rows = seed;
 
@@ -60,13 +121,13 @@ function CatalogueImportPage() {
         {/* Toolbar */}
         <div className="flex flex-col gap-3 rounded-xl border border-border bg-secondary/40 p-5 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <p className="text-sm font-medium text-foreground">Import your catalogue</p>
+            <p className="text-sm font-bold text-foreground">Import your catalogue</p>
             <p className="mt-0.5 text-xs text-muted-foreground">
               Upload an .xlsx file. We accept the PixelBooks bulk-import template.
             </p>
           </div>
           <Link
-            to="/catalogue-import/new"
+            to="/publisher/catalogue-import/new"
             className="inline-flex h-11 cursor-pointer items-center gap-2 self-start rounded-lg px-5 text-sm font-semibold shadow-sm transition-opacity hover:opacity-90 sm:self-auto"
             style={{ backgroundColor: "var(--brand)", color: "var(--brand-contrast)" }}
           >
@@ -100,22 +161,26 @@ function CatalogueImportPage() {
                 {pageItems.map((r) => (
                   <tr
                     key={r.fileName}
-                    className="cursor-pointer border-b border-border/60 transition-colors last:border-0 hover:bg-secondary/50"
+                    onClick={() =>
+                      navigate({
+                        to: "/publisher/catalogue-import/$fileName",
+                        params: { fileName: r.fileName },
+                      })
+                    }
+                    className="group cursor-pointer border-b border-border/60 transition-colors last:border-0 hover:bg-secondary/50"
                   >
                     <td className="py-4 pl-6 pr-4">
-                      <Link
-                        to="/catalogue-import/$fileName"
-                        params={{ fileName: r.fileName }}
-                        className="flex items-center gap-3 hover:underline"
-                      >
+                      <div className="flex items-center gap-3">
                         <div
                           className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md"
                           style={{ backgroundColor: "var(--sidebar-highlight)" }}
                         >
                           <FileSpreadsheet size={17} style={{ color: "var(--brand)" }} />
                         </div>
-                        <span className="font-medium text-foreground">{r.fileName}</span>
-                      </Link>
+                        <span className="font-medium text-foreground">
+                          {r.fileName}
+                        </span>
+                      </div>
                     </td>
                     <td className="py-4 pr-4 text-muted-foreground">{r.date}</td>
                     <td className="py-4 pr-4 font-medium">{r.total} Files</td>
@@ -126,14 +191,12 @@ function CatalogueImportPage() {
                       {r.failed} Files
                     </td>
                     <td className="py-4 pr-6 text-right">
-                      <Link
-                        to="/catalogue-import/$fileName"
-                        params={{ fileName: r.fileName }}
+                      <span
                         aria-label="View details"
-                        className="inline-flex h-8 w-8 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
+                        className="inline-flex h-8 w-8 items-center justify-center rounded-md text-muted-foreground transition-colors group-hover:bg-secondary group-hover:text-foreground"
                       >
                         <ChevRight size={16} />
-                      </Link>
+                      </span>
                     </td>
                   </tr>
                 ))}
@@ -151,7 +214,7 @@ function CatalogueImportPage() {
             {pageItems.map((r) => (
               <li key={r.fileName} className="p-4">
                 <Link
-                  to="/catalogue-import/$fileName"
+                  to="/publisher/catalogue-import/$fileName"
                   params={{ fileName: r.fileName }}
                   className="flex items-start gap-3"
                 >
@@ -177,9 +240,7 @@ function CatalogueImportPage() {
                       </div>
                       <div>
                         <p className="text-muted-foreground">Failed</p>
-                        <p className="font-semibold text-rose-600 dark:text-rose-400">
-                          {r.failed}
-                        </p>
+                        <p className="font-semibold text-rose-600 dark:text-rose-400">{r.failed}</p>
                       </div>
                     </div>
                   </div>

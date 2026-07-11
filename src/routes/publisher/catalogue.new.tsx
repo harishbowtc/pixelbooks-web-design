@@ -27,7 +27,7 @@ import {
 } from "lucide-react";
 import { AppShell } from "@/components/app-shell";
 
-export const Route = createFileRoute("/catalogue_/new")({
+export const Route = createFileRoute("/publisher/catalogue/new")({
   head: () => ({
     meta: [
       { title: "Add New eBook — PixelBooks" },
@@ -269,6 +269,8 @@ function UploadTile({
 }
 
 function UploadRow() {
+  const [autofill, setAutofill] = useState(true);
+
   return (
     <SectionCard>
       <div className="grid gap-4 md:grid-cols-3">
@@ -282,7 +284,7 @@ function UploadRow() {
           />
         </div>
         <div>
-          <p className="mb-2 text-sm font-semibold">Upload Free Sample (Optional)</p>
+          <p className="mb-2 text-sm font-semibold">Upload Free Sample</p>
           <UploadTile
             title="Your eBook free sample"
             hint="Maximum file size 10 MB"
@@ -315,6 +317,34 @@ function UploadRow() {
           />
         </div>
       </div>
+
+      <div
+        className="mt-11 flex items-start gap-3 rounded-lg border p-3.5 text-[13px]"
+        style={{
+          borderColor: "color-mix(in oklab, var(--destructive) 40%, transparent)",
+          backgroundColor: "color-mix(in oklab, var(--destructive) 6%, transparent)",
+          color: "color-mix(in oklab, var(--destructive) 85%, var(--foreground))",
+        }}
+      >
+        <AlertCircle size={16} className="mt-0.5 shrink-0" />
+        <p className="leading-relaxed">
+          PixelBooks&apos; auto content generation API uses automated parsing to extract and
+          autofill metadata from your eBook files (ePub &amp; PDF). Because automated
+          extraction is inherently subject to inaccuracies, some data may be incomplete,
+          malformatted, or incorrectly assigned depending on the structure and quality of the
+          source file. You are solely responsible for reviewing and verifying all
+          auto-populated information. Please ensure that all generated metadata is manually
+          reviewed and verified before publishing. If you prefer, you may disable this option
+          and enter all details manually.
+        </p>
+      </div>
+
+      <Check
+        checked={autofill}
+        onChange={setAutofill}
+        label={<span className="font-medium">Autofill metadata from eBook</span>}
+        className="mt-5"
+      />
     </SectionCard>
   );
 }
@@ -428,7 +458,6 @@ function GuidelinesSection() {
 /* -------------------------------------------------------------------------- */
 
 function EBookDetailsSection() {
-  const [autofill, setAutofill] = useState(true);
   const [tags, setTags] = useState<string[]>(["Promised Land 2024", "Barack Obama", "Barack Obama"]);
   const [tagInput, setTagInput] = useState("");
 
@@ -445,33 +474,7 @@ function EBookDetailsSection() {
       title="eBook Details"
       right={<AutoDetectedBadge />}
     >
-      <div
-        className="mb-5 flex items-start gap-3 rounded-lg border p-3.5 text-[13px]"
-        style={{
-          borderColor: "color-mix(in oklab, var(--destructive) 40%, transparent)",
-          backgroundColor: "color-mix(in oklab, var(--destructive) 6%, transparent)",
-          color: "color-mix(in oklab, var(--destructive) 85%, var(--foreground))",
-        }}
-      >
-        <AlertCircle size={16} className="mt-0.5 shrink-0" />
-        <p className="leading-relaxed">
-          PixelBooks&apos; auto content generation API uses automated parsing to extract and
-          autofill metadata from your eBook files (ePub &amp; PDF). Because automated
-          extraction is inherently subject to inaccuracies, some data may be incomplete,
-          malformatted, or incorrectly assigned depending on the structure and quality of the
-          source file. You are solely responsible for reviewing and verifying all
-          auto-populated information. Please ensure that all generated metadata is manually
-          reviewed and verified before publishing. If you prefer, you may disable this option
-          and enter all details manually.
-        </p>
-      </div>
-
-      <Check
-        checked={autofill}
-        onChange={setAutofill}
-        label={<span className="font-medium">Autofill metadata from eBook</span>}
-        className="mb-5"
-      />
+      
 
       <div className="grid gap-x-5 gap-y-4 md:grid-cols-2">
         <Field label="Enter eBook Name" required>
@@ -1849,7 +1852,7 @@ function AddEBookPage() {
     <AppShell title="Add eBook">
       <div className="p-4 md:p-8">
         <Link
-          to="/catalogue"
+          to="/publisher/catalogue"
           className="mb-5 inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
         >
           <ArrowLeft size={15} /> Back to Catalogue
@@ -1881,7 +1884,7 @@ function AddEBookPage() {
 
         <div className="sticky bottom-0 -mx-4 mt-6 flex items-center justify-end gap-2 border-t border-border bg-background/90 px-4 py-4 backdrop-blur md:-mx-8 md:px-8">
           <Link
-            to="/catalogue"
+            to="/publisher/catalogue"
             className="inline-flex h-11 items-center rounded-lg border border-border bg-background px-5 text-sm font-semibold hover:bg-secondary"
           >
             Cancel
