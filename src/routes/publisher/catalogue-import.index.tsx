@@ -9,7 +9,7 @@ import {
 } from "lucide-react";
 import { AppShell } from "@/components/app-shell";
 
-export const Route = createFileRoute("/publisher/catalogue-import")({
+export const Route = createFileRoute("/publisher/catalogue-import/")({
   component: CatalogueImportPage,
 });
 

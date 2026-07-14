@@ -96,7 +96,7 @@ function ImportDetailPage() {
         {/* Back + heading */}
         <div className="mb-6 flex items-center gap-3">
           <Link
-            to="/publisher/catalogue-import"
+            to="/publisher/catalogue-import/"
             aria-label="Back to imports"
             className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-border bg-card text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
           >

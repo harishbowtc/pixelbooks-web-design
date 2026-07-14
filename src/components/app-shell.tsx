@@ -102,10 +102,10 @@ function getSections(pathname: string): NavSection[] {
       heading: "Main",
       items: [
         { label: "Dashboard", icon: LayoutDashboard, to: "/publisher" },
-        { label: "My Catalogue", icon: BookMarked, to: "/publisher/catalogue" },
-        { label: "Catalogue Import", icon: FileUp, to: "/publisher/catalogue-import" },
-        { label: "eBook Bundles", icon: Library, to: "/publisher/bundles", badge: "New" },
-        { label: "Promo Codes", icon: TicketPercent, to: "/publisher/promo-codes" },
+        { label: "My Catalogue", icon: BookMarked, to: "/publisher/catalogue/" },
+        { label: "Catalogue Import", icon: FileUp, to: "/publisher/catalogue-import/" },
+        { label: "eBook Bundles", icon: Library, to: "/publisher/bundles/", badge: "New" },
+        { label: "Promo Codes", icon: TicketPercent, to: "/publisher/promo-codes/" },
       ],
     },
     {

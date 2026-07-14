@@ -139,7 +139,7 @@ function NewBundleWizardPage() {
       <div className="space-y-6 p-4 md:p-8">
         <div className="flex items-center justify-between">
           <Link
-            to="/publisher/bundles"
+            to="/publisher/bundles/"
             className="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
           >
             <ArrowLeft size={16} />

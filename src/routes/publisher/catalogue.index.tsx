@@ -21,7 +21,7 @@ import {
 } from "@/components/ui/pagination";
 import { seedBooks, type Book, type Status } from "@/lib/catalogue-data";
 
-export const Route = createFileRoute("/publisher/catalogue")({
+export const Route = createFileRoute("/publisher/catalogue/")({
   component: CataloguePage,
 });
 
@@ -185,7 +185,7 @@ function CataloguePage() {
                 {pageItems.map((b) => (
                   <tr
                     key={b.id}
-                    onClick={() => navigate({ to: "/catalogue/$bookId", params: { bookId: b.id } })}
+                    onClick={() => navigate({ to: "/publisher/catalogue/$bookId", params: { bookId: b.id } })}
                     className="group border-b border-border/60 transition-colors last:border-0 cursor-pointer hover:bg-secondary/50"
                   >
                     <td className="py-4 pl-6 pr-4">
@@ -249,7 +249,7 @@ function CataloguePage() {
               <li
                 key={b.id}
                 className="p-4 cursor-pointer hover:bg-secondary/50 transition-colors"
-                onClick={() => navigate({ to: "/catalogue/$bookId", params: { bookId: b.id } })}
+                onClick={() => navigate({ to: "/publisher/catalogue/$bookId", params: { bookId: b.id } })}
               >
                 <div className="flex items-start gap-3">
                   <div

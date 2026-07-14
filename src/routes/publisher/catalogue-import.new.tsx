@@ -420,7 +420,7 @@ function NewImportWizardPage() {
     setStatus("uploading");
     setTimeout(() => {
       setStatus("success");
-      setTimeout(() => navigate({ to: "/publisher/catalogue-import" }), 1400);
+      setTimeout(() => navigate({ to: "/publisher/catalogue-import/" }), 1400);
     }, 1600);
   }
 
@@ -428,7 +428,7 @@ function NewImportWizardPage() {
     <AppShell title="Catalogue Import" subtitle="Bulk-upload your eBook metadata via spreadsheet.">
       <div className="space-y-6 p-4 md:p-8">
         <Link
-          to="/publisher/catalogue-import"
+          to="/publisher/catalogue-import/"
           className="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
         >
           <ArrowLeft size={16} /> Back to imports

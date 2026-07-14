@@ -187,7 +187,7 @@ function WorkspaceSelector() {
       {/* Footer */}
       <footer className="mx-auto w-full max-w-7xl border-t border-border/60 pt-6 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-muted-foreground/80">
         <div>
-          © 2026 PixelBooks Inc. All rights reserved.
+          © 2026 PixelBooks. All rights reserved.
         </div>
         <div className="flex items-center gap-4">
           <a href="#" className="hover:text-foreground transition-colors">Privacy Policy</a>

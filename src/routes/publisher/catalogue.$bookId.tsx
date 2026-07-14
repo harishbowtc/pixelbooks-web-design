@@ -197,7 +197,7 @@ function EBookDetailPage() {
       <AppShell title="eBook Details">
         <div className="flex flex-col items-center justify-center gap-3 p-16 text-center">
           <p className="text-sm text-muted-foreground">eBook not found.</p>
-          <Link to="/publisher/catalogue" className="text-sm font-medium" style={{ color: "var(--brand)" }}>
+          <Link to="/publisher/catalogue/" className="text-sm font-medium" style={{ color: "var(--brand)" }}>
             ← Back to Catalogue
           </Link>
         </div>
@@ -215,7 +215,7 @@ function EBookDetailPage() {
         {/* Back + heading */}
         <div className="mb-6 flex items-center gap-3">
           <Link
-            to="/publisher/catalogue"
+            to="/publisher/catalogue/"
             className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-border bg-card text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
           >
             <ArrowLeft size={16} />

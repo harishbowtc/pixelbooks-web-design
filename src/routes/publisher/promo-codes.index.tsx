@@ -23,7 +23,7 @@ import {
   PaginationEllipsis,
 } from "@/components/ui/pagination";
 
-export const Route = createFileRoute("/publisher/promo-codes")({
+export const Route = createFileRoute("/publisher/promo-codes/")({
   head: () => ({
     meta: [
       { title: "Promo Codes — PixelBooks" },

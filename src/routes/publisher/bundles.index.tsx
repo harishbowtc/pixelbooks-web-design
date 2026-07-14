@@ -20,7 +20,7 @@ import {
   PaginationEllipsis,
 } from "@/components/ui/pagination";
 
-export const Route = createFileRoute("/publisher/bundles")({
+export const Route = createFileRoute("/publisher/bundles/")({
   head: () => ({
     meta: [
       { title: "eBook Bundles — PixelBooks" },
@@ -185,7 +185,7 @@ function BundlesPage() {
                   <tr
                     key={b.id}
                     onClick={() =>
-                      navigate({ to: "/bundles/$bundleId", params: { bundleId: b.id } })
+                      navigate({ to: "/publisher/bundles/$bundleId", params: { bundleId: b.id } })
                     }
                     className="group cursor-pointer border-b border-border/60 transition-colors last:border-0 hover:bg-secondary/50"
                   >
@@ -260,7 +260,7 @@ function BundlesPage() {
             {pageItems.map((b) => (
               <li
                 key={b.id}
-                onClick={() => navigate({ to: "/bundles/$bundleId", params: { bundleId: b.id } })}
+                onClick={() => navigate({ to: "/publisher/bundles/$bundleId", params: { bundleId: b.id } })}
                 className="flex cursor-pointer items-start gap-3 p-4 hover:bg-secondary/40 transition-colors"
               >
                 <div

@@ -141,7 +141,7 @@ function CreatePromoCodePage() {
         {/* Back link + title */}
         <div className="mb-6 flex items-center gap-3">
           <Link
-            to="/publisher/promo-codes"
+            to="/publisher/promo-codes/"
             className="flex h-10 w-10 items-center justify-center rounded-lg border border-border bg-card text-muted-foreground transition-colors hover:text-foreground"
           >
             <ArrowLeft size={18} />
@@ -235,7 +235,7 @@ function CreatePromoCodePage() {
 
             <div className="mt-6 flex items-center justify-end gap-3 border-t border-border pt-6">
               <Link
-                to="/publisher/promo-codes"
+                to="/publisher/promo-codes/"
                 className="inline-flex h-12 items-center justify-center rounded-xl border border-border bg-background px-6 text-sm font-semibold text-foreground transition-colors hover:bg-secondary"
               >
                 Cancel

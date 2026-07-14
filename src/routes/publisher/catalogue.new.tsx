@@ -640,25 +640,46 @@ function AuthorSearchResultCard({
   onAdd: () => void;
   isSelected: boolean;
 }) {
+  const [showBooksPopup, setShowBooksPopup] = useState(false);
+  const booksPopupRef = useRef<HTMLDivElement | null>(null);
+  const books = AUTHOR_BOOK_LISTS[match.name] ?? [];
+
+  useEffect(() => {
+    const onOutsideClick = (event: MouseEvent) => {
+      if (!booksPopupRef.current) return;
+      if (!booksPopupRef.current.contains(event.target as Node)) {
+        setShowBooksPopup(false);
+      }
+    };
+    if (showBooksPopup) {
+      document.addEventListener("mousedown", onOutsideClick);
+    }
+    return () => {
+      document.removeEventListener("mousedown", onOutsideClick);
+    };
+  }, [showBooksPopup]);
+
   return (
-    <button
-      type="button"
-      onClick={onAdd}
-      disabled={isSelected}
+    <div
+      onClick={() => {
+        if (!isSelected) {
+          onAdd();
+        }
+      }}
       className={`flex items-center gap-3 rounded-xl border px-3 py-2.5 text-left transition-colors ${
         isSelected
           ? "cursor-default border-border/70 bg-secondary/30 text-muted-foreground"
-          : "border-border bg-background hover:bg-secondary/50"
+          : "border-border bg-background hover:bg-secondary/50 cursor-pointer"
       }`}
     >
       {match.avatar ? (
         <img
           src={match.avatar}
           alt={match.name}
-          className={`h-8 w-8 rounded-full object-cover ${isSelected ? "opacity-70" : ""}`}
+          className={`h-8 w-8 shrink-0 rounded-full object-cover ${isSelected ? "opacity-70" : ""}`}
         />
       ) : (
-        <span className="flex h-8 w-8 items-center justify-center rounded-full bg-secondary text-[11px] font-semibold text-muted-foreground">
+        <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-secondary text-[11px] font-semibold text-muted-foreground">
           {initials(match.name)}
         </span>
       )}
@@ -666,17 +687,59 @@ function AuthorSearchResultCard({
         <span className={`block truncate text-sm font-semibold ${isSelected ? "text-muted-foreground" : ""}`}>
           {match.name}
         </span>
-        <span className="mt-0.5 flex items-center gap-1 text-[11px] text-muted-foreground">
-          <BookOpen size={11} />
-          {match.books} Books
-        </span>
+        <div 
+          ref={booksPopupRef} 
+          className="relative mt-0.5"
+          onMouseEnter={() => {
+            if (match.books > 0) setShowBooksPopup(true);
+          }}
+          onMouseLeave={() => setShowBooksPopup(false)}
+        >
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              if (match.books > 0) setShowBooksPopup((v) => !v);
+            }}
+            className={`inline-flex items-center gap-1 text-[11px] text-muted-foreground cursor-pointer ${
+              match.books > 0 ? "hover:text-foreground" : ""
+            }`}
+          >
+            <BookOpen size={11} />
+            <span className={match.books > 0 ? "underline-offset-2 hover:underline" : ""}>
+              {match.books} Books
+            </span>
+          </button>
+
+          {showBooksPopup && (
+            <div 
+              onClick={(e) => e.stopPropagation()}
+              className="absolute left-0 top-[calc(100%+6px)] z-30 w-[260px] overflow-hidden rounded-lg border border-border bg-card shadow-lg cursor-default text-foreground"
+            >
+              <div className="border-b border-border px-3 py-2">
+                <p className="text-sm font-semibold">Books by {match.name}</p>
+                <p className="text-xs text-muted-foreground">{match.books} total</p>
+              </div>
+              <ul className="max-h-56 overflow-y-auto">
+                {books.map((title) => (
+                  <li key={title} className="border-t border-border first:border-t-0">
+                    <div className="flex items-center gap-2 px-3 py-2.5 text-sm">
+                      <BookOpen size={13} className="text-muted-foreground" />
+                      <span>{title}</span>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </div>
       </span>
       {isSelected && (
-        <span className="ml-1 text-muted-foreground" aria-label="Selected author">
+        <span className="ml-auto text-muted-foreground shrink-0" aria-label="Selected author">
           <CheckIcon size={14} />
         </span>
       )}
-    </button>
+    </div>
   );
 }
 
@@ -744,11 +807,20 @@ function SelectedAuthorCard({
               <p className="text-sm font-semibold">{author.name}</p>
        
             </div>
-            <div ref={booksPopupRef} className="relative mt-0.5">
+            <div 
+              ref={booksPopupRef} 
+              className="relative mt-0.5"
+              onMouseEnter={() => {
+                if (author.books > 0) setShowBooksPopup(true);
+              }}
+              onMouseLeave={() => setShowBooksPopup(false)}
+            >
               <button
                 type="button"
-                onClick={() => setShowBooksPopup((v) => !v)}
-                className="inline-flex items-center gap-1 text-[11px] text-muted-foreground hover:text-foreground"
+                onClick={() => {
+                  if (author.books > 0) setShowBooksPopup((v) => !v);
+                }}
+                className="inline-flex items-center gap-1 text-[11px] text-muted-foreground hover:text-foreground cursor-pointer"
               >
                 <BookOpen size={11} />
                 <span className="underline-offset-2 hover:underline">{author.books} Books</span>
@@ -785,7 +857,7 @@ function SelectedAuthorCard({
         <button
           type="button"
           onClick={onRemove}
-          className="inline-flex items-center gap-1 text-sm font-semibold text-rose-600 hover:underline"
+          className="inline-flex items-center gap-1 text-sm font-semibold text-rose-600 hover:underline cursor-pointer"
         >
           <Trash2 size={14} />
           Remove
@@ -1852,7 +1924,7 @@ function AddEBookPage() {
     <AppShell title="Add eBook">
       <div className="p-4 md:p-8">
         <Link
-          to="/publisher/catalogue"
+          to="/publisher/catalogue/"
           className="mb-5 inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
         >
           <ArrowLeft size={15} /> Back to Catalogue
@@ -1884,7 +1956,7 @@ function AddEBookPage() {
 
         <div className="sticky bottom-0 -mx-4 mt-6 flex items-center justify-end gap-2 border-t border-border bg-background/90 px-4 py-4 backdrop-blur md:-mx-8 md:px-8">
           <Link
-            to="/publisher/catalogue"
+            to="/publisher/catalogue/"
             className="inline-flex h-11 items-center rounded-lg border border-border bg-background px-5 text-sm font-semibold hover:bg-secondary"
           >
             Cancel
