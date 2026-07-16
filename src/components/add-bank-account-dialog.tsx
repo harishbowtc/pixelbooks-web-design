@@ -1,11 +1,6 @@
 import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -23,11 +18,7 @@ interface AddBankAccountDialogProps {
   }) => void;
 }
 
-export function AddBankAccountDialog({
-  open,
-  onOpenChange,
-  onAdd,
-}: AddBankAccountDialogProps) {
+export function AddBankAccountDialog({ open, onOpenChange, onAdd }: AddBankAccountDialogProps) {
   const [ifsc, setIfsc] = useState("");
   const [bankName, setBankName] = useState("");
   const [branch, setBranch] = useState("");
@@ -140,11 +131,7 @@ export function AddBankAccountDialog({
                   onClick={() => setShowAccountNumber((v) => !v)}
                   className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
                 >
-                  {showAccountNumber ? (
-                    <EyeOff size={20} />
-                  ) : (
-                    <Eye size={20} />
-                  )}
+                  {showAccountNumber ? <EyeOff size={20} /> : <Eye size={20} />}
                 </button>
               </div>
             </div>
@@ -168,11 +155,7 @@ export function AddBankAccountDialog({
                   onClick={() => setShowConfirmNumber((v) => !v)}
                   className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
                 >
-                  {showConfirmNumber ? (
-                    <EyeOff size={20} />
-                  ) : (
-                    <Eye size={20} />
-                  )}
+                  {showConfirmNumber ? <EyeOff size={20} /> : <Eye size={20} />}
                 </button>
               </div>
             </div>

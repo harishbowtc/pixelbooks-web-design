@@ -8,12 +8,14 @@ description: "Guidelines and patterns to ensure style consistency across PixelBo
 This skill enforces visual consistency across all PixelBooks portals by ensuring every new interface utilizes current patterns.
 
 ## Layout & Wrappers
+
 - **Always use `AppShell`**: Every primary workspace view must be wrapped using the `<AppShell title="[Page Title]" subtitle="[Subtitle]">` component imported from `@/components/app-shell`. Do not build independent header or sidebar structures.
 - **Dynamic Portals**: AppShell automatically adapts navigation tabs, branding labels, and user roles based on the route prefix:
   - `/publisher` or publisher routes -> Publisher views
   - `/library-admin` -> Library Admin views
 
 ## Color System
+
 - All colors must utilize `oklch` formatting defined in `src/styles.css`.
 - Use the registered tailwind theme tokens:
   - `var(--brand)`: Brand primary teal.
@@ -23,6 +25,7 @@ This skill enforces visual consistency across all PixelBooks portals by ensuring
 - **Control Backgrounds**: Keep control backgrounds white (e.g., input bars, selector dropdown triggers, date pickers should use white backgrounds like `bg-white` or `bg-card` in light themes rather than gray backgrounds like `bg-background`).
 
 ## Controls & Components
+
 1. **Stat/Metrics Cards**:
    - Wrap metrics in a flex card layout using standard styles:
      ```tsx
@@ -51,7 +54,12 @@ This skill enforces visual consistency across all PixelBooks portals by ensuring
 3. **Interactive Dropdowns**:
    - Always use the UI library’s dropdown primitive:
      ```tsx
-     import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from "@/components/ui/dropdown-menu";
+     import {
+       DropdownMenu,
+       DropdownMenuTrigger,
+       DropdownMenuContent,
+       DropdownMenuItem,
+     } from "@/components/ui/dropdown-menu";
      ```
 4. **Book Covers (No Image Files)**:
    - Do NOT create or download image files for book covers in any case.

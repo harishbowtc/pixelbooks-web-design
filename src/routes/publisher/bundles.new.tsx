@@ -50,14 +50,70 @@ type Ebook = {
 };
 
 const availableBooks: Ebook[] = [
-  { id: "b1", title: "NEP 2020 - Policy Formulation", author: "Dr. Ashok Alex", price: 3.15, cover: gradients[0], initials: "NEP" },
-  { id: "b2", title: "Knowledge for the Time", author: "John Timbs", price: 2.5, cover: gradients[1], initials: "KFT" },
-  { id: "b3", title: "The Curtiss Aviation Book", author: "Glenn Curtiss", price: 1.05, cover: gradients[2], initials: "AVI" },
-  { id: "b4", title: "Essays on Art", author: "Clutton Brock", price: 5.25, cover: gradients[3], initials: "ART" },
-  { id: "b5", title: "The Elements of Style", author: "William Strunk Jr.", price: 2.1, cover: gradients[4], initials: "STY" },
-  { id: "b6", title: "Meditations", author: "Marcus Aurelius", price: 4.5, cover: gradients[5], initials: "MED" },
-  { id: "b7", title: "The Art of War", author: "Sun Tzu", price: 2.99, cover: gradients[0], initials: "WAR" },
-  { id: "b8", title: "The Republic", author: "Plato", price: 3.75, cover: gradients[1], initials: "REP" },
+  {
+    id: "b1",
+    title: "NEP 2020 - Policy Formulation",
+    author: "Dr. Ashok Alex",
+    price: 3.15,
+    cover: gradients[0],
+    initials: "NEP",
+  },
+  {
+    id: "b2",
+    title: "Knowledge for the Time",
+    author: "John Timbs",
+    price: 2.5,
+    cover: gradients[1],
+    initials: "KFT",
+  },
+  {
+    id: "b3",
+    title: "The Curtiss Aviation Book",
+    author: "Glenn Curtiss",
+    price: 1.05,
+    cover: gradients[2],
+    initials: "AVI",
+  },
+  {
+    id: "b4",
+    title: "Essays on Art",
+    author: "Clutton Brock",
+    price: 5.25,
+    cover: gradients[3],
+    initials: "ART",
+  },
+  {
+    id: "b5",
+    title: "The Elements of Style",
+    author: "William Strunk Jr.",
+    price: 2.1,
+    cover: gradients[4],
+    initials: "STY",
+  },
+  {
+    id: "b6",
+    title: "Meditations",
+    author: "Marcus Aurelius",
+    price: 4.5,
+    cover: gradients[5],
+    initials: "MED",
+  },
+  {
+    id: "b7",
+    title: "The Art of War",
+    author: "Sun Tzu",
+    price: 2.99,
+    cover: gradients[0],
+    initials: "WAR",
+  },
+  {
+    id: "b8",
+    title: "The Republic",
+    author: "Plato",
+    price: 3.75,
+    cover: gradients[1],
+    initials: "REP",
+  },
 ];
 
 function FieldLabel({ children, required }: { children: React.ReactNode; required?: boolean }) {
@@ -209,9 +265,7 @@ function NewBundleWizardPage() {
                       438×678 pixels (or 2x scale), less than 2 MB
                     </p>
                   </div>
-                  <span
-                    className="inline-flex items-center gap-2 rounded-lg border border-border bg-card px-4 py-2 text-xs font-semibold"
-                  >
+                  <span className="inline-flex items-center gap-2 rounded-lg border border-border bg-card px-4 py-2 text-xs font-semibold">
                     <Upload size={14} />
                     Upload
                   </span>
@@ -266,7 +320,9 @@ function NewBundleWizardPage() {
                         setTags(tags.slice(0, -1));
                       }
                     }}
-                    placeholder={tags.length >= 3 ? "Maximum reached" : "Type and press space or Enter"}
+                    placeholder={
+                      tags.length >= 3 ? "Maximum reached" : "Type and press space or Enter"
+                    }
                     disabled={tags.length >= 3}
                     className="flex-1 min-w-32 bg-transparent text-sm outline-none placeholder:text-muted-foreground"
                   />
@@ -314,7 +370,11 @@ function NewBundleWizardPage() {
                       key={b.id}
                       onClick={() => toggleBook(b.id)}
                       className="flex cursor-pointer items-center gap-4 p-4 transition-colors hover:bg-secondary/40"
-                      style={isSel ? { backgroundColor: "color-mix(in oklch, var(--brand) 6%, transparent)" } : undefined}
+                      style={
+                        isSel
+                          ? { backgroundColor: "color-mix(in oklch, var(--brand) 6%, transparent)" }
+                          : undefined
+                      }
                     >
                       <div
                         className="flex h-14 w-11 shrink-0 items-center justify-center rounded-md text-[10px] font-bold text-white shadow-sm"
@@ -326,7 +386,9 @@ function NewBundleWizardPage() {
                         <p className="truncate text-sm font-medium text-foreground">{b.title}</p>
                         <p className="mt-0.5 text-xs text-muted-foreground">{b.author}</p>
                       </div>
-                      <span className="text-sm font-medium text-foreground">₹{b.price.toFixed(2)}</span>
+                      <span className="text-sm font-medium text-foreground">
+                        ₹{b.price.toFixed(2)}
+                      </span>
                       <div
                         className="flex h-5 w-5 items-center justify-center rounded border transition-colors"
                         style={{
@@ -364,7 +426,10 @@ function NewBundleWizardPage() {
                         <span
                           key={t}
                           className="rounded-full px-2.5 py-0.5 text-[11px] font-medium"
-                          style={{ backgroundColor: "var(--sidebar-highlight)", color: "var(--brand)" }}
+                          style={{
+                            backgroundColor: "var(--sidebar-highlight)",
+                            color: "var(--brand)",
+                          }}
                         >
                           {t}
                         </span>
@@ -377,7 +442,11 @@ function NewBundleWizardPage() {
                     <input
                       value={pricing}
                       onChange={(e) => setPricing(e.target.value.replace(/[^0-9.]/g, ""))}
-                      placeholder={originalTotal > 0 ? `Suggested: ${(originalTotal * 0.7).toFixed(2)}` : "0.00"}
+                      placeholder={
+                        originalTotal > 0
+                          ? `Suggested: ${(originalTotal * 0.7).toFixed(2)}`
+                          : "0.00"
+                      }
                       className="h-11 w-full rounded-lg border border-border bg-card px-4 text-sm outline-none focus:border-[var(--brand)]"
                     />
                     {originalTotal > 0 && (
@@ -433,7 +502,9 @@ function NewBundleWizardPage() {
         {!submitted && (
           <div className="flex items-center justify-between">
             <button
-              onClick={() => (step === 1 ? navigate({ to: "/bundles" }) : setStep((step - 1) as Step))}
+              onClick={() =>
+                step === 1 ? navigate({ to: "/bundles" }) : setStep((step - 1) as Step)
+              }
               className="h-11 rounded-lg border border-border bg-card px-5 text-sm font-medium transition-colors hover:bg-secondary"
             >
               {step === 1 ? "Cancel" : "Back"}

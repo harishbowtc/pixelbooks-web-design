@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { AppShell } from "@/components/app-shell";
 
-export const Route = createFileRoute("/settings")({
+export const Route = createFileRoute("/publisher/settings")({
   head: () => ({
     meta: [
       { title: "Settings — PixelBooks" },

@@ -1,0 +1,1420 @@
+import { createFileRoute } from "@tanstack/react-router";
+import { useState, useMemo } from "react";
+import {
+  Search,
+  Plus,
+  Upload,
+  FileText,
+  Eye,
+  Calendar,
+  ChevronDown,
+  ChevronRight,
+  X,
+  User,
+  ArrowLeft,
+  Shield,
+  BookOpen,
+} from "lucide-react";
+import { AppShell } from "@/components/app-shell";
+import { toast } from "sonner";
+import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { Switch } from "@/components/ui/switch";
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+} from "@/components/ui/dropdown-menu";
+
+export const Route = createFileRoute("/library-admin/users")({
+  component: LibraryAdminUsersPage,
+});
+
+interface UserRecord {
+  id: string;
+  name: string;
+  email: string;
+  userType: "Student" | "Staff";
+  borrows: string;
+  mobileAccess: boolean;
+  status: "Active" | "Inactive";
+  joinDate: string;
+  department: string;
+}
+
+const initialUsers: UserRecord[] = [
+  {
+    id: "U001",
+    name: "DIVYA ABRAHAM",
+    email: "divya.abraham@university.edu",
+    userType: "Student",
+    borrows: "No eBook borrowed",
+    mobileAccess: false,
+    status: "Active",
+    joinDate: "2026-03-12",
+    department: "Computer Science",
+  },
+  {
+    id: "U002",
+    name: "ABRAHAM",
+    email: "abraham.john@university.edu",
+    userType: "Student",
+    borrows: "No eBook borrowed",
+    mobileAccess: false,
+    status: "Active",
+    joinDate: "2026-03-24",
+    department: "Electrical Engineering",
+  },
+  {
+    id: "U003",
+    name: "Sunny",
+    email: "sunny.boy@university.edu",
+    userType: "Student",
+    borrows: "No eBook borrowed",
+    mobileAccess: false,
+    status: "Active",
+    joinDate: "2026-04-05",
+    department: "Mechanical Engineering",
+  },
+  {
+    id: "U004",
+    name: "PREETHA ALI",
+    email: "preetha.ali@university.edu",
+    userType: "Student",
+    borrows: "No eBook borrowed",
+    mobileAccess: false,
+    status: "Active",
+    joinDate: "2026-04-18",
+    department: "Business Administration",
+  },
+  {
+    id: "U005",
+    name: "SURYA KIRAN ACHARYA",
+    email: "surya.acharya@university.edu",
+    userType: "Staff",
+    borrows: "No eBook borrowed",
+    mobileAccess: false,
+    status: "Active",
+    joinDate: "2026-05-01",
+    department: "Physics",
+  },
+  {
+    id: "U006",
+    name: "Ajsal",
+    email: "ajsal.muhammad@university.edu",
+    userType: "Student",
+    borrows: "No eBook borrowed",
+    mobileAccess: false,
+    status: "Active",
+    joinDate: "2026-05-15",
+    department: "Information Technology",
+  },
+  {
+    id: "U007",
+    name: "weet",
+    email: "weet.singh@university.edu",
+    userType: "Student",
+    borrows: "No eBook borrowed",
+    mobileAccess: false,
+    status: "Active",
+    joinDate: "2026-06-02",
+    department: "Chemistry",
+  },
+  {
+    id: "U008",
+    name: "Anaina",
+    email: "anaina.sharma@university.edu",
+    userType: "Student",
+    borrows: "No eBook borrowed",
+    mobileAccess: true,
+    status: "Active",
+    joinDate: "2026-06-20",
+    department: "Mathematics",
+  },
+  {
+    id: "U009",
+    name: "Rahul Verma",
+    email: "rahul.verma@university.edu",
+    userType: "Student",
+    borrows: "3 eBooks borrowed",
+    mobileAccess: true,
+    status: "Active",
+    joinDate: "2026-06-25",
+    department: "Computer Science",
+  },
+  {
+    id: "U010",
+    name: "Priya Nair",
+    email: "priya.nair@university.edu",
+    userType: "Staff",
+    borrows: "1 eBook borrowed",
+    mobileAccess: false,
+    status: "Inactive",
+    joinDate: "2026-07-02",
+    department: "Civil Engineering",
+  },
+  {
+    id: "U011",
+    name: "John Doe",
+    email: "john.doe@university.edu",
+    userType: "Student",
+    borrows: "2 eBooks borrowed",
+    mobileAccess: true,
+    status: "Inactive",
+    joinDate: "2026-07-05",
+    department: "Humanities",
+  },
+  {
+    id: "U012",
+    name: "Jane Smith",
+    email: "jane.smith@university.edu",
+    userType: "Staff",
+    borrows: "No eBook borrowed",
+    mobileAccess: true,
+    status: "Active",
+    joinDate: "2026-07-08",
+    department: "Economics",
+  },
+  {
+    id: "U013",
+    name: "Aman Gupta",
+    email: "aman.gupta@university.edu",
+    userType: "Student",
+    borrows: "No eBook borrowed",
+    mobileAccess: false,
+    status: "Inactive",
+    joinDate: "2026-07-10",
+    department: "Computer Science",
+  },
+  {
+    id: "U014",
+    name: "Kirti Roy",
+    email: "kirti.roy@university.edu",
+    userType: "Student",
+    borrows: "No eBook borrowed",
+    mobileAccess: true,
+    status: "Active",
+    joinDate: "2026-07-11",
+    department: "Biotechnology",
+  },
+];
+
+const departments = [
+  "Computer Science",
+  "Electrical Engineering",
+  "Mechanical Engineering",
+  "Business Administration",
+  "Physics",
+  "Information Technology",
+  "Chemistry",
+  "Mathematics",
+  "Civil Engineering",
+  "Humanities",
+  "Economics",
+  "Biotechnology",
+];
+
+const PRESETS = ["MTD", "QTD", "YTD", "Last 30 days", "Custom"] as const;
+
+function LibraryAdminUsersPage() {
+  type Preset = (typeof PRESETS)[number];
+
+  const [users, setUsers] = useState<UserRecord[]>(initialUsers);
+  const [statusFilter, setStatusFilter] = useState<"All" | "Active" | "Inactive">("All");
+  const [typeFilter, setTypeFilter] = useState<"All" | "Student" | "Staff">("All");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [page, setPage] = useState(1);
+  const PAGE_SIZE = 8;
+
+  // Date Preset states matching orders/catalogue
+  const [preset, setPreset] = useState<Preset>("YTD");
+  const [presetOpen, setPresetOpen] = useState(false);
+  const [from, setFrom] = useState("2025-01-01");
+  const [to, setTo] = useState("2026-07-11");
+
+  // Modals / Dialogs states
+  const [selectedUser, setSelectedUser] = useState<UserRecord | null>(null);
+  const [isViewOpen, setIsViewOpen] = useState(false);
+  const [isAddOpen, setIsAddOpen] = useState(false);
+  const [isUploadOpen, setIsUploadOpen] = useState(false);
+
+  // Add User Form states
+  const [addName, setAddName] = useState("");
+  const [addEmail, setAddEmail] = useState("");
+  const [addUserType, setAddUserType] = useState<"Student" | "Staff">("Student");
+  const [addDept, setAddDept] = useState(departments[0]);
+
+  // Edit User Details Form states matching Student Details mockup
+  const [editName, setEditName] = useState("");
+  const [editUserType, setEditUserType] = useState<"Student" | "Staff">("Student");
+  const [editUniv, setEditUniv] = useState("Pixelbooks Library");
+  const [editStudentId, setEditStudentId] = useState("");
+  const [editEnrollmentId, setEditEnrollmentId] = useState("");
+  const [editEnrollmentDate, setEditEnrollmentDate] = useState("09 April 2025");
+  const [editCourse, setEditCourse] = useState("B.Com (CA)");
+  const [editBatch, setEditBatch] = useState("2025,2029");
+  const [editAddress, setEditAddress] = useState("");
+  const [editPinCode, setEditPinCode] = useState("");
+  const [editEmail, setEditEmail] = useState("");
+  const [editPhone, setEditPhone] = useState("");
+
+  // Import User Upload states
+  const [uploadFile, setUploadFile] = useState<File | null>(null);
+  const [uploadDragging, setUploadDragging] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState<number | null>(null);
+
+  // Filtering logic
+  const filteredUsers = useMemo(() => {
+    return users.filter((u) => {
+      // Date Range Filter (registration date)
+      const uDate = new Date(u.joinDate);
+      const fromDate = new Date(from);
+      const toDate = new Date(to);
+      uDate.setHours(0, 0, 0, 0);
+      fromDate.setHours(0, 0, 0, 0);
+      toDate.setHours(23, 59, 59, 999);
+
+      const matchesDate = uDate >= fromDate && uDate <= toDate;
+      if (!matchesDate) return false;
+
+      // Status filter
+      if (statusFilter !== "All" && u.status !== statusFilter) {
+        return false;
+      }
+
+      // User Type filter
+      if (typeFilter !== "All" && u.userType !== typeFilter) {
+        return false;
+      }
+
+      // Search Query filter (matches name, email, department, userType)
+      const query = searchQuery.trim().toLowerCase();
+      if (query) {
+        const matchesName = u.name.toLowerCase().includes(query);
+        const matchesEmail = u.email.toLowerCase().includes(query);
+        const matchesDept = u.department.toLowerCase().includes(query);
+        const matchesType = u.userType.toLowerCase().includes(query);
+        if (!matchesName && !matchesEmail && !matchesDept && !matchesType) {
+          return false;
+        }
+      }
+
+      return true;
+    });
+  }, [users, statusFilter, typeFilter, searchQuery, from, to]);
+
+  // Pagination calculations
+  const totalResults = filteredUsers.length;
+  const totalPages = Math.max(1, Math.ceil(totalResults / PAGE_SIZE));
+  const currentPage = Math.min(page, totalPages);
+  const startIndex = (currentPage - 1) * PAGE_SIZE;
+  const paginatedUsers = filteredUsers.slice(startIndex, startIndex + PAGE_SIZE);
+
+  // Handlers
+  const handlePresetSelect = (p: Preset) => {
+    setPreset(p);
+    setPresetOpen(false);
+
+    const today = new Date("2026-07-11");
+    let fromDate = new Date("2026-07-11");
+    const toDate = new Date("2026-07-11");
+
+    if (p === "MTD") {
+      fromDate = new Date(today.getFullYear(), today.getMonth(), 1);
+    } else if (p === "QTD") {
+      const currentMonth = today.getMonth();
+      const quarterStartMonth = Math.floor(currentMonth / 3) * 3;
+      fromDate = new Date(today.getFullYear(), quarterStartMonth, 1);
+    } else if (p === "YTD") {
+      fromDate = new Date(today.getFullYear(), 0, 1);
+    } else if (p === "Last 30 days") {
+      fromDate.setDate(today.getDate() - 30);
+    }
+
+    setFrom(fromDate.toISOString().split("T")[0]);
+    setTo(toDate.toISOString().split("T")[0]);
+    setPage(1);
+  };
+
+  const handleMobileAccessToggle = (userId: string, currentVal: boolean) => {
+    setUsers((prev) =>
+      prev.map((u) => (u.id === userId ? { ...u, mobileAccess: !currentVal } : u)),
+    );
+    const targetUser = users.find((u) => u.id === userId);
+    if (targetUser) {
+      toast.success(`Mobile access ${!currentVal ? "Enabled" : "Disabled"} for ${targetUser.name}`);
+    }
+  };
+
+  const handleStatusToggle = (userId: string, currentVal: "Active" | "Inactive") => {
+    const newVal = currentVal === "Active" ? "Inactive" : "Active";
+    setUsers((prev) => prev.map((u) => (u.id === userId ? { ...u, status: newVal } : u)));
+    const targetUser = users.find((u) => u.id === userId);
+    if (targetUser) {
+      toast.success(`User profile status updated to ${newVal} for ${targetUser.name}`);
+    }
+  };
+
+  // Add User Form Submission
+  const handleAddSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!addName.trim() || !addEmail.trim()) {
+      toast.error("Please fill in all required fields.");
+      return;
+    }
+
+    const newUserId = `U${(users.length + 1).toString().padStart(3, "0")}`;
+    const newUser: UserRecord = {
+      id: newUserId,
+      name: addName.toUpperCase(),
+      email: addEmail.toLowerCase(),
+      userType: addUserType,
+      borrows: "No eBook borrowed",
+      mobileAccess: false,
+      status: "Active",
+      joinDate: new Date().toISOString().split("T")[0],
+      department: addDept,
+    };
+
+    setUsers([newUser, ...users]);
+    toast.success(`New user ${newUser.name} created successfully!`);
+
+    // Reset fields
+    setAddName("");
+    setAddEmail("");
+    setAddUserType("Student");
+    setAddDept(departments[0]);
+    setIsAddOpen(false);
+    setPage(1);
+  };
+
+  const handleOpenEditDetails = (u: UserRecord) => {
+    setSelectedUser(u);
+    setEditName(u.name);
+    setEditUserType(u.userType);
+    setEditUniv("Pixelbooks Library");
+    // Generate a student/staff ID similar to the mockup format if it is not already structured
+    const formattedId = u.id.startsWith("PXL")
+      ? u.id
+      : `PXL${u.userType === "Student" ? "STU" : "STF"}${u.id.replace(/\D/g, "") || "47896"}`;
+    setEditStudentId(formattedId);
+    setEditEnrollmentId("");
+    setEditEnrollmentDate("09 April 2025");
+    setEditCourse(u.userType === "Student" ? "B.Com (CA)" : "Administration");
+    setEditBatch("2025,2029");
+    setEditAddress("");
+    setEditPinCode("");
+    setEditEmail(u.email);
+    setEditPhone("");
+    setIsViewOpen(true);
+  };
+
+  const handleUpdateDetailsSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!selectedUser) return;
+
+    setUsers(
+      users.map((u) =>
+        u.id === selectedUser.id
+          ? {
+              ...u,
+              name: editName.toUpperCase(),
+              userType: editUserType,
+              email: editEmail.toLowerCase(),
+            }
+          : u,
+      ),
+    );
+
+    toast.success("User details updated successfully!");
+    setIsViewOpen(false);
+    setSelectedUser(null);
+  };
+
+  // File Upload Drag & Drop
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    setUploadDragging(true);
+  };
+
+  const handleDragLeave = () => {
+    setUploadDragging(false);
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setUploadDragging(false);
+    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+      const file = e.dataTransfer.files[0];
+      if (file.name.endsWith(".csv") || file.name.endsWith(".xlsx")) {
+        setUploadFile(file);
+      } else {
+        toast.error("Please upload a CSV or Excel spreadsheet.");
+      }
+    }
+  };
+
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setUploadFile(e.target.files[0]);
+    }
+  };
+
+  const handleUploadSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!uploadFile) return;
+
+    setUploadProgress(0);
+    let progress = 0;
+    const interval = setInterval(() => {
+      progress += 10;
+      setUploadProgress(progress);
+      if (progress >= 100) {
+        clearInterval(interval);
+
+        // Add a mock imported user
+        const newUserId = `U${(users.length + 1).toString().padStart(3, "0")}`;
+        const importedUser: UserRecord = {
+          id: newUserId,
+          name: "IMPORTED USER",
+          email: "imported.user@university.edu",
+          userType: "Student",
+          borrows: "No eBook borrowed",
+          mobileAccess: true,
+          status: "Active",
+          joinDate: "2026-07-11",
+          department: "Computer Science",
+        };
+
+        setUsers([importedUser, ...users]);
+        setUploadFile(null);
+        setUploadProgress(null);
+        setIsUploadOpen(false);
+        setPage(1);
+        toast.success(`Spreadsheet upload completed! Imported user successfully.`);
+      }
+    }, 150);
+  };
+
+  // Helper for generating initial-based user avatars
+  const getUserInitials = (name: string) => {
+    const parts = name.split(" ").filter((p) => p.length > 0);
+    if (parts.length >= 2) {
+      return (parts[0][0] + parts[1][0]).toUpperCase();
+    } else if (parts.length === 1) {
+      return parts[0].substring(0, 2).toUpperCase();
+    }
+    return "U";
+  };
+
+  if (isViewOpen && selectedUser) {
+    return (
+      <AppShell title={`${editUserType} Details`}>
+        <div className="p-4 md:p-8 space-y-6">
+          {/* Back button */}
+          <button
+            onClick={() => {
+              setIsViewOpen(false);
+              setSelectedUser(null);
+            }}
+            className="flex items-center gap-2 text-sm font-semibold text-slate-700 dark:text-slate-200 hover:text-foreground mb-4 cursor-pointer"
+          >
+            <ArrowLeft size={16} />
+            Back to Users
+          </button>
+
+          {/* Main Card Container */}
+          <form
+            onSubmit={handleUpdateDetailsSubmit}
+            className="rounded-xl border border-border bg-card p-6 shadow-sm space-y-6"
+          >
+            {/* Header: Avatar and User Type Selection */}
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-4 border-b border-border/80">
+              <div className="flex h-20 w-20 items-center justify-center rounded-full bg-slate-100 dark:bg-secondary/20 border border-slate-200 dark:border-border text-slate-400 dark:text-muted-foreground/60 shadow-inner">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="h-10 w-10"
+                >
+                  <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
+                  <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
+                </svg>
+              </div>
+
+              {/* User Type Display with border/label */}
+              <div className="relative w-48 self-start sm:self-center">
+                <label className="absolute -top-2 left-3 bg-card px-1 text-[11px] font-medium text-slate-500 dark:text-slate-400">
+                  User Type
+                </label>
+                <select
+                  value={editUserType}
+                  onChange={(e) => setEditUserType(e.target.value as "Student" | "Staff")}
+                  className="h-11 w-full rounded-lg border border-slate-300 dark:border-border bg-transparent px-3 text-sm font-semibold text-foreground focus:outline-none focus:ring-1 focus:ring-[var(--brand)]"
+                >
+                  <option value="Student">Student</option>
+                  <option value="Staff">Staff</option>
+                </select>
+              </div>
+            </div>
+
+            {/* Library User Details Section */}
+            <div className="space-y-4">
+              <h3 className="text-sm font-bold text-foreground">Library User Details</h3>
+              {editUserType === "Student" ? (
+                <div className="space-y-5">
+                  {/* Row 1: Name & University */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    {/* Name */}
+                    <div className="relative">
+                      <label className="absolute -top-2 left-3 bg-card px-1 text-[11px] font-medium text-slate-500 dark:text-slate-400">
+                        Name<span className="text-red-500">*</span>
+                      </label>
+                      <input
+                        type="text"
+                        value={editName}
+                        onChange={(e) => setEditName(e.target.value)}
+                        className="h-11 w-full rounded-lg border border-slate-300 dark:border-border bg-transparent px-3 text-sm font-semibold text-foreground focus:outline-none focus:ring-1 focus:ring-[var(--brand)]"
+                        required
+                      />
+                    </div>
+
+                    {/* University / Institute */}
+                    <div className="relative">
+                      <label className="absolute -top-2 left-3 bg-card px-1 text-[11px] font-medium text-slate-500 dark:text-slate-400">
+                        University / Institute<span className="text-red-500">*</span>
+                      </label>
+                      <input
+                        type="text"
+                        value={editUniv}
+                        onChange={(e) => setEditUniv(e.target.value)}
+                        className="h-11 w-full rounded-lg border border-slate-300 dark:border-border bg-transparent px-3 text-sm font-semibold text-foreground focus:outline-none focus:ring-1 focus:ring-[var(--brand)]"
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  {/* Row 2: Student ID, Enrollment ID, Enrollment Date */}
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+                    {/* Student ID */}
+                    <div className="relative">
+                      <label className="absolute -top-2 left-3 bg-card px-1 text-[11px] font-medium text-slate-500 dark:text-slate-400">
+                        Student ID<span className="text-red-500">*</span>
+                      </label>
+                      <input
+                        type="text"
+                        value={editStudentId}
+                        disabled
+                        className="h-11 w-full rounded-lg border border-slate-200 dark:border-border bg-slate-50 dark:bg-secondary/15 px-3 text-sm font-semibold text-muted-foreground cursor-not-allowed"
+                      />
+                    </div>
+
+                    {/* Enrollment ID */}
+                    <div className="relative">
+                      <label className="absolute -top-2 left-3 bg-card px-1 text-[11px] font-medium text-slate-500 dark:text-slate-400">
+                        Enrollment ID<span className="text-red-500">*</span>
+                      </label>
+                      <input
+                        type="text"
+                        value={editEnrollmentId}
+                        onChange={(e) => setEditEnrollmentId(e.target.value)}
+                        placeholder="Enter Enrollment ID"
+                        className="h-11 w-full rounded-lg border border-slate-300 dark:border-border bg-transparent px-3 text-sm font-semibold text-foreground focus:outline-none focus:ring-1 focus:ring-[var(--brand)]"
+                      />
+                    </div>
+
+                    {/* Enrollment Date */}
+                    <div className="relative">
+                      <label className="absolute -top-2 left-3 bg-card px-1 text-[11px] font-medium text-slate-500 dark:text-slate-400">
+                        Enrollment Date
+                      </label>
+                      <div className="relative">
+                        <input
+                          type="text"
+                          value={editEnrollmentDate}
+                          onChange={(e) => setEditEnrollmentDate(e.target.value)}
+                          className="h-11 w-full rounded-lg border border-slate-300 dark:border-border bg-transparent pl-3 pr-10 text-sm font-semibold text-foreground focus:outline-none focus:ring-1 focus:ring-[var(--brand)]"
+                        />
+                        <Calendar
+                          size={15}
+                          className="absolute right-3 top-3.5 text-muted-foreground"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Row 3: Course & Batch */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    {/* Course Selection */}
+                    <div className="relative">
+                      <label className="absolute -top-2 left-3 bg-card px-1 text-[11px] font-medium text-slate-500 dark:text-slate-400">
+                        Course<span className="text-red-500">*</span>
+                      </label>
+                      <div className="relative">
+                        <select
+                          value={editCourse}
+                          onChange={(e) => setEditCourse(e.target.value)}
+                          className="h-11 w-full appearance-none rounded-lg border border-slate-300 dark:border-border bg-transparent px-3 text-sm font-semibold text-foreground focus:outline-none focus:ring-1 focus:ring-[var(--brand)]"
+                        >
+                          <option value="B.Com (CA)">B.Com (CA)</option>
+                          <option value="B.Sc (CS)">B.Sc (CS)</option>
+                          <option value="B.Tech (IT)">B.Tech (IT)</option>
+                          <option value="M.B.A">M.B.A</option>
+                          <option value="Administration">Administration</option>
+                        </select>
+                        <ChevronDown
+                          size={15}
+                          className="absolute right-3.5 top-3.5 text-muted-foreground pointer-events-none"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Batch Selection */}
+                    <div className="relative">
+                      <label className="absolute -top-2 left-3 bg-card px-1 text-[11px] font-medium text-slate-500 dark:text-slate-400">
+                        Batch<span className="text-red-500">*</span>
+                      </label>
+                      <div className="relative">
+                        <select
+                          value={editBatch}
+                          onChange={(e) => setEditBatch(e.target.value)}
+                          className="h-11 w-full appearance-none rounded-lg border border-slate-300 dark:border-border bg-transparent px-3 text-sm font-semibold text-foreground focus:outline-none focus:ring-1 focus:ring-[var(--brand)]"
+                        >
+                          <option value="2025,2029">2025,2029</option>
+                          <option value="2024,2028">2024,2028</option>
+                          <option value="2023,2027">2023,2027</option>
+                          <option value="2022,2026">2022,2026</option>
+                        </select>
+                        <ChevronDown
+                          size={15}
+                          className="absolute right-3.5 top-3.5 text-muted-foreground pointer-events-none"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <div className="space-y-5">
+                  {/* Row 1: Name & University */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    {/* Name */}
+                    <div className="relative">
+                      <label className="absolute -top-2 left-3 bg-card px-1 text-[11px] font-medium text-slate-500 dark:text-slate-400">
+                        Name<span className="text-red-500">*</span>
+                      </label>
+                      <input
+                        type="text"
+                        value={editName}
+                        onChange={(e) => setEditName(e.target.value)}
+                        className="h-11 w-full rounded-lg border border-slate-300 dark:border-border bg-transparent px-3 text-sm font-semibold text-foreground focus:outline-none focus:ring-1 focus:ring-[var(--brand)]"
+                        required
+                      />
+                    </div>
+
+                    {/* University / Institute */}
+                    <div className="relative">
+                      <label className="absolute -top-2 left-3 bg-card px-1 text-[11px] font-medium text-slate-500 dark:text-slate-400">
+                        University / Institute<span className="text-red-500">*</span>
+                      </label>
+                      <input
+                        type="text"
+                        value={editUniv}
+                        onChange={(e) => setEditUniv(e.target.value)}
+                        className="h-11 w-full rounded-lg border border-slate-300 dark:border-border bg-transparent px-3 text-sm font-semibold text-foreground focus:outline-none focus:ring-1 focus:ring-[var(--brand)]"
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  {/* Row 2: Department & Staff ID */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    {/* Department */}
+                    <div className="relative">
+                      <label className="absolute -top-2 left-3 bg-card px-1 text-[11px] font-medium text-slate-500 dark:text-slate-400">
+                        Department<span className="text-red-500">*</span>
+                      </label>
+                      <div className="relative">
+                        <select
+                          value={editCourse}
+                          onChange={(e) => setEditCourse(e.target.value)}
+                          className="h-11 w-full appearance-none rounded-lg border border-slate-300 dark:border-border bg-transparent px-3 text-sm font-semibold text-foreground focus:outline-none focus:ring-1 focus:ring-[var(--brand)]"
+                        >
+                          <option value="Accountancy">Accountancy</option>
+                          <option value="Computer Science">Computer Science</option>
+                          <option value="Electrical Engineering">Electrical Engineering</option>
+                          <option value="Mechanical Engineering">Mechanical Engineering</option>
+                          <option value="Business Administration">Business Administration</option>
+                          <option value="Physics">Physics</option>
+                          <option value="Information Technology">Information Technology</option>
+                          <option value="Chemistry">Chemistry</option>
+                          <option value="Mathematics">Mathematics</option>
+                          <option value="Civil Engineering">Civil Engineering</option>
+                          <option value="Humanities">Humanities</option>
+                          <option value="Economics">Economics</option>
+                          <option value="Biotechnology">Biotechnology</option>
+                        </select>
+                        <ChevronDown
+                          size={15}
+                          className="absolute right-3.5 top-3.5 text-muted-foreground pointer-events-none"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Staff ID */}
+                    <div className="relative">
+                      <label className="absolute -top-2 left-3 bg-card px-1 text-[11px] font-medium text-slate-500 dark:text-slate-400">
+                        Staff ID<span className="text-red-500">*</span>
+                      </label>
+                      <input
+                        type="text"
+                        value={editStudentId}
+                        disabled
+                        className="h-11 w-full rounded-lg border border-slate-200 dark:border-border bg-slate-50 dark:bg-secondary/15 px-3 text-sm font-semibold text-muted-foreground cursor-not-allowed"
+                      />
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Contact Details Section */}
+            <div className="space-y-4 pt-2">
+              <h3 className="text-sm font-bold text-foreground">Contact Details</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                {/* Address */}
+                <div className="relative">
+                  <label className="absolute -top-2 left-3 bg-card px-1 text-[11px] font-medium text-slate-500 dark:text-slate-400">
+                    Address
+                  </label>
+                  <input
+                    type="text"
+                    value={editAddress}
+                    onChange={(e) => setEditAddress(e.target.value)}
+                    placeholder={`Enter ${editUserType} Address`}
+                    className="h-11 w-full rounded-lg border border-slate-300 dark:border-border bg-transparent px-3 text-sm font-semibold text-foreground focus:outline-none focus:ring-1 focus:ring-[var(--brand)]"
+                  />
+                </div>
+
+                {/* Pin Code */}
+                <div className="relative">
+                  <label className="absolute -top-2 left-3 bg-card px-1 text-[11px] font-medium text-slate-500 dark:text-slate-400">
+                    Pin Code
+                  </label>
+                  <input
+                    type="text"
+                    value={editPinCode}
+                    onChange={(e) => setEditPinCode(e.target.value)}
+                    placeholder="Enter Pin Code"
+                    className="h-11 w-full rounded-lg border border-slate-300 dark:border-border bg-transparent px-3 text-sm font-semibold text-foreground focus:outline-none focus:ring-1 focus:ring-[var(--brand)]"
+                  />
+                </div>
+
+                {/* Email */}
+                <div className="relative">
+                  <label className="absolute -top-2 left-3 bg-card px-1 text-[11px] font-medium text-slate-500 dark:text-slate-400">
+                    Email
+                  </label>
+                  <input
+                    type="email"
+                    value={editEmail}
+                    onChange={(e) => setEditEmail(e.target.value)}
+                    placeholder={`Enter ${editUserType} Email`}
+                    className="h-11 w-full rounded-lg border border-slate-300 dark:border-border bg-transparent px-3 text-sm font-semibold text-foreground focus:outline-none focus:ring-1 focus:ring-[var(--brand)]"
+                  />
+                </div>
+
+                {/* Phone Number */}
+                <div className="relative">
+                  <label className="absolute -top-2 left-3 bg-card px-1 text-[11px] font-medium text-slate-500 dark:text-slate-400">
+                    Phone Number
+                  </label>
+                  <input
+                    type="tel"
+                    value={editPhone}
+                    onChange={(e) => setEditPhone(e.target.value)}
+                    placeholder={`Enter ${editUserType} Phone Number`}
+                    className="h-11 w-full rounded-lg border border-slate-300 dark:border-border bg-transparent px-3 text-sm font-semibold text-foreground focus:outline-none focus:ring-1 focus:ring-[var(--brand)]"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Bottom Form Actions */}
+            <div className="flex items-center justify-end gap-3 pt-4 border-t border-border mt-4">
+              <button
+                type="button"
+                onClick={() => {
+                  setIsViewOpen(false);
+                  setSelectedUser(null);
+                }}
+                className="h-10 rounded-lg border border-slate-300 dark:border-border bg-white dark:bg-card px-5 text-sm font-semibold text-slate-700 dark:text-slate-300 hover:bg-secondary/40 transition-colors cursor-pointer"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                className="h-10 rounded-lg bg-[var(--brand)] text-white px-5 text-sm font-semibold hover:opacity-90 active:scale-[0.98] transition-all shadow-sm cursor-pointer"
+              >
+                Update Details
+              </button>
+            </div>
+          </form>
+        </div>
+      </AppShell>
+    );
+  }
+
+  return (
+    <AppShell
+      title="Library Users"
+      subtitle="Manage university library users, mobile access, and borrowing active statuses."
+    >
+      <div className="space-y-6 p-4 md:p-8">
+        {/* Top Action Bar */}
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div />
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => setIsAddOpen(true)}
+              className="h-10 rounded-lg bg-[var(--brand)] text-white px-4 text-xs font-semibold hover:opacity-90 active:scale-[0.98] transition-all flex items-center gap-1.5 shadow-sm cursor-pointer"
+            >
+              <Plus size={16} />
+              Add User
+            </button>
+            <button
+              onClick={() => setIsUploadOpen(true)}
+              className="h-10 rounded-lg border border-border bg-white dark:bg-card px-4 text-xs font-semibold text-muted-foreground hover:bg-secondary/40 hover:text-foreground transition-all flex items-center gap-1.5 shadow-sm cursor-pointer"
+            >
+              <Upload size={15} />
+              Import User
+            </button>
+          </div>
+        </div>
+
+        {/* Unified Toolbar */}
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 bg-card border border-border rounded-xl p-4 shadow-sm">
+          {/* Left Side: Status Dropdown & Search Input */}
+          <div className="flex flex-col sm:flex-row sm:items-center gap-3 flex-1">
+            {/* Status Dropdown Filter */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button className="h-10 flex items-center justify-between rounded-lg border border-border bg-white dark:bg-card px-3 text-xs font-semibold text-muted-foreground hover:text-foreground transition-all cursor-pointer min-w-36 gap-2 shadow-sm">
+                  <span>Status: {statusFilter}</span>
+                  <ChevronDown size={14} className="text-muted-foreground" />
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent
+                align="start"
+                className="w-36 bg-card border border-border shadow-md"
+              >
+                <DropdownMenuItem
+                  onClick={() => {
+                    setStatusFilter("All");
+                    setPage(1);
+                  }}
+                  className="text-xs hover:bg-secondary cursor-pointer"
+                >
+                  All
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => {
+                    setStatusFilter("Active");
+                    setPage(1);
+                  }}
+                  className="text-xs hover:bg-secondary cursor-pointer"
+                >
+                  Active
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => {
+                    setStatusFilter("Inactive");
+                    setPage(1);
+                  }}
+                  className="text-xs hover:bg-secondary cursor-pointer"
+                >
+                  Inactive
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+
+            {/* Type Dropdown Filter */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button className="h-10 flex items-center justify-between rounded-lg border border-border bg-white dark:bg-card px-3 text-xs font-semibold text-muted-foreground hover:text-foreground transition-all cursor-pointer min-w-36 gap-2 shadow-sm">
+                  <span>Type: {typeFilter}</span>
+                  <ChevronDown size={14} className="text-muted-foreground" />
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent
+                align="start"
+                className="w-36 bg-card border border-border shadow-md"
+              >
+                <DropdownMenuItem
+                  onClick={() => {
+                    setTypeFilter("All");
+                    setPage(1);
+                  }}
+                  className="text-xs hover:bg-secondary cursor-pointer"
+                >
+                  All
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => {
+                    setTypeFilter("Staff");
+                    setPage(1);
+                  }}
+                  className="text-xs hover:bg-secondary cursor-pointer"
+                >
+                  Staff
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => {
+                    setTypeFilter("Student");
+                    setPage(1);
+                  }}
+                  className="text-xs hover:bg-secondary cursor-pointer"
+                >
+                  Student
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+
+            {/* Search Input */}
+            <label className="relative flex h-10 items-center rounded-lg border border-border bg-white dark:bg-card px-3 w-full sm:max-w-xs shadow-sm">
+              <Search size={14} className="text-muted-foreground shrink-0" />
+              <input
+                type="text"
+                placeholder="Search users..."
+                value={searchQuery}
+                onChange={(e) => {
+                  setSearchQuery(e.target.value);
+                  setPage(1);
+                }}
+                className="w-full bg-transparent pl-2 text-xs outline-none text-foreground"
+              />
+            </label>
+          </div>
+
+          {/* Right Side: Date Presets & Custom Date Pickers (filters Join Date) */}
+          <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+            {/* Date Preset Dropdown */}
+            <DropdownMenu open={presetOpen} onOpenChange={setPresetOpen}>
+              <DropdownMenuTrigger asChild>
+                <button className="h-10 flex items-center justify-between rounded-lg border border-border bg-white dark:bg-card px-3 text-xs font-semibold text-muted-foreground hover:text-foreground transition-all cursor-pointer gap-2 min-w-36 shadow-sm">
+                  <span className="flex items-center gap-1.5">
+                    <Calendar size={14} />
+                    {preset === "Custom" ? "Custom Range" : preset}
+                  </span>
+                  <ChevronDown size={14} className="text-muted-foreground" />
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent
+                align="end"
+                className="w-40 bg-card border border-border shadow-md"
+              >
+                {PRESETS.map((p) => (
+                  <DropdownMenuItem
+                    key={p}
+                    onClick={() => handlePresetSelect(p)}
+                    className={`text-xs hover:bg-secondary cursor-pointer ${
+                      preset === p ? "font-bold text-[var(--brand)]" : ""
+                    }`}
+                  >
+                    {p}
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+
+            {/* Custom Dates Container */}
+            <div className="flex items-center gap-2">
+              <label className="relative flex h-10 items-center rounded-lg border border-border bg-white dark:bg-card px-3 w-full sm:w-36 shadow-sm">
+                <input
+                  type="date"
+                  value={from}
+                  onChange={(e) => {
+                    setFrom(e.target.value);
+                    setPreset("Custom");
+                    setPage(1);
+                  }}
+                  className="w-full bg-transparent text-sm outline-none text-foreground"
+                />
+              </label>
+
+              <span className="text-muted-foreground text-xs font-semibold">to</span>
+
+              <label className="relative flex h-10 items-center rounded-lg border border-border bg-white dark:bg-card px-3 w-full sm:w-36 shadow-sm">
+                <input
+                  type="date"
+                  value={to}
+                  onChange={(e) => {
+                    setTo(e.target.value);
+                    setPreset("Custom");
+                    setPage(1);
+                  }}
+                  className="w-full bg-transparent text-sm outline-none text-foreground"
+                />
+              </label>
+            </div>
+          </div>
+        </div>
+
+        {/* Users Table Container */}
+        <div className="rounded-xl border border-border bg-card p-4 md:p-6 overflow-hidden shadow-sm">
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-border text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                  <th className="pb-3 pr-4 font-semibold">Users</th>
+                  <th className="pb-3 px-4 font-semibold">User Type</th>
+                  <th className="pb-3 px-4 font-semibold">Borrows</th>
+                  <th className="pb-3 px-4 font-semibold text-center">Mobile Access</th>
+                  <th className="pb-3 px-4 font-semibold text-center">Status</th>
+                  <th className="pb-3 pl-4 font-semibold text-right pr-6"></th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-border/60">
+                {paginatedUsers.length === 0 ? (
+                  <tr>
+                    <td colSpan={6} className="py-8 text-center text-muted-foreground">
+                      No library users match your filters.
+                    </td>
+                  </tr>
+                ) : (
+                  paginatedUsers.map((u) => (
+                    <tr
+                      key={u.id}
+                      onClick={() => handleOpenEditDetails(u)}
+                      className="group border-b border-border/60 transition-colors last:border-0 cursor-pointer hover:bg-secondary/40"
+                    >
+                      {/* Name & Avatar */}
+                      <td className="py-3.5 pr-4 font-medium text-foreground">
+                        <div className="flex items-center gap-3">
+                          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-slate-100 dark:bg-border font-bold text-xs text-slate-500 dark:text-muted-foreground shadow-inner border border-border">
+                            {getUserInitials(u.name)}
+                          </div>
+                          <div className="min-w-0">
+                            <p className="font-semibold text-foreground truncate text-sm">
+                              {u.name}
+                            </p>
+                            <p className="text-muted-foreground text-[10px] truncate">{u.email}</p>
+                          </div>
+                        </div>
+                      </td>
+
+                      {/* User Type */}
+                      <td className="py-3.5 px-4 text-muted-foreground text-xs font-medium">
+                        {u.userType}
+                      </td>
+
+                      {/* Borrows */}
+                      <td className="py-3.5 px-4 text-muted-foreground text-xs font-medium">
+                        {u.borrows}
+                      </td>
+
+                      {/* Mobile Access Switch Toggle */}
+                      <td className="py-3.5 px-4 text-center" onClick={(e) => e.stopPropagation()}>
+                        <div className="flex items-center justify-center gap-2">
+                          <Switch
+                            checked={u.mobileAccess}
+                            onCheckedChange={() => handleMobileAccessToggle(u.id, u.mobileAccess)}
+                          />
+                          <span
+                            className={`text-xs font-semibold min-w-14 text-left ${
+                              u.mobileAccess
+                                ? "text-emerald-600 dark:text-emerald-400"
+                                : "text-muted-foreground"
+                            }`}
+                          >
+                            {u.mobileAccess ? "Enabled" : "Disabled"}
+                          </span>
+                        </div>
+                      </td>
+
+                      {/* Status Toggle switch */}
+                      <td className="py-3.5 px-4 text-center" onClick={(e) => e.stopPropagation()}>
+                        <div className="flex items-center justify-center gap-2">
+                          <Switch
+                            checked={u.status === "Active"}
+                            onCheckedChange={() => handleStatusToggle(u.id, u.status)}
+                          />
+                          <span
+                            className={`text-xs font-semibold min-w-12 text-left ${
+                              u.status === "Active"
+                                ? "text-[var(--brand)]"
+                                : "text-muted-foreground"
+                            }`}
+                          >
+                            {u.status}
+                          </span>
+                        </div>
+                      </td>
+
+                      {/* Action Chevron */}
+                      <td className="py-3.5 pr-6 text-right">
+                        <span className="inline-flex h-8 w-8 items-center justify-center rounded-md text-muted-foreground transition-colors group-hover:bg-secondary group-hover:text-foreground">
+                          <ChevronRight size={16} />
+                        </span>
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
+
+          {/* Pagination Footer */}
+          {totalPages > 1 && (
+            <div className="flex items-center justify-between border-t border-border/60 pt-4 mt-4">
+              <span className="text-xs text-muted-foreground">
+                Showing {startIndex + 1} to {Math.min(startIndex + PAGE_SIZE, totalResults)} of{" "}
+                {totalResults} results
+              </span>
+              <div className="flex items-center gap-1.5">
+                <button
+                  disabled={currentPage === 1}
+                  onClick={() => setPage((p) => Math.max(1, p - 1))}
+                  className="inline-flex h-8 items-center gap-1 rounded-lg border border-border bg-white dark:bg-card px-2.5 text-xs font-semibold text-muted-foreground hover:bg-secondary/40 hover:text-foreground transition-colors disabled:opacity-50 disabled:pointer-events-none cursor-pointer"
+                >
+                  Previous
+                </button>
+                {Array.from({ length: totalPages }, (_, i) => {
+                  const pageNum = i + 1;
+                  const isPageActive = currentPage === pageNum;
+                  return (
+                    <button
+                      key={pageNum}
+                      onClick={() => setPage(pageNum)}
+                      className={`h-8 w-8 rounded-lg text-xs font-semibold border transition-all cursor-pointer ${
+                        isPageActive
+                          ? "bg-sky-50 dark:bg-sky-950/40 text-sky-600 dark:text-sky-400 border-sky-200 dark:border-sky-800"
+                          : "bg-white dark:bg-card text-muted-foreground border-border hover:bg-secondary/40 hover:text-foreground"
+                      }`}
+                    >
+                      {pageNum}
+                    </button>
+                  );
+                })}
+                <button
+                  disabled={currentPage === totalPages}
+                  onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                  className="inline-flex h-8 items-center gap-1 rounded-lg border border-border bg-white dark:bg-card px-2.5 text-xs font-semibold text-muted-foreground hover:bg-secondary/40 hover:text-foreground transition-colors disabled:opacity-50 disabled:pointer-events-none cursor-pointer"
+                >
+                  Next
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Add User Modal Dialog */}
+        <Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>
+          <DialogContent className="max-w-md bg-card border border-border rounded-xl shadow-xl p-6">
+            <div className="border-b border-border pb-4 mb-4">
+              <DialogTitle className="text-lg font-bold tracking-tight text-foreground">
+                Add Library User
+              </DialogTitle>
+              <DialogDescription className="text-xs text-muted-foreground mt-0.5">
+                Register a new member in the library system database.
+              </DialogDescription>
+            </div>
+
+            <form onSubmit={handleAddSubmit} className="space-y-4 text-xs sm:text-sm">
+              <div className="space-y-1.5">
+                <label className="font-semibold text-muted-foreground text-xs">Full Name</label>
+                <input
+                  type="text"
+                  placeholder="e.g. JOHN DOE"
+                  value={addName}
+                  onChange={(e) => setAddName(e.target.value)}
+                  className="h-9 w-full rounded-lg border border-border bg-white dark:bg-card px-3 text-xs focus:outline-none focus:ring-1 focus:ring-[var(--brand)]"
+                  required
+                />
+              </div>
+
+              <div className="space-y-1.5">
+                <label className="font-semibold text-muted-foreground text-xs">Email Address</label>
+                <input
+                  type="email"
+                  placeholder="e.g. john.doe@university.edu"
+                  value={addEmail}
+                  onChange={(e) => setAddEmail(e.target.value)}
+                  className="h-9 w-full rounded-lg border border-border bg-white dark:bg-card px-3 text-xs focus:outline-none focus:ring-1 focus:ring-[var(--brand)]"
+                  required
+                />
+              </div>
+
+              <div className="space-y-1.5">
+                <label className="font-semibold text-muted-foreground text-xs">User Type</label>
+                <select
+                  value={addUserType}
+                  onChange={(e) => setAddUserType(e.target.value as "Student" | "Staff")}
+                  className="h-9 w-full rounded-lg border border-border bg-white dark:bg-card px-2.5 text-xs focus:outline-none focus:ring-1 focus:ring-[var(--brand)]"
+                >
+                  <option value="Student">Student</option>
+                  <option value="Staff">Staff</option>
+                </select>
+              </div>
+
+              <div className="space-y-1.5">
+                <label className="font-semibold text-muted-foreground text-xs">Department</label>
+                <select
+                  value={addDept}
+                  onChange={(e) => setAddDept(e.target.value)}
+                  className="h-9 w-full rounded-lg border border-border bg-white dark:bg-card px-2.5 text-xs focus:outline-none focus:ring-1 focus:ring-[var(--brand)]"
+                >
+                  {departments.map((d) => (
+                    <option key={d} value={d}>
+                      {d}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="flex items-center justify-end pt-4 border-t border-border mt-2">
+                <button
+                  type="submit"
+                  className="h-9 rounded-lg bg-[var(--brand)] text-white px-4 text-xs font-semibold hover:opacity-90 active:scale-[0.98] transition-all shadow-sm cursor-pointer"
+                >
+                  Add User Request
+                </button>
+              </div>
+            </form>
+          </DialogContent>
+        </Dialog>
+
+        {/* Import User Modal Dialog */}
+        <Dialog open={isUploadOpen} onOpenChange={setIsUploadOpen}>
+          <DialogContent className="max-w-xl bg-card border border-border rounded-xl shadow-xl p-6">
+            <div className="border-b border-border pb-4 mb-4">
+              <DialogTitle className="text-xl font-bold tracking-tight text-foreground">
+                Upload Users List for Bulk Registration
+              </DialogTitle>
+            </div>
+
+            <div className="text-sm text-foreground/80 space-y-2.5 mb-6">
+              <p className="flex items-center gap-1.5 flex-wrap">
+                <span>1. Download the sample users template (Excel)</span>
+                <button
+                  type="button"
+                  onClick={() => toast.success("Sample template downloaded successfully!")}
+                  className="text-blue-600 hover:underline font-medium inline-flex items-center gap-0.5 cursor-pointer"
+                >
+                  Download
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="h-3 w-3"
+                  >
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                    <polyline points="7 10 12 15 17 10" />
+                    <line x1="12" y1="15" x2="12" y2="3" />
+                  </svg>
+                </button>
+              </p>
+              <p>2. Fill in the member details as per the format.</p>
+              <p>3. Upload the completed template file below.</p>
+              <p>4. Review and confirm import before submission.</p>
+            </div>
+
+            <form onSubmit={handleUploadSubmit} className="space-y-5">
+              <div
+                onDragOver={handleDragOver}
+                onDragLeave={handleDragLeave}
+                onDrop={handleDrop}
+                className={`relative border border-dashed rounded-xl p-10 text-center cursor-pointer transition-all ${
+                  uploadDragging
+                    ? "border-[var(--brand)] bg-[var(--sidebar-highlight)]/30 scale-[1.01]"
+                    : "border-slate-300 dark:border-border/60 bg-secondary/5 hover:bg-secondary/20"
+                }`}
+              >
+                <input
+                  type="file"
+                  id="csv-file-input"
+                  accept=".csv, .xlsx"
+                  onChange={handleFileSelect}
+                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                />
+                <div className="flex flex-col items-center justify-center gap-2">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="h-16 w-16 text-slate-300 dark:text-muted-foreground/60"
+                  >
+                    <path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242" />
+                    <path d="M12 12v9" />
+                    <path d="m15 15-3-3-3 3" />
+                  </svg>
+                  <span className="text-blue-600 hover:underline font-medium text-sm mt-1">
+                    Click to upload
+                  </span>
+                </div>
+              </div>
+
+              {uploadFile && (
+                <div className="rounded-lg border border-border p-3 flex items-center justify-between bg-white dark:bg-card">
+                  <div className="flex items-center gap-2.5 truncate">
+                    <FileText size={18} className="text-[var(--brand)] shrink-0" />
+                    <div className="truncate text-xs">
+                      <p className="font-semibold text-foreground truncate">{uploadFile.name}</p>
+                      <p className="text-muted-foreground text-[10px]">
+                        {(uploadFile.size / 1024).toFixed(1)} KB
+                      </p>
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setUploadFile(null)}
+                    className="h-6 w-6 flex items-center justify-center rounded hover:bg-secondary transition-colors text-muted-foreground hover:text-foreground cursor-pointer"
+                  >
+                    <X size={12} />
+                  </button>
+                </div>
+              )}
+
+              {/* Upload animation progress */}
+              {uploadProgress !== null && (
+                <div className="space-y-1.5">
+                  <div className="flex items-center justify-between text-[11px] text-muted-foreground">
+                    <span>Importing and verifying members...</span>
+                    <span>{uploadProgress}%</span>
+                  </div>
+                  <div className="h-1.5 w-full bg-secondary rounded-full overflow-hidden">
+                    <div
+                      className="h-full bg-[var(--brand)] transition-all duration-150"
+                      style={{ width: `${uploadProgress}%` }}
+                    />
+                  </div>
+                </div>
+              )}
+
+              <div className="flex items-center justify-end border-t border-border pt-4 mt-2">
+                <button
+                  type="submit"
+                  disabled={!uploadFile || uploadProgress !== null}
+                  className="h-10 rounded-lg bg-[var(--brand)] text-white px-5 text-sm font-semibold hover:opacity-90 active:scale-[0.98] transition-all shadow-sm disabled:bg-slate-200 disabled:text-slate-400 disabled:cursor-not-allowed dark:disabled:bg-border dark:disabled:text-muted-foreground cursor-pointer"
+                >
+                  Upload & Continue
+                </button>
+              </div>
+            </form>
+          </DialogContent>
+        </Dialog>
+      </div>
+    </AppShell>
+  );
+}

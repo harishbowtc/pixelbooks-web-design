@@ -2,13 +2,7 @@ import { Check, ChevronRight } from "lucide-react";
 
 export type WizardStep = { id: number; label: string };
 
-export function WizardStepper({
-  steps,
-  current,
-}: {
-  steps: WizardStep[];
-  current: number;
-}) {
+export function WizardStepper({ steps, current }: { steps: WizardStep[]; current: number }) {
   return (
     <nav
       aria-label="Progress"
@@ -34,14 +28,15 @@ export function WizardStepper({
                   >
                     {s.id}
                   </span>
-                  <span className="whitespace-nowrap text-sm font-semibold" style={{ color: "var(--brand)" }}>
+                  <span
+                    className="whitespace-nowrap text-sm font-semibold"
+                    style={{ color: "var(--brand)" }}
+                  >
                     {s.label}
                   </span>
                 </div>
               ) : (
-                <div
-                  className={`flex items-center gap-2 ${done ? "" : "opacity-60"}`}
-                >
+                <div className={`flex items-center gap-2 ${done ? "" : "opacity-60"}`}>
                   <span
                     className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[10px] font-bold"
                     style={

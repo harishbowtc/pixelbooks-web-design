@@ -47,9 +47,7 @@ function InstructionSection({
       </div>
       <div className="flex-1 space-y-2">
         <h3 className="text-base font-semibold text-foreground">{title}</h3>
-        <div className="space-y-1.5 text-sm leading-relaxed text-muted-foreground">
-          {children}
-        </div>
+        <div className="space-y-1.5 text-sm leading-relaxed text-muted-foreground">{children}</div>
       </div>
     </div>
   );
@@ -80,12 +78,20 @@ function Step1({ onNext }: { onNext: () => void }) {
 
         <InstructionSection number="2" title="Upload Multiple Files">
           <p>
-            Start by selecting multiple eBooks (PDF, ePub) and Cover images (JPG, PNG) to
-            upload.
+            Start by selecting multiple eBooks (PDF, ePub) and Cover images (JPG, PNG) to upload.
           </p>
           <ul className="list-disc space-y-1 pl-5">
-            <li>Click <span className="font-medium text-foreground">"Choose Multiple Files to Upload"</span></li>
-            <li>Supported formats: <code className="rounded bg-secondary px-1.5 py-0.5 text-xs">.pdf</code>, <code className="rounded bg-secondary px-1.5 py-0.5 text-xs">.epub</code>, <code className="rounded bg-secondary px-1.5 py-0.5 text-xs">.jpg</code>, <code className="rounded bg-secondary px-1.5 py-0.5 text-xs">.png</code></li>
+            <li>
+              Click{" "}
+              <span className="font-medium text-foreground">"Choose Multiple Files to Upload"</span>
+            </li>
+            <li>
+              Supported formats:{" "}
+              <code className="rounded bg-secondary px-1.5 py-0.5 text-xs">.pdf</code>,{" "}
+              <code className="rounded bg-secondary px-1.5 py-0.5 text-xs">.epub</code>,{" "}
+              <code className="rounded bg-secondary px-1.5 py-0.5 text-xs">.jpg</code>,{" "}
+              <code className="rounded bg-secondary px-1.5 py-0.5 text-xs">.png</code>
+            </li>
           </ul>
           <div
             className="mt-2 rounded-md border-l-4 p-3 text-xs"
@@ -106,15 +112,23 @@ function Step1({ onNext }: { onNext: () => void }) {
           <p>After selecting files, they appear in a list.</p>
           <ul className="list-disc space-y-1 pl-5">
             <li>Preview file details like name, type, and cover image</li>
-            <li>Remove individual files if needed by clicking the remove button next to each file</li>
-            <li>Click <span className="font-medium text-foreground">"Add More Files"</span> to include additional items</li>
+            <li>
+              Remove individual files if needed by clicking the remove button next to each file
+            </li>
+            <li>
+              Click <span className="font-medium text-foreground">"Add More Files"</span> to include
+              additional items
+            </li>
           </ul>
         </InstructionSection>
 
         <InstructionSection number="4" title="Upload Excel File">
           <p>For bulk metadata import, upload an Excel sheet.</p>
           <ul className="list-disc space-y-1 pl-5">
-            <li>Click <span className="font-medium text-foreground">"Choose Excel File to Upload"</span></li>
+            <li>
+              Click{" "}
+              <span className="font-medium text-foreground">"Choose Excel File to Upload"</span>
+            </li>
             <li>Make sure the file follows the required format</li>
             <li>Click upload and submit</li>
           </ul>
@@ -124,7 +138,10 @@ function Step1({ onNext }: { onNext: () => void }) {
           <p>Your files will begin uploading.</p>
           <ul className="list-disc space-y-1 pl-5">
             <li>A progress bar will indicate the upload percentage</li>
-            <li>You'll see a <span className="font-medium text-foreground">"Successfully Uploaded"</span> message</li>
+            <li>
+              You'll see a{" "}
+              <span className="font-medium text-foreground">"Successfully Uploaded"</span> message
+            </li>
             <li>Files will be imported and sent for approval</li>
             <li>A notification will be sent once approved</li>
           </ul>
@@ -136,10 +153,22 @@ function Step1({ onNext }: { onNext: () => void }) {
             corruption, or similar issue):
           </p>
           <ul className="list-disc space-y-1 pl-5">
-            <li>A <span className="font-medium text-foreground">"Failed Files"</span> dialog will appear</li>
-            <li>The reason for the failure will be displayed (e.g., "File name exceeds maximum length allowed" or "Network connection lost")</li>
-            <li>You must re-upload the entire file from the beginning — incomplete uploads cannot be processed or stored by the system</li>
-            <li>Click <span className="font-medium text-foreground">"Cancel"</span> to resolve the issue and start the upload again</li>
+            <li>
+              A <span className="font-medium text-foreground">"Failed Files"</span> dialog will
+              appear
+            </li>
+            <li>
+              The reason for the failure will be displayed (e.g., "File name exceeds maximum length
+              allowed" or "Network connection lost")
+            </li>
+            <li>
+              You must re-upload the entire file from the beginning — incomplete uploads cannot be
+              processed or stored by the system
+            </li>
+            <li>
+              Click <span className="font-medium text-foreground">"Cancel"</span> to resolve the
+              issue and start the upload again
+            </li>
           </ul>
         </InstructionSection>
       </div>
@@ -207,12 +236,8 @@ function Step2({
           style={{ borderColor: "var(--border)" }}
         >
           <Upload size={28} style={{ color: "var(--brand)" }} />
-          <p className="text-sm font-semibold text-foreground">
-            Choose Multiple Files to Upload
-          </p>
-          <p className="text-xs text-muted-foreground">
-            Supported: .pdf, .epub, .jpg, .png
-          </p>
+          <p className="text-sm font-semibold text-foreground">Choose Multiple Files to Upload</p>
+          <p className="text-xs text-muted-foreground">Supported: .pdf, .epub, .jpg, .png</p>
           <input
             ref={inputRef}
             type="file"
@@ -257,9 +282,7 @@ function Step2({
                     </p>
                   </div>
                   <button
-                    onClick={() =>
-                      setFiles((prev) => prev.filter((_, idx) => idx !== i))
-                    }
+                    onClick={() => setFiles((prev) => prev.filter((_, idx) => idx !== i))}
                     aria-label={`Remove ${f.name}`}
                     className="flex h-8 w-8 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
                   >

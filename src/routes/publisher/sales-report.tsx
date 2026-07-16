@@ -574,10 +574,10 @@ function SalesReportPage() {
                         style={
                           n === currentPage
                             ? {
-                              backgroundColor: "var(--brand)",
-                              color: "var(--brand-contrast)",
-                              borderColor: "transparent",
-                            }
+                                backgroundColor: "var(--brand)",
+                                color: "var(--brand-contrast)",
+                                borderColor: "transparent",
+                              }
                             : undefined
                         }
                       >

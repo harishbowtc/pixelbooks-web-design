@@ -146,9 +146,7 @@ function CreatePromoCodePage() {
           >
             <ArrowLeft size={18} />
           </Link>
-          <h1 className="text-lg font-semibold leading-tight">
-            Create New Promo Code
-          </h1>
+          <h1 className="text-lg font-semibold leading-tight">Create New Promo Code</h1>
         </div>
 
         <div className="space-y-6">

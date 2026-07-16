@@ -24,8 +24,7 @@ function NotificationsPage() {
   const [items, setItems] = useState<NotificationItem[]>(seed);
   const groups = groupByDate(items);
 
-  const clearDate = (date: string) =>
-    setItems((prev) => prev.filter((n) => n.date !== date));
+  const clearDate = (date: string) => setItems((prev) => prev.filter((n) => n.date !== date));
 
   return (
     <AppShell title="Notifications">
@@ -39,9 +38,7 @@ function NotificationsPage() {
           {groups.map((group) => (
             <section key={group.date} className="mb-6 last:mb-0">
               <div className="mb-2 flex items-center justify-between">
-                <h2 className="text-[15px] font-semibold text-foreground">
-                  {group.date}
-                </h2>
+                <h2 className="text-[15px] font-semibold text-foreground">{group.date}</h2>
                 <button
                   onClick={() => clearDate(group.date)}
                   className="text-sm font-semibold underline-offset-4 hover:underline"
@@ -52,10 +49,7 @@ function NotificationsPage() {
               </div>
               <ul className="space-y-2">
                 {group.items.map((n) => (
-                  <li
-                    key={n.id}
-                    className="rounded-lg bg-secondary/60 px-4 py-4"
-                  >
+                  <li key={n.id} className="rounded-lg bg-secondary/60 px-4 py-4">
                     <div className="flex items-start gap-3">
                       <span
                         className="mt-1.5 h-2 w-2 shrink-0 rounded-full"
@@ -63,16 +57,12 @@ function NotificationsPage() {
                       />
                       <div className="min-w-0 flex-1">
                         <div className="flex items-start justify-between gap-4">
-                          <p className="text-[14px] leading-snug text-foreground">
-                            {n.message}
-                          </p>
+                          <p className="text-[14px] leading-snug text-foreground">{n.message}</p>
                           <span className="shrink-0 text-[13px] text-muted-foreground">
                             {n.time}
                           </span>
                         </div>
-                        <p className="mt-1 text-[12.5px] text-muted-foreground">
-                          {n.category}
-                        </p>
+                        <p className="mt-1 text-[12.5px] text-muted-foreground">{n.category}</p>
                       </div>
                     </div>
                   </li>

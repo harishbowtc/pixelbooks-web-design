@@ -33,8 +33,7 @@ export const Route = createFileRoute("/publisher/catalogue/new")({
       { title: "Add New eBook — PixelBooks" },
       {
         name: "description",
-        content:
-          "Upload your eBook, cover, and details to publish a new title on PixelBooks.",
+        content: "Upload your eBook, cover, and details to publish a new title on PixelBooks.",
       },
     ],
   }),
@@ -62,9 +61,7 @@ function SectionCard({
         <div className="mb-4 flex items-start justify-between gap-3">
           <div>
             {title && <h2 className="text-[15px] font-semibold">{title}</h2>}
-            {description && (
-              <p className="mt-1 text-sm text-muted-foreground">{description}</p>
-            )}
+            {description && <p className="mt-1 text-sm text-muted-foreground">{description}</p>}
           </div>
           {right}
         </div>
@@ -204,13 +201,7 @@ function Check({
   );
 }
 
-function Switch({
-  checked,
-  onChange,
-}: {
-  checked: boolean;
-  onChange: (v: boolean) => void;
-}) {
+function Switch({ checked, onChange }: { checked: boolean; onChange: (v: boolean) => void }) {
   return (
     <button
       type="button"
@@ -329,13 +320,12 @@ function UploadRow() {
         <AlertCircle size={16} className="mt-0.5 shrink-0" />
         <p className="leading-relaxed">
           PixelBooks&apos; auto content generation API uses automated parsing to extract and
-          autofill metadata from your eBook files (ePub &amp; PDF). Because automated
-          extraction is inherently subject to inaccuracies, some data may be incomplete,
-          malformatted, or incorrectly assigned depending on the structure and quality of the
-          source file. You are solely responsible for reviewing and verifying all
-          auto-populated information. Please ensure that all generated metadata is manually
-          reviewed and verified before publishing. If you prefer, you may disable this option
-          and enter all details manually.
+          autofill metadata from your eBook files (ePub &amp; PDF). Because automated extraction is
+          inherently subject to inaccuracies, some data may be incomplete, malformatted, or
+          incorrectly assigned depending on the structure and quality of the source file. You are
+          solely responsible for reviewing and verifying all auto-populated information. Please
+          ensure that all generated metadata is manually reviewed and verified before publishing. If
+          you prefer, you may disable this option and enter all details manually.
         </p>
       </div>
 
@@ -357,8 +347,7 @@ const GUIDELINES = [
   {
     icon: <FileText size={18} />,
     title: "File Format",
-    description:
-      "Upload your eBook in PDF, ePUB format, ensuring DRM protection for security.",
+    description: "Upload your eBook in PDF, ePUB format, ensuring DRM protection for security.",
   },
   {
     icon: <List size={18} />,
@@ -375,8 +364,7 @@ const GUIDELINES = [
   {
     icon: <HardDrive size={18} />,
     title: "Size Limit",
-    description:
-      "Keep file sizes under 30 MB to ensure smooth downloading.",
+    description: "Keep file sizes under 30 MB to ensure smooth downloading.",
   },
   {
     icon: <Info size={18} />,
@@ -426,10 +414,7 @@ function GuidelinesSection() {
       {open && (
         <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {GUIDELINES.map((g, i) => (
-            <div
-              key={i}
-              className="flex gap-3 rounded-xl border border-border bg-secondary/30 p-4"
-            >
+            <div key={i} className="flex gap-3 rounded-xl border border-border bg-secondary/30 p-4">
               <span
                 className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg"
                 style={{
@@ -458,7 +443,11 @@ function GuidelinesSection() {
 /* -------------------------------------------------------------------------- */
 
 function EBookDetailsSection() {
-  const [tags, setTags] = useState<string[]>(["Promised Land 2024", "Barack Obama", "Barack Obama"]);
+  const [tags, setTags] = useState<string[]>([
+    "Promised Land 2024",
+    "Barack Obama",
+    "Barack Obama",
+  ]);
   const [tagInput, setTagInput] = useState("");
 
   const removeTag = (i: number) => setTags((t) => t.filter((_, idx) => idx !== i));
@@ -470,12 +459,7 @@ function EBookDetailsSection() {
   };
 
   return (
-    <SectionCard
-      title="eBook Details"
-      right={<AutoDetectedBadge />}
-    >
-      
-
+    <SectionCard title="eBook Details" right={<AutoDetectedBadge />}>
       <div className="grid gap-x-5 gap-y-4 md:grid-cols-2">
         <Field label="Enter eBook Name" required>
           <TextInput defaultValue="Harry Potter" />
@@ -600,12 +584,7 @@ const AUTHOR_BOOK_LISTS: Record<string, string[]> = {
     "Oliver Twist",
     "David Copperfield",
   ],
-  "Haruki Murakami": [
-    "Kafka on the Shore",
-    "Norwegian Wood",
-    "1Q84",
-    "The Wind-Up Bird Chronicle",
-  ],
+  "Haruki Murakami": ["Kafka on the Shore", "Norwegian Wood", "1Q84", "The Wind-Up Bird Chronicle"],
 };
 
 const TAKEN_AUTHOR_SLUGS = new Set(["mark-twain"]);
@@ -684,11 +663,13 @@ function AuthorSearchResultCard({
         </span>
       )}
       <span className="min-w-0 flex-1">
-        <span className={`block truncate text-sm font-semibold ${isSelected ? "text-muted-foreground" : ""}`}>
+        <span
+          className={`block truncate text-sm font-semibold ${isSelected ? "text-muted-foreground" : ""}`}
+        >
           {match.name}
         </span>
-        <div 
-          ref={booksPopupRef} 
+        <div
+          ref={booksPopupRef}
           className="relative mt-0.5"
           onMouseEnter={() => {
             if (match.books > 0) setShowBooksPopup(true);
@@ -712,7 +693,7 @@ function AuthorSearchResultCard({
           </button>
 
           {showBooksPopup && (
-            <div 
+            <div
               onClick={(e) => e.stopPropagation()}
               className="absolute left-0 top-[calc(100%+6px)] z-30 w-[260px] overflow-hidden rounded-lg border border-border bg-card shadow-lg cursor-default text-foreground"
             >
@@ -781,7 +762,11 @@ function SelectedAuthorCard({
         <div className="flex items-center gap-3">
           <label className="group relative cursor-pointer">
             {author.avatar ? (
-              <img src={author.avatar} alt={author.name} className="h-12 w-12 rounded-full object-cover" />
+              <img
+                src={author.avatar}
+                alt={author.name}
+                className="h-12 w-12 rounded-full object-cover"
+              />
             ) : (
               <span className="flex h-12 w-12 items-center justify-center rounded-full bg-secondary text-sm font-semibold text-muted-foreground">
                 {initials(author.name)}
@@ -805,10 +790,9 @@ function SelectedAuthorCard({
           <div className="min-w-0">
             <div className="flex flex-wrap items-center gap-2">
               <p className="text-sm font-semibold">{author.name}</p>
-       
             </div>
-            <div 
-              ref={booksPopupRef} 
+            <div
+              ref={booksPopupRef}
               className="relative mt-0.5"
               onMouseEnter={() => {
                 if (author.books > 0) setShowBooksPopup(true);
@@ -868,7 +852,9 @@ function SelectedAuthorCard({
         <Field
           label="Author Profile URL"
           required
-          error={unavailable ? "This URL is already in use. Please try a different one." : undefined}
+          error={
+            unavailable ? "This URL is already in use. Please try a different one." : undefined
+          }
           hint={!unavailable ? "The URL is available" : undefined}
         >
           <div className="flex overflow-hidden rounded-lg border border-border bg-background">
@@ -1002,7 +988,7 @@ function AuthorsSection() {
                 type="button"
                 onClick={addAsNewFromQuery}
                 className="inline-flex h-9 items-center rounded-lg border px-3 text-sm font-medium text-white transition-opacity hover:opacity-90"
-style={{ backgroundColor: "#008585", borderColor: "#008585" }}
+                style={{ backgroundColor: "#008585", borderColor: "#008585" }}
               >
                 Add as new
               </button>
@@ -1049,9 +1035,7 @@ style={{ backgroundColor: "#008585", borderColor: "#008585" }}
                     )
                   }
                   onRemove={() =>
-                    setSelectedAuthors((prev) =>
-                      prev.filter((item) => item.id !== author.id),
-                    )
+                    setSelectedAuthors((prev) => prev.filter((item) => item.id !== author.id))
                   }
                 />
               );
@@ -1080,12 +1064,8 @@ function BookUrlSection() {
         </SelectInput>
       </Field>
 
-
       <div className="mt-4">
-        <Field
-          label="Book URL"
-          error="This URL is already in use. Please try a different one."
-        >
+        <Field label="Book URL" error="This URL is already in use. Please try a different one.">
           <div className="flex gap-2">
             <div className="flex flex-1 overflow-hidden rounded-lg border border-border bg-background">
               <span className="flex items-center bg-secondary/60 px-3 text-xs text-muted-foreground">
@@ -1131,14 +1111,14 @@ function CategoriesSection() {
               {g.name}
             </div>
             {g.subs.length > 0 && (
-            <ul className="mt-1 space-y-1 pl-6 text-muted-foreground">
-              {g.subs.map((s, i) => (
-                <li key={i} className="flex items-center gap-2">
-                  <span className="h-1 w-1 rounded-full bg-muted-foreground" />
-                  {s}
-                </li>
-              ))}
-            </ul>
+              <ul className="mt-1 space-y-1 pl-6 text-muted-foreground">
+                {g.subs.map((s, i) => (
+                  <li key={i} className="flex items-center gap-2">
+                    <span className="h-1 w-1 rounded-full bg-muted-foreground" />
+                    {s}
+                  </li>
+                ))}
+              </ul>
             )}
           </li>
         ))}
@@ -1193,9 +1173,7 @@ function CategoryDialog({
 }) {
   const mains = Object.keys(CATEGORY_DATA);
   const [selected, setSelected] = useState<Record<string, string[]>>(initial);
-  const [active, setActive] = useState<string>(
-    Object.keys(initial)[0] ?? mains[0],
-  );
+  const [active, setActive] = useState<string>(Object.keys(initial)[0] ?? mains[0]);
 
   const toggleMain = (name: string) => {
     setSelected((prev) => {
@@ -1272,9 +1250,7 @@ function CategoryDialog({
                           toggleMain(name);
                         }}
                         className={`flex h-5 w-5 shrink-0 items-center justify-center rounded border transition-colors ${
-                          checked
-                            ? "border-transparent"
-                            : "border-border bg-background"
+                          checked ? "border-transparent" : "border-border bg-background"
                         }`}
                         style={
                           checked
@@ -1426,10 +1402,7 @@ function Radio({
         style={{ borderColor: checked ? "var(--brand)" : "var(--border)" }}
       >
         {checked && (
-          <span
-            className="h-2 w-2 rounded-full"
-            style={{ backgroundColor: "var(--brand)" }}
-          />
+          <span className="h-2 w-2 rounded-full" style={{ backgroundColor: "var(--brand)" }} />
         )}
       </span>
       {label}
@@ -1449,16 +1422,8 @@ function PaymentSection() {
             Choose Pricing
           </span>
           <div className="flex items-center gap-6">
-            <Radio
-              checked={pricing === "free"}
-              onChange={() => setPricing("free")}
-              label="Free"
-            />
-            <Radio
-              checked={pricing === "paid"}
-              onChange={() => setPricing("paid")}
-              label="Paid"
-            />
+            <Radio checked={pricing === "free"} onChange={() => setPricing("free")} label="Free" />
+            <Radio checked={pricing === "paid"} onChange={() => setPricing("paid")} label="Paid" />
           </div>
         </div>
 
@@ -1478,8 +1443,8 @@ function PaymentSection() {
           onChange={setGstConfirm}
           label={
             <span>
-              I hereby confirm that the eBook includes a print version and therefore is
-              subject to the GST rate of 5%.
+              I hereby confirm that the eBook includes a print version and therefore is subject to
+              the GST rate of 5%.
             </span>
           }
         />
@@ -1696,7 +1661,7 @@ function RentalDialog({
               type="button"
               onClick={handleAdd}
               className="h-14 rounded-xl px-6 text-sm font-semibold shadow-sm transition-opacity hover:opacity-90"
-style={{ backgroundColor: "var(--brand)", color: "var(--brand-contrast)" }}
+              style={{ backgroundColor: "var(--brand)", color: "var(--brand-contrast)" }}
             >
               Add
             </button>
@@ -1722,10 +1687,7 @@ style={{ backgroundColor: "var(--brand)", color: "var(--brand-contrast)" }}
               <tbody>
                 {rows.length === 0 && (
                   <tr>
-                    <td
-                      colSpan={6}
-                      className="px-5 py-6 text-center text-sm text-muted-foreground"
-                    >
+                    <td colSpan={6} className="px-5 py-6 text-center text-sm text-muted-foreground">
                       No rentals added yet.
                     </td>
                   </tr>
@@ -1736,18 +1698,13 @@ style={{ backgroundColor: "var(--brand)", color: "var(--brand-contrast)" }}
                     <td className="px-5 py-3 text-muted-foreground">{r.days}</td>
                     <td className="px-5 py-3">₹{r.unit}</td>
                     <td className="px-5 py-3">₹{r.offer}</td>
-                    <td
-                      className="px-5 py-3 font-semibold"
-                      style={{ color: "var(--brand)" }}
-                    >
+                    <td className="px-5 py-3 font-semibold" style={{ color: "var(--brand)" }}>
                       ₹{calcSelling(r.unit, r.offer)}
                     </td>
                     <td className="px-5 py-3 text-right">
                       <button
                         type="button"
-                        onClick={() =>
-                          setRows((prev) => prev.filter((x) => x.id !== r.id))
-                        }
+                        onClick={() => setRows((prev) => prev.filter((x) => x.id !== r.id))}
                         className="text-muted-foreground transition-colors hover:text-rose-500"
                       >
                         <Trash2 size={15} />
@@ -1763,9 +1720,8 @@ style={{ backgroundColor: "var(--brand)", color: "var(--brand-contrast)" }}
           <div className="mt-4 flex items-center justify-between text-sm text-muted-foreground">
             <span>
               Showing {rows.length === 0 ? 0 : (page - 1) * RENTAL_PAGE_SIZE + 1}
-              {rows.length > 1 &&
-                `–${Math.min(page * RENTAL_PAGE_SIZE, rows.length)}`}{" "}
-              from {rows.length} results
+              {rows.length > 1 && `–${Math.min(page * RENTAL_PAGE_SIZE, rows.length)}`} from{" "}
+              {rows.length} results
             </span>
             <div className="flex items-center gap-1">
               <button
@@ -1785,8 +1741,7 @@ style={{ backgroundColor: "var(--brand)", color: "var(--brand-contrast)" }}
                   style={
                     p === page
                       ? {
-                          backgroundColor:
-                            "color-mix(in oklab, var(--brand) 12%, transparent)",
+                          backgroundColor: "color-mix(in oklab, var(--brand) 12%, transparent)",
                           color: "var(--brand)",
                         }
                       : undefined
@@ -1879,9 +1834,7 @@ function RentalSection() {
                     <td className="py-3 text-right">
                       <button
                         type="button"
-                        onClick={() =>
-                          setEntries((prev) => prev.filter((x) => x.id !== r.id))
-                        }
+                        onClick={() => setEntries((prev) => prev.filter((x) => x.id !== r.id))}
                         className="text-muted-foreground hover:text-rose-500"
                       >
                         <Trash2 size={15} />

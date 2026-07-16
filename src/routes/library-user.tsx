@@ -1,18 +1,18 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
-import { 
-  BookOpen, 
-  Search, 
-  ArrowLeft, 
-  Clock, 
-  Bookmark, 
-  ChevronLeft, 
-  ChevronRight, 
-  Minimize2, 
-  Type, 
+import {
+  BookOpen,
+  Search,
+  ArrowLeft,
+  Clock,
+  Bookmark,
+  ChevronLeft,
+  ChevronRight,
+  Minimize2,
+  Type,
   FileText,
   Star,
-  BookMarked
+  BookMarked,
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -54,17 +54,20 @@ function LibraryUserDashboard() {
       initials: "NEP",
       category: "Academic",
       cover: "linear-gradient(160deg, oklch(0.55 0.14 240), oklch(0.35 0.09 240))",
-      description: "A comprehensive critical analysis of the National Education Policy 2020, focusing on curriculum restructuring, student credits, and multi-disciplinary academic integration in Indian institutions.",
+      description:
+        "A comprehensive critical analysis of the National Education Policy 2020, focusing on curriculum restructuring, student credits, and multi-disciplinary academic integration in Indian institutions.",
       chapters: [
         {
           title: "Chapter 1: The Historical Context of NEP",
-          content: "The National Education Policy 2020 is India's third major policy restructure in higher education. Initiated under high-level panels, this document aims to address key systemic challenges such as lack of interdisciplinary study, rigid choice structures, and uneven funding distribution across research universities. The transition from 10+2 to 5+3+3+4 marks a fundamental shift in pedagogical organization designed to align learning with cognitive developmental stages."
+          content:
+            "The National Education Policy 2020 is India's third major policy restructure in higher education. Initiated under high-level panels, this document aims to address key systemic challenges such as lack of interdisciplinary study, rigid choice structures, and uneven funding distribution across research universities. The transition from 10+2 to 5+3+3+4 marks a fundamental shift in pedagogical organization designed to align learning with cognitive developmental stages.",
         },
         {
           title: "Chapter 2: Multidisciplinary Restructuring",
-          content: "Historically, higher education institutes (HEIs) have operated in highly siloed formats. Universities of engineering did not integrate humanities, and liberal arts programs lacked basic computational foundations. Chapter 2 details the legal framework for HEIs to transition into integrated campuses, allowing students studying physics to concurrently major in Sanskrit or music under a unified Credit Accumulation bank."
-        }
-      ]
+          content:
+            "Historically, higher education institutes (HEIs) have operated in highly siloed formats. Universities of engineering did not integrate humanities, and liberal arts programs lacked basic computational foundations. Chapter 2 details the legal framework for HEIs to transition into integrated campuses, allowing students studying physics to concurrently major in Sanskrit or music under a unified Credit Accumulation bank.",
+        },
+      ],
     },
     {
       id: "book-2",
@@ -76,13 +79,15 @@ function LibraryUserDashboard() {
       initials: "MUS",
       category: "Music",
       cover: "linear-gradient(160deg, oklch(0.45 0.09 145), oklch(0.28 0.06 145))",
-      description: "An archival study of classical melodies, instruments, composer biographies, and scale progressions designed for educational institutions and introductory music departments.",
+      description:
+        "An archival study of classical melodies, instruments, composer biographies, and scale progressions designed for educational institutions and introductory music departments.",
       chapters: [
         {
           title: "Chapter 1: Early Polyphony and the Monks",
-          content: "Before music was written in standardized bars, early church music relied entirely on the monophonic chant. St. Gregory compiled the chants that would form the liturgical backbone of Europe. This chapter explores how vocal lines split into two, introducing the parallel fourths and fifths that would define early polyphony."
-        }
-      ]
+          content:
+            "Before music was written in standardized bars, early church music relied entirely on the monophonic chant. St. Gregory compiled the chants that would form the liturgical backbone of Europe. This chapter explores how vocal lines split into two, introducing the parallel fourths and fifths that would define early polyphony.",
+        },
+      ],
     },
     {
       id: "book-3",
@@ -94,13 +99,15 @@ function LibraryUserDashboard() {
       initials: "STY",
       category: "Style",
       cover: "linear-gradient(160deg, oklch(0.55 0.12 300), oklch(0.32 0.08 300))",
-      description: "The classic American English writing style guide. It includes basic rules of usage, elementary principles of composition, and commonly misused words and phrases.",
+      description:
+        "The classic American English writing style guide. It includes basic rules of usage, elementary principles of composition, and commonly misused words and phrases.",
       chapters: [
         {
           title: "Chapter 1: Elementary Rules of Usage",
-          content: "Rule 1: Form the possessive singular of nouns by adding 's. Write 'Charles's friend', 'Burns's poems', 'the witch's malice'. Rule 2: In a series of three or more terms with a single conjunction, use a comma after each term except the last."
-        }
-      ]
+          content:
+            "Rule 1: Form the possessive singular of nouns by adding 's. Write 'Charles's friend', 'Burns's poems', 'the witch's malice'. Rule 2: In a series of three or more terms with a single conjunction, use a comma after each term except the last.",
+        },
+      ],
     },
     {
       id: "book-4",
@@ -112,20 +119,23 @@ function LibraryUserDashboard() {
       initials: "KFT",
       category: "General",
       cover: "linear-gradient(160deg, oklch(0.5 0.13 30), oklch(0.32 0.08 30))",
-      description: "A manual of curiosities, historical anecdotes, scientific facts, and literary snippets collected from Victorian records and early modern academic journals.",
+      description:
+        "A manual of curiosities, historical anecdotes, scientific facts, and literary snippets collected from Victorian records and early modern academic journals.",
       chapters: [
         {
           title: "Chapter 1: Curiosities of Science",
-          content: "The progression of scientific discoveries in the nineteenth century occurred at an unprecedented pace. The electric telegraph transformed instantaneous communication. Steam engines linked far-flung towns in minutes, altering the perception of geographical distance."
-        }
-      ]
-    }
+          content:
+            "The progression of scientific discoveries in the nineteenth century occurred at an unprecedented pace. The electric telegraph transformed instantaneous communication. Steam engines linked far-flung towns in minutes, altering the perception of geographical distance.",
+        },
+      ],
+    },
   ];
 
-  const filteredBooks = books.filter(book => {
+  const filteredBooks = books.filter((book) => {
     const matchesCategory = activeCategory === "All" || book.category === activeCategory;
-    const matchesSearch = book.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
-                          book.author.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesSearch =
+      book.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      book.author.toLowerCase().includes(searchQuery.toLowerCase());
     return matchesCategory && matchesSearch;
   });
 
@@ -149,8 +159,8 @@ function LibraryUserDashboard() {
       <header className="sticky top-0 z-30 border-b border-border bg-background/85 px-4 py-4 backdrop-blur md:px-8">
         <div className="mx-auto max-w-7xl flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <Link 
-              to="/" 
+            <Link
+              to="/"
               id="library-user-btn-back"
               className="flex h-9 w-9 items-center justify-center rounded-lg border border-border bg-card text-muted-foreground hover:text-foreground transition-colors"
             >
@@ -168,7 +178,10 @@ function LibraryUserDashboard() {
           </div>
 
           <div className="relative max-w-xs w-full hidden sm:block">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={14} />
+            <Search
+              className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground"
+              size={14}
+            />
             <input
               type="text"
               placeholder="Search books, authors..."
@@ -185,7 +198,10 @@ function LibraryUserDashboard() {
         {/* Currently Reading Banner */}
         <section className="rounded-xl border border-border bg-card p-5 relative overflow-hidden shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="flex items-center gap-4">
-            <div className="h-16 w-12 shrink-0 rounded-md flex items-center justify-center text-[10px] font-bold text-white shadow" style={{ background: books[0].cover }}>
+            <div
+              className="h-16 w-12 shrink-0 rounded-md flex items-center justify-center text-[10px] font-bold text-white shadow"
+              style={{ background: books[0].cover }}
+            >
               {books[0].initials}
             </div>
             <div>
@@ -196,14 +212,17 @@ function LibraryUserDashboard() {
               <p className="text-xs text-muted-foreground">by {books[0].author}</p>
             </div>
           </div>
-          
+
           <div className="space-y-2 md:w-64">
             <div className="flex items-center justify-between text-xs text-muted-foreground font-semibold">
               <span>Progress</span>
               <span>{books[0].progress}%</span>
             </div>
             <div className="w-full bg-secondary h-2 rounded-full overflow-hidden">
-              <div className="bg-[oklch(0.62_0.15_155)] h-full rounded-full" style={{ width: `${books[0].progress}%` }} />
+              <div
+                className="bg-[oklch(0.62_0.15_155)] h-full rounded-full"
+                style={{ width: `${books[0].progress}%` }}
+              />
             </div>
             <button
               onClick={() => handleOpenReader(books[0])}
@@ -224,8 +243,8 @@ function LibraryUserDashboard() {
                   key={cat}
                   onClick={() => setActiveCategory(cat)}
                   className={`rounded-full px-3 py-1.5 text-xs font-medium border transition-colors ${
-                    activeCategory === cat 
-                      ? "bg-[oklch(0.62_0.15_155)] border-[oklch(0.62_0.15_155)] text-white" 
+                    activeCategory === cat
+                      ? "bg-[oklch(0.62_0.15_155)] border-[oklch(0.62_0.15_155)] text-white"
                       : "border-border bg-card text-muted-foreground hover:text-foreground"
                   }`}
                 >
@@ -243,7 +262,7 @@ function LibraryUserDashboard() {
                 onClick={() => setSelectedBook(book)}
                 className="group cursor-pointer flex flex-col space-y-3 p-3 rounded-xl border border-border/80 bg-card hover:shadow-md hover:border-border transition-all"
               >
-                <div 
+                <div
                   className="aspect-[3/4] w-full rounded-lg flex items-center justify-center text-white font-bold text-lg shadow-sm transition-transform group-hover:scale-[1.02]"
                   style={{ background: book.cover }}
                 >
@@ -252,7 +271,7 @@ function LibraryUserDashboard() {
                 <div className="space-y-1">
                   <h3 className="font-bold text-xs truncate text-foreground">{book.title}</h3>
                   <p className="text-[11px] text-muted-foreground truncate">by {book.author}</p>
-                  
+
                   <div className="flex items-center justify-between pt-1">
                     <span className="text-[10px] text-muted-foreground font-mono flex items-center gap-0.5">
                       <Star size={10} className="fill-yellow-400 text-yellow-400" />
@@ -275,7 +294,7 @@ function LibraryUserDashboard() {
       {selectedBook && (
         <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in duration-200">
           <div className="bg-card border border-border w-full max-w-md rounded-2xl p-6 relative shadow-2xl flex flex-col space-y-6">
-            <button 
+            <button
               onClick={() => setSelectedBook(null)}
               aria-label="Close book details"
               className="absolute right-4 top-4 h-8 w-8 rounded-full bg-secondary flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors"
@@ -284,12 +303,19 @@ function LibraryUserDashboard() {
             </button>
 
             <div className="flex gap-4">
-              <div className="h-28 w-20 shrink-0 rounded-lg flex items-center justify-center text-white font-bold text-base shadow" style={{ background: selectedBook.cover }}>
+              <div
+                className="h-28 w-20 shrink-0 rounded-lg flex items-center justify-center text-white font-bold text-base shadow"
+                style={{ background: selectedBook.cover }}
+              >
                 {selectedBook.initials}
               </div>
               <div className="min-w-0 space-y-1">
-                <span className="text-[10px] font-bold text-emerald-500 uppercase">{selectedBook.category}</span>
-                <h3 className="font-bold text-base text-foreground leading-tight">{selectedBook.title}</h3>
+                <span className="text-[10px] font-bold text-emerald-500 uppercase">
+                  {selectedBook.category}
+                </span>
+                <h3 className="font-bold text-base text-foreground leading-tight">
+                  {selectedBook.title}
+                </h3>
                 <p className="text-xs text-muted-foreground">by {selectedBook.author}</p>
                 <div className="flex items-center gap-1.5 pt-2 text-xs">
                   <Star size={13} className="fill-yellow-400 text-yellow-400" />
@@ -299,7 +325,9 @@ function LibraryUserDashboard() {
             </div>
 
             <div className="space-y-2">
-              <h4 className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Synopsis</h4>
+              <h4 className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                Synopsis
+              </h4>
               <p className="text-xs text-muted-foreground/90 leading-relaxed font-medium">
                 {selectedBook.description}
               </p>
@@ -327,11 +355,13 @@ function LibraryUserDashboard() {
 
       {/* Fullscreen Digital Reader Modal */}
       {readingBook && (
-        <div 
+        <div
           className="fixed inset-0 z-50 flex flex-col transition-colors duration-200"
           style={{
-            backgroundColor: readerTheme === "sepia" ? "#fbf0db" : readerTheme === "dark" ? "#181818" : "#ffffff",
-            color: readerTheme === "sepia" ? "#433422" : readerTheme === "dark" ? "#e0e0e0" : "#202020"
+            backgroundColor:
+              readerTheme === "sepia" ? "#fbf0db" : readerTheme === "dark" ? "#181818" : "#ffffff",
+            color:
+              readerTheme === "sepia" ? "#433422" : readerTheme === "dark" ? "#e0e0e0" : "#202020",
           }}
         >
           {/* Reader Top Controls */}
@@ -390,8 +420,8 @@ function LibraryUserDashboard() {
                     onClick={() => setReaderTheme(t)}
                     id={`btn-reader-theme-${t}`}
                     className={`h-6 px-2 text-[10px] font-bold rounded border uppercase tracking-wider transition-all ${
-                      readerTheme === t 
-                        ? "border-current/80 bg-black/10 scale-105" 
+                      readerTheme === t
+                        ? "border-current/80 bg-black/10 scale-105"
                         : "border-transparent opacity-60 hover:opacity-100"
                     }`}
                   >
@@ -404,14 +434,18 @@ function LibraryUserDashboard() {
 
           {/* Reader Content Body */}
           <div className="flex-1 overflow-y-auto px-6 py-12 md:px-12 flex justify-center items-start">
-            <article 
+            <article
               className={`max-w-2xl w-full mx-auto leading-relaxed select-none space-y-6 ${
-                fontSize === "sm" ? "text-sm" :
-                fontSize === "base" ? "text-base" :
-                fontSize === "lg" ? "text-lg" : "text-xl"
+                fontSize === "sm"
+                  ? "text-sm"
+                  : fontSize === "base"
+                    ? "text-base"
+                    : fontSize === "lg"
+                      ? "text-lg"
+                      : "text-xl"
               }`}
               style={{
-                fontFamily: "Georgia, serif"
+                fontFamily: "Georgia, serif",
               }}
             >
               <h2 className="text-2xl md:text-3xl font-bold font-serif mb-6 border-b border-current/10 pb-4">
@@ -421,7 +455,11 @@ function LibraryUserDashboard() {
                 {readingBook.chapters[currentChapter]?.content}
               </p>
               <p className="text-justify font-serif">
-                Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.
+                Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium
+                doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore
+                veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam
+                voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur
+                magni dolores eos qui ratione voluptatem sequi nesciunt.
               </p>
             </article>
           </div>
@@ -431,7 +469,7 @@ function LibraryUserDashboard() {
             <button
               onClick={() => {
                 if (currentChapter > 0) {
-                  setCurrentChapter(prev => prev - 1);
+                  setCurrentChapter((prev) => prev - 1);
                 } else {
                   toast.error("You are on the first chapter.");
                 }
@@ -449,7 +487,7 @@ function LibraryUserDashboard() {
             <button
               onClick={() => {
                 if (currentChapter < readingBook.chapters.length - 1) {
-                  setCurrentChapter(prev => prev + 1);
+                  setCurrentChapter((prev) => prev + 1);
                 } else {
                   toast.success("Congratulations! You completed the book.");
                 }

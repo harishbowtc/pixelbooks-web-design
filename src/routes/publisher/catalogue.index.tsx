@@ -25,8 +25,6 @@ export const Route = createFileRoute("/publisher/catalogue/")({
   component: CataloguePage,
 });
 
-
-
 const STATUS_FILTERS: Array<"All" | Status> = ["All", "Published", "Unpublished", "Rejected"];
 const PAGE_SIZE = 8;
 
@@ -51,7 +49,13 @@ function StatusPill({ status }: { status: Status }) {
   );
 }
 
-function StatusFilter({ value, onChange }: { value: string; onChange: (v: typeof STATUS_FILTERS[number]) => void }) {
+function StatusFilter({
+  value,
+  onChange,
+}: {
+  value: string;
+  onChange: (v: (typeof STATUS_FILTERS)[number]) => void;
+}) {
   const [open, setOpen] = useState(false);
   return (
     <div className="relative">
@@ -75,8 +79,9 @@ function StatusFilter({ value, onChange }: { value: string; onChange: (v: typeof
                 onChange(s);
                 setOpen(false);
               }}
-              className={`block w-full px-4 py-2 text-left text-sm hover:bg-secondary ${s === value ? "text-foreground font-medium" : "text-muted-foreground"
-                }`}
+              className={`block w-full px-4 py-2 text-left text-sm hover:bg-secondary ${
+                s === value ? "text-foreground font-medium" : "text-muted-foreground"
+              }`}
             >
               {s}
             </button>
@@ -172,7 +177,9 @@ function CataloguePage() {
                   <th className="py-4 pr-4 font-semibold">ISBN</th>
                   <th className="py-4 pr-4 font-semibold">Status</th>
                   <th className="py-4 pr-4 font-semibold">Pricing</th>
-                  <th className="py-4 pr-6 font-semibold">Author</th>                  <th className="py-4 pr-6" />                </tr>
+                  <th className="py-4 pr-6 font-semibold">Author</th>{" "}
+                  <th className="py-4 pr-6" />{" "}
+                </tr>
               </thead>
               <tbody>
                 {pageItems.length === 0 && (
@@ -185,7 +192,9 @@ function CataloguePage() {
                 {pageItems.map((b) => (
                   <tr
                     key={b.id}
-                    onClick={() => navigate({ to: "/publisher/catalogue/$bookId", params: { bookId: b.id } })}
+                    onClick={() =>
+                      navigate({ to: "/publisher/catalogue/$bookId", params: { bookId: b.id } })
+                    }
                     className="group border-b border-border/60 transition-colors last:border-0 cursor-pointer hover:bg-secondary/50"
                   >
                     <td className="py-4 pl-6 pr-4">
@@ -249,7 +258,9 @@ function CataloguePage() {
               <li
                 key={b.id}
                 className="p-4 cursor-pointer hover:bg-secondary/50 transition-colors"
-                onClick={() => navigate({ to: "/publisher/catalogue/$bookId", params: { bookId: b.id } })}
+                onClick={() =>
+                  navigate({ to: "/publisher/catalogue/$bookId", params: { bookId: b.id } })
+                }
               >
                 <div className="flex items-start gap-3">
                   <div
@@ -319,7 +330,11 @@ function CataloguePage() {
                         href="#"
                         style={
                           n === currentPage
-                            ? { backgroundColor: "var(--brand)", color: "var(--brand-contrast)", borderColor: "transparent" }
+                            ? {
+                                backgroundColor: "var(--brand)",
+                                color: "var(--brand-contrast)",
+                                borderColor: "transparent",
+                              }
                             : undefined
                         }
                       >

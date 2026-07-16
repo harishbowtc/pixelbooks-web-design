@@ -27,20 +27,21 @@ export const Route = createFileRoute("/publisher/promo-codes/")({
   head: () => ({
     meta: [
       { title: "Promo Codes — PixelBooks" },
-      { name: "description", content: "Create and manage discount promo codes for your storefront." },
+      {
+        name: "description",
+        content: "Create and manage discount promo codes for your storefront.",
+      },
       { property: "og:title", content: "Promo Codes — PixelBooks" },
-      { property: "og:description", content: "Create and manage discount promo codes for your storefront." },
+      {
+        property: "og:description",
+        content: "Create and manage discount promo codes for your storefront.",
+      },
     ],
   }),
   component: PromoCodesPage,
 });
 
-type PromoStatus =
-  | "Pending for Admin Approval"
-  | "Approved"
-  | "Rejected"
-  | "Disabled"
-  | "Expired";
+type PromoStatus = "Pending for Admin Approval" | "Approved" | "Rejected" | "Disabled" | "Expired";
 type Activation = "Available" | "Not available";
 
 type Promo = {
@@ -56,12 +57,72 @@ type Promo = {
 };
 
 const seed: Promo[] = [
-  { id: "1", code: "FQSGFQX799", start: "Dec 09", end: "Dec 09, 2025", status: "Expired", discount: 10, title: "All", activation: "Not available", active: false },
-  { id: "2", code: "MONSOON25", start: "Jul 01", end: "Aug 31, 2026", status: "Approved", discount: 25, title: "Monsoon Reads", activation: "Available", active: true },
-  { id: "3", code: "KIDS15", start: "Jun 15", end: "Dec 31, 2026", status: "Approved", discount: 15, title: "Kids Collection", activation: "Available", active: true },
-  { id: "4", code: "WELCOME5", start: "Jan 01", end: "Dec 31, 2026", status: "Pending for Admin Approval", discount: 5, title: "New Users", activation: "Not available", active: false },
-  { id: "5", code: "AUG40", start: "Aug 01", end: "Aug 15, 2026", status: "Disabled", discount: 40, title: "Independence Sale", activation: "Not available", active: false },
-  { id: "6", code: "FLASH20", start: "Mar 10", end: "Mar 12, 2026", status: "Rejected", discount: 20, title: "Flash Weekend", activation: "Not available", active: false },
+  {
+    id: "1",
+    code: "FQSGFQX799",
+    start: "Dec 09",
+    end: "Dec 09, 2025",
+    status: "Expired",
+    discount: 10,
+    title: "All",
+    activation: "Not available",
+    active: false,
+  },
+  {
+    id: "2",
+    code: "MONSOON25",
+    start: "Jul 01",
+    end: "Aug 31, 2026",
+    status: "Approved",
+    discount: 25,
+    title: "Monsoon Reads",
+    activation: "Available",
+    active: true,
+  },
+  {
+    id: "3",
+    code: "KIDS15",
+    start: "Jun 15",
+    end: "Dec 31, 2026",
+    status: "Approved",
+    discount: 15,
+    title: "Kids Collection",
+    activation: "Available",
+    active: true,
+  },
+  {
+    id: "4",
+    code: "WELCOME5",
+    start: "Jan 01",
+    end: "Dec 31, 2026",
+    status: "Pending for Admin Approval",
+    discount: 5,
+    title: "New Users",
+    activation: "Not available",
+    active: false,
+  },
+  {
+    id: "5",
+    code: "AUG40",
+    start: "Aug 01",
+    end: "Aug 15, 2026",
+    status: "Disabled",
+    discount: 40,
+    title: "Independence Sale",
+    activation: "Not available",
+    active: false,
+  },
+  {
+    id: "6",
+    code: "FLASH20",
+    start: "Mar 10",
+    end: "Mar 12, 2026",
+    status: "Rejected",
+    discount: 20,
+    title: "Flash Weekend",
+    activation: "Not available",
+    active: false,
+  },
 ];
 
 const filters = [
@@ -333,7 +394,11 @@ function PromoCodesPage() {
                         href="#"
                         style={
                           n === currentPage
-                            ? { backgroundColor: "var(--brand)", color: "var(--brand-contrast)", borderColor: "transparent" }
+                            ? {
+                                backgroundColor: "var(--brand)",
+                                color: "var(--brand-contrast)",
+                                borderColor: "transparent",
+                              }
                             : undefined
                         }
                       >

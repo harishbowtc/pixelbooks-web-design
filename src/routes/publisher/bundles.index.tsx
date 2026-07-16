@@ -198,9 +198,7 @@ function BundlesPage() {
                           {b.initials}
                         </div>
                         <div>
-                          <div className="font-medium text-foreground">
-                            {b.title}
-                          </div>
+                          <div className="font-medium text-foreground">{b.title}</div>
                           <span
                             className="mt-1 inline-block rounded-full px-2.5 py-0.5 text-[11px] font-medium"
                             style={{
@@ -260,7 +258,9 @@ function BundlesPage() {
             {pageItems.map((b) => (
               <li
                 key={b.id}
-                onClick={() => navigate({ to: "/publisher/bundles/$bundleId", params: { bundleId: b.id } })}
+                onClick={() =>
+                  navigate({ to: "/publisher/bundles/$bundleId", params: { bundleId: b.id } })
+                }
                 className="flex cursor-pointer items-start gap-3 p-4 hover:bg-secondary/40 transition-colors"
               >
                 <div

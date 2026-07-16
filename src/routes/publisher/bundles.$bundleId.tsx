@@ -1,6 +1,16 @@
 import { useState } from "react";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { ArrowLeft, CheckCircle2, XCircle, Clock, Star, Globe, Copy, Check, FileX2 } from "lucide-react";
+import {
+  ArrowLeft,
+  CheckCircle2,
+  XCircle,
+  Clock,
+  Star,
+  Globe,
+  Copy,
+  Check,
+  FileX2,
+} from "lucide-react";
 import { toast } from "sonner";
 import { AppShell } from "@/components/app-shell";
 import { seedBooks, type Book } from "@/lib/catalogue-data";
@@ -279,7 +289,11 @@ function EBookBundleDetailPage() {
       <AppShell title="Bundle Details">
         <div className="flex flex-col items-center justify-center gap-3 p-16 text-center">
           <p className="text-sm text-muted-foreground">eBook Bundle not found.</p>
-          <Link to="/publisher/bundles/" className="text-sm font-medium" style={{ color: "var(--brand)" }}>
+          <Link
+            to="/publisher/bundles/"
+            className="text-sm font-medium"
+            style={{ color: "var(--brand)" }}
+          >
             ← Back to eBook Bundles
           </Link>
         </div>

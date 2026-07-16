@@ -10,7 +10,7 @@ import {
   BookOpen,
   X,
   Star,
-  CheckCircle2
+  CheckCircle2,
 } from "lucide-react";
 import { AppShell } from "@/components/app-shell";
 import { Switch } from "@/components/ui/switch";
@@ -64,7 +64,8 @@ const initialBooks: LibraryBook[] = [
     category: "Travel & History",
     isbn: "9780199540013",
     rating: 4.5,
-    description: "Mark Twain's classic travelogue detailing his journey through Europe and the Holy Land aboard the steamship Quaker City."
+    description:
+      "Mark Twain's classic travelogue detailing his journey through Europe and the Holy Land aboard the steamship Quaker City.",
   },
   {
     id: "lib-2",
@@ -79,7 +80,8 @@ const initialBooks: LibraryBook[] = [
     category: "Memoir",
     isbn: "9780199537549",
     rating: 4.8,
-    description: "A memoir by Mark Twain of his days as a steamboat pilot on the Mississippi River before the American Civil War."
+    description:
+      "A memoir by Mark Twain of his days as a steamboat pilot on the Mississippi River before the American Civil War.",
   },
   {
     id: "lib-3",
@@ -94,7 +96,8 @@ const initialBooks: LibraryBook[] = [
     category: "Science & Biology",
     isbn: "9780521437769",
     rating: 4.7,
-    description: "A mathematical beauty of biology, analyzing the way things grow and the shapes they take."
+    description:
+      "A mathematical beauty of biology, analyzing the way things grow and the shapes they take.",
   },
   {
     id: "lib-4",
@@ -109,11 +112,12 @@ const initialBooks: LibraryBook[] = [
     category: "Art & Typography",
     isbn: "9780486213064",
     rating: 4.2,
-    description: "A historic treatise on the geometric construction of Roman capitals and alphabets.",
+    description:
+      "A historic treatise on the geometric construction of Roman capitals and alphabets.",
     purchases: [
       { copies: 2, purchaseDate: "03 Dec 2025" },
-      { copies: 1, purchaseDate: "10 Nov 2025" }
-    ]
+      { copies: 1, purchaseDate: "10 Nov 2025" },
+    ],
   },
   {
     id: "lib-5",
@@ -128,11 +132,12 @@ const initialBooks: LibraryBook[] = [
     category: "Reference",
     isbn: "9781019041857",
     rating: 4.0,
-    description: "A manual of information on historical, scientific, and literary developments of the 19th century.",
+    description:
+      "A manual of information on historical, scientific, and literary developments of the 19th century.",
     purchases: [
       { copies: 3, purchaseDate: "08 Dec 2025" },
-      { copies: 2, purchaseDate: "20 Oct 2025" }
-    ]
+      { copies: 2, purchaseDate: "20 Oct 2025" },
+    ],
   },
   {
     id: "lib-6",
@@ -147,7 +152,8 @@ const initialBooks: LibraryBook[] = [
     category: "Satire & Fiction",
     isbn: "9780199535736",
     rating: 4.6,
-    description: "A classic satirical novel in four parts, recounting Lemuel Gulliver's voyages to fantastical civilizations."
+    description:
+      "A classic satirical novel in four parts, recounting Lemuel Gulliver's voyages to fantastical civilizations.",
   },
   {
     id: "lib-7",
@@ -162,7 +168,8 @@ const initialBooks: LibraryBook[] = [
     category: "Political Science",
     isbn: "9780486296029",
     rating: 4.5,
-    description: "A highly influential pamphlet advocating independence from Great Britain to the people in the Thirteen Colonies."
+    description:
+      "A highly influential pamphlet advocating independence from Great Britain to the people in the Thirteen Colonies.",
   },
   {
     id: "lib-8",
@@ -177,7 +184,8 @@ const initialBooks: LibraryBook[] = [
     category: "Mathematics & Humor",
     isbn: "1646502779",
     rating: 4.3,
-    description: "A series of humorous stories incorporating mathematical puzzles and knots to solve."
+    description:
+      "A series of humorous stories incorporating mathematical puzzles and knots to solve.",
   },
   {
     id: "lib-9",
@@ -192,7 +200,8 @@ const initialBooks: LibraryBook[] = [
     category: "Writing Guide",
     isbn: "9780205309023",
     rating: 4.9,
-    description: "The definitive manual of writing style in American English, including rules of composition and usage."
+    description:
+      "The definitive manual of writing style in American English, including rules of composition and usage.",
   },
   {
     id: "lib-10",
@@ -207,11 +216,12 @@ const initialBooks: LibraryBook[] = [
     category: "Philosophy",
     isbn: "9780140449334",
     rating: 4.9,
-    description: "A series of personal writings by the Roman Emperor Marcus Aurelius, recording his private notes to himself and ideas on Stoic philosophy.",
+    description:
+      "A series of personal writings by the Roman Emperor Marcus Aurelius, recording his private notes to himself and ideas on Stoic philosophy.",
     purchases: [
       { copies: 30, purchaseDate: "15 Sep 2025" },
-      { copies: 20, purchaseDate: "01 Aug 2025" }
-    ]
+      { copies: 20, purchaseDate: "01 Aug 2025" },
+    ],
   },
   {
     id: "lib-11",
@@ -226,7 +236,8 @@ const initialBooks: LibraryBook[] = [
     category: "Philosophy",
     isbn: "9780872201361",
     rating: 4.8,
-    description: "A Socratic dialogue concerning justice, the order and character of the just city-state, and the just man."
+    description:
+      "A Socratic dialogue concerning justice, the order and character of the just city-state, and the just man.",
   },
   {
     id: "lib-12",
@@ -241,12 +252,13 @@ const initialBooks: LibraryBook[] = [
     category: "Cosmology",
     isbn: "9780553380163",
     rating: 4.7,
-    description: "A landmark popular-science book on cosmology, explaining complex astrophysics theories to general readers.",
+    description:
+      "A landmark popular-science book on cosmology, explaining complex astrophysics theories to general readers.",
     purchases: [
       { copies: 15, purchaseDate: "04 Aug 2025" },
       { copies: 10, purchaseDate: "15 Jul 2025" },
-      { copies: 5, purchaseDate: "01 Jun 2025" }
-    ]
+      { copies: 5, purchaseDate: "01 Jun 2025" },
+    ],
   },
   {
     id: "lib-13",
@@ -261,7 +273,8 @@ const initialBooks: LibraryBook[] = [
     category: "Military Strategy",
     isbn: "9781590302255",
     rating: 4.6,
-    description: "An ancient Chinese military treatise attributed to Sun Tzu, detailing strategies for warfare and conflict management."
+    description:
+      "An ancient Chinese military treatise attributed to Sun Tzu, detailing strategies for warfare and conflict management.",
   },
   {
     id: "lib-14",
@@ -276,7 +289,8 @@ const initialBooks: LibraryBook[] = [
     category: "Romance & Fiction",
     isbn: "9780141439518",
     rating: 4.8,
-    description: "A romantic novel of manners following the character development of Elizabeth Bennet."
+    description:
+      "A romantic novel of manners following the character development of Elizabeth Bennet.",
   },
   {
     id: "lib-15",
@@ -291,7 +305,8 @@ const initialBooks: LibraryBook[] = [
     category: "Gothic Horror",
     isbn: "9780486282114",
     rating: 4.5,
-    description: "The story of Victor Frankenstein, a young scientist who creates a sapient creature in an unorthodox scientific experiment."
+    description:
+      "The story of Victor Frankenstein, a young scientist who creates a sapient creature in an unorthodox scientific experiment.",
   },
   {
     id: "lib-16",
@@ -306,7 +321,8 @@ const initialBooks: LibraryBook[] = [
     category: "Philosophy & Nature",
     isbn: "9780486284958",
     rating: 4.4,
-    description: "A reflection upon simple living in natural surroundings, detailing Thoreau's experiences over two years in a cabin near Walden Pond."
+    description:
+      "A reflection upon simple living in natural surroundings, detailing Thoreau's experiences over two years in a cabin near Walden Pond.",
   },
   {
     id: "lib-17",
@@ -321,7 +337,8 @@ const initialBooks: LibraryBook[] = [
     category: "Economics",
     isbn: "9780199535927",
     rating: 4.6,
-    description: "The magnum opus of the Scottish economist, discussing the economic and social mechanisms of the Industrial Revolution."
+    description:
+      "The magnum opus of the Scottish economist, discussing the economic and social mechanisms of the Industrial Revolution.",
   },
   {
     id: "lib-18",
@@ -336,8 +353,9 @@ const initialBooks: LibraryBook[] = [
     category: "Victorian Fiction",
     isbn: "9780141439563",
     rating: 4.5,
-    description: "The education of an orphan nicknamed Pip, tracking his growth and personal development in Victorian England."
-  }
+    description:
+      "The education of an orphan nicknamed Pip, tracking his growth and personal development in Victorian England.",
+  },
 ];
 
 function LibraryCataloguePage() {
@@ -361,15 +379,15 @@ function LibraryCataloguePage() {
 
   // Toggle switch status
   const handleToggleStatus = (bookId: string) => {
-    setBooks(prev =>
-      prev.map(b => {
+    setBooks((prev) =>
+      prev.map((b) => {
         if (b.id === bookId) {
           const nextStatus = b.status === "Active" ? "Inactive" : "Active";
           toast.success(`"${b.title}" is now ${nextStatus}`);
           return { ...b, status: nextStatus };
         }
         return b;
-      })
+      }),
     );
   };
 
@@ -380,7 +398,7 @@ function LibraryCataloguePage() {
 
     const today = new Date("2026-07-11");
     let fromDate = new Date("2026-07-11");
-    let toDate = new Date("2026-07-11");
+    const toDate = new Date("2026-07-11");
 
     if (p === "MTD") {
       fromDate = new Date(today.getFullYear(), today.getMonth(), 1);
@@ -398,8 +416,8 @@ function LibraryCataloguePage() {
 
     const formatDate = (d: Date) => {
       const yyyy = d.getFullYear();
-      const mm = String(d.getMonth() + 1).padStart(2, '0');
-      const dd = String(d.getDate()).padStart(2, '0');
+      const mm = String(d.getMonth() + 1).padStart(2, "0");
+      const dd = String(d.getDate()).padStart(2, "0");
       return `${yyyy}-${mm}-${dd}`;
     };
 
@@ -410,7 +428,7 @@ function LibraryCataloguePage() {
 
   // Filter & Search Logic
   const filteredBooks = useMemo(() => {
-    return books.filter(b => {
+    return books.filter((b) => {
       // Date Range Filter
       const pDate = new Date(b.purchaseDate);
       const fromDate = new Date(from);
@@ -450,15 +468,17 @@ function LibraryCataloguePage() {
 
   // Chevron click logic
   const toggleExpand = (bookId: string) => {
-    setExpandedBookId(prev => (prev === bookId ? null : bookId));
+    setExpandedBookId((prev) => (prev === bookId ? null : bookId));
   };
 
   return (
-    <AppShell title="Catalogue" subtitle="Overview of digital catalogue, copies, and active availability.">
+    <AppShell
+      title="Catalogue"
+      subtitle="Overview of digital catalogue, copies, and active availability."
+    >
       <div className="space-y-6 p-4 md:p-8">
         {/* Redesigned Unified Toolbar */}
         <div className="flex flex-col gap-4 rounded-xl border border-border bg-card p-4 lg:flex-row lg:items-center lg:justify-between lg:p-5">
-
           {/* Left Side: Status Dropdown + Search Input */}
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center flex-1 w-full lg:max-w-xl">
             {/* Dropdown Filter */}
@@ -469,16 +489,22 @@ function LibraryCataloguePage() {
                   <ChevronDown size={15} className="text-muted-foreground" />
                 </button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="start" className="w-[120px] bg-card border border-border rounded-lg shadow-md z-50">
-                {(["All", "Active", "Inactive"] as const).map(tab => (
+              <DropdownMenuContent
+                align="start"
+                className="w-[120px] bg-card border border-border rounded-lg shadow-md z-50"
+              >
+                {(["All", "Active", "Inactive"] as const).map((tab) => (
                   <DropdownMenuItem
                     key={tab}
                     onClick={() => {
                       setActiveTab(tab);
                       setPage(1);
                     }}
-                    className={`cursor-pointer text-xs font-semibold px-4 py-2 hover:bg-secondary outline-none transition-colors ${activeTab === tab ? "text-[var(--brand)] bg-secondary/40" : "text-muted-foreground"
-                      }`}
+                    className={`cursor-pointer text-xs font-semibold px-4 py-2 hover:bg-secondary outline-none transition-colors ${
+                      activeTab === tab
+                        ? "text-[var(--brand)] bg-secondary/40"
+                        : "text-muted-foreground"
+                    }`}
                   >
                     {tab}
                   </DropdownMenuItem>
@@ -495,7 +521,7 @@ function LibraryCataloguePage() {
               <input
                 type="text"
                 value={searchQuery}
-                onChange={e => {
+                onChange={(e) => {
                   setSearchQuery(e.target.value);
                   setPage(1);
                 }}
@@ -582,109 +608,107 @@ function LibraryCataloguePage() {
                     </td>
                   </tr>
                 ) : (
-                  paginatedBooks.map(book => {
+                  paginatedBooks.map((book) => {
                     const isExpanded = expandedBookId === book.id;
                     return (
-                      <>                        <tr
-                        key={book.id}
-                        onClick={() => toggleExpand(book.id)}
-                        className={`transition-colors hover:bg-secondary/40 cursor-pointer ${isExpanded ? "bg-secondary/20" : ""
+                      <>
+                        {" "}
+                        <tr
+                          key={book.id}
+                          onClick={() => toggleExpand(book.id)}
+                          className={`transition-colors hover:bg-secondary/40 cursor-pointer ${
+                            isExpanded ? "bg-secondary/20" : ""
                           }`}
-                      >
-                        {/* Book Details */}
-                        <td className="py-4 pl-6 pr-4">
-                          <div className="flex items-center gap-4">
-                            <div
-                              className="flex h-14 w-10 shrink-0 items-center justify-center rounded-md text-[9px] font-bold text-white shadow-sm"
-                              style={{ background: book.cover }}
-                            >
-                              {book.initials}
+                        >
+                          {/* Book Details */}
+                          <td className="py-4 pl-6 pr-4">
+                            <div className="flex items-center gap-4">
+                              <div
+                                className="flex h-14 w-10 shrink-0 items-center justify-center rounded-md text-[9px] font-bold text-white shadow-sm"
+                                style={{ background: book.cover }}
+                              >
+                                {book.initials}
+                              </div>
+                              <div className="min-w-0">
+                                <span className="font-semibold text-foreground block truncate max-w-sm md:max-w-md lg:max-w-lg">
+                                  {book.title}
+                                </span>
+                                <span className="text-xs text-muted-foreground block">
+                                  {book.publisher}
+                                </span>
+                              </div>
                             </div>
-                            <div className="min-w-0">
-                              <span className="font-semibold text-foreground block truncate max-w-sm md:max-w-md lg:max-w-lg">
-                                {book.title}
-                              </span>
-                              <span className="text-xs text-muted-foreground block">
-                                {book.publisher}
-                              </span>
-                            </div>
-                          </div>
-                        </td>
-                        {/* Copies */}
-                        <td className="py-4 px-4 text-center font-medium text-foreground">
-                          <div className="flex flex-col items-center gap-0.5 justify-center">
-                            <span>{book.copies}</span>
-                            {book.purchases && book.purchases.length > 1 && (
-                              <span className="inline-flex items-center gap-0.5 rounded px-1.5 py-0.5 text-[9px] font-semibold bg-sky-50 text-sky-700 border border-sky-100 dark:bg-sky-950/40 dark:text-sky-400 dark:border-sky-900/40 mt-1 uppercase tracking-wide">
-                                {book.purchases.length} Purchases
-                              </span>
-                            )}
-                          </div>
-                        </td>
-
-                        {/* Purchase Date */}
-                        <td className="py-4 px-4 text-center text-muted-foreground">
-                          <div className="flex flex-col items-center gap-0.5 justify-center">
-                            <span>{book.purchaseDate}</span>
-                            {book.purchases && book.purchases.length > 1 && (
-                              <span className="text-[10px] text-muted-foreground/60 italic">
-                                +{book.purchases.length - 1} earlier dates
-                              </span>
-                            )}
-                          </div>
-                        </td>
-
-                        {/* Status Toggle Switch */}
-                        <td className="py-4 px-4">
-                          <div
-                            className="flex items-center justify-center gap-2"
-                            onClick={(e) => e.stopPropagation()}
-                          >
-                            <Switch
-                              checked={book.status === "Active"}
-                              onCheckedChange={() => handleToggleStatus(book.id)}
-                            />
-                            <span className="text-xs font-medium text-foreground w-12 text-left">
-                              {book.status}
-                            </span>
-                          </div>
-                        </td>
-
-                        {/* Action Button & Chevron */}
-                        <td className="py-4 pl-4 pr-6 text-right">
-                          <div className="inline-flex items-center gap-3">
-                            <button
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                setReaderBook(book);
-                              }}
-                              className="inline-flex items-center gap-1.5 rounded-lg px-4 py-1.5 text-xs font-semibold tracking-wide transition-opacity hover:opacity-90 shadow-sm"
-                              style={{
-                                backgroundColor: "var(--brand)",
-                                color: "var(--brand-contrast)",
-                              }}
-                            >
-                              <BookOpen size={13} />
-                              <span>Read eBook</span>
-                            </button>
-                            <button
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                toggleExpand(book.id);
-                              }}
-                              className="p-1 rounded-md text-muted-foreground hover:bg-secondary transition-colors"
-                              aria-label={isExpanded ? "Collapse row" : "Expand row"}
-                            >
-                              {isExpanded ? (
-                                <ChevronUp size={16} />
-                              ) : (
-                                <ChevronDown size={16} />
+                          </td>
+                          {/* Copies */}
+                          <td className="py-4 px-4 text-center font-medium text-foreground">
+                            <div className="flex flex-col items-center gap-0.5 justify-center">
+                              <span>{book.copies}</span>
+                              {book.purchases && book.purchases.length > 1 && (
+                                <span className="inline-flex items-center gap-0.5 rounded px-1.5 py-0.5 text-[9px] font-semibold bg-sky-50 text-sky-700 border border-sky-100 dark:bg-sky-950/40 dark:text-sky-400 dark:border-sky-900/40 mt-1 uppercase tracking-wide">
+                                  {book.purchases.length} Purchases
+                                </span>
                               )}
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
+                            </div>
+                          </td>
 
+                          {/* Purchase Date */}
+                          <td className="py-4 px-4 text-center text-muted-foreground">
+                            <div className="flex flex-col items-center gap-0.5 justify-center">
+                              <span>{book.purchaseDate}</span>
+                              {book.purchases && book.purchases.length > 1 && (
+                                <span className="text-[10px] text-muted-foreground/60 italic">
+                                  +{book.purchases.length - 1} earlier dates
+                                </span>
+                              )}
+                            </div>
+                          </td>
+
+                          {/* Status Toggle Switch */}
+                          <td className="py-4 px-4">
+                            <div
+                              className="flex items-center justify-center gap-2"
+                              onClick={(e) => e.stopPropagation()}
+                            >
+                              <Switch
+                                checked={book.status === "Active"}
+                                onCheckedChange={() => handleToggleStatus(book.id)}
+                              />
+                              <span className="text-xs font-medium text-foreground w-12 text-left">
+                                {book.status}
+                              </span>
+                            </div>
+                          </td>
+
+                          {/* Action Button & Chevron */}
+                          <td className="py-4 pl-4 pr-6 text-right">
+                            <div className="inline-flex items-center gap-3">
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setReaderBook(book);
+                                }}
+                                className="inline-flex items-center gap-1.5 rounded-lg px-4 py-1.5 text-xs font-semibold tracking-wide transition-opacity hover:opacity-90 shadow-sm"
+                                style={{
+                                  backgroundColor: "var(--brand)",
+                                  color: "var(--brand-contrast)",
+                                }}
+                              >
+                                <BookOpen size={13} />
+                                <span>Read eBook</span>
+                              </button>
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  toggleExpand(book.id);
+                                }}
+                                className="p-1 rounded-md text-muted-foreground hover:bg-secondary transition-colors"
+                                aria-label={isExpanded ? "Collapse row" : "Expand row"}
+                              >
+                                {isExpanded ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
                         {/* Expandable Info Area */}
                         {isExpanded && (
                           <tr className="bg-secondary/10">
@@ -710,9 +734,7 @@ function LibraryCataloguePage() {
                                   <span className="text-[10px] uppercase tracking-wider font-semibold text-muted-foreground">
                                     ISBN-13 Reference
                                   </span>
-                                  <p className="text-sm font-medium text-foreground">
-                                    {book.isbn}
-                                  </p>
+                                  <p className="text-sm font-medium text-foreground">{book.isbn}</p>
                                 </div>
                                 <div className="md:col-span-2 space-y-1 pt-2">
                                   <span className="text-[10px] uppercase tracking-wider font-semibold text-muted-foreground block">
@@ -731,20 +753,28 @@ function LibraryCataloguePage() {
                                   {book.purchases && book.purchases.length > 0 ? (
                                     <div className="space-y-1.5">
                                       {book.purchases.map((purchase, pIdx) => (
-                                        <div key={pIdx} className="flex items-center justify-between text-xs py-1 border-b border-border/40 last:border-0">
+                                        <div
+                                          key={pIdx}
+                                          className="flex items-center justify-between text-xs py-1 border-b border-border/40 last:border-0"
+                                        >
                                           <span className="font-semibold text-foreground">
-                                            {purchase.copies} {purchase.copies === 1 ? 'copy' : 'copies'}
+                                            {purchase.copies}{" "}
+                                            {purchase.copies === 1 ? "copy" : "copies"}
                                           </span>
-                                          <span className="text-muted-foreground">{purchase.purchaseDate}</span>
+                                          <span className="text-muted-foreground">
+                                            {purchase.purchaseDate}
+                                          </span>
                                         </div>
                                       ))}
                                     </div>
                                   ) : (
                                     <div className="flex items-center justify-between text-xs py-1">
                                       <span className="font-semibold text-foreground">
-                                        {book.copies} {book.copies === 1 ? 'copy' : 'copies'}
+                                        {book.copies} {book.copies === 1 ? "copy" : "copies"}
                                       </span>
-                                      <span className="text-muted-foreground">{book.purchaseDate}</span>
+                                      <span className="text-muted-foreground">
+                                        {book.purchaseDate}
+                                      </span>
                                     </div>
                                   )}
                                 </div>
@@ -771,7 +801,7 @@ function LibraryCataloguePage() {
           {/* Custom Styled Pagination bar */}
           <div className="flex items-center gap-1 self-end sm:self-auto">
             <button
-              onClick={() => setPage(p => Math.max(1, p - 1))}
+              onClick={() => setPage((p) => Math.max(1, p - 1))}
               disabled={currentPage === 1}
               className="inline-flex items-center gap-1 px-3 py-1.5 rounded-md text-xs font-semibold text-muted-foreground hover:bg-secondary hover:text-foreground disabled:opacity-40 disabled:hover:bg-transparent transition-all"
             >
@@ -784,17 +814,18 @@ function LibraryCataloguePage() {
                 <button
                   key={pageNum}
                   onClick={() => setPage(pageNum)}
-                  className={`px-3 py-1.5 text-xs font-semibold rounded-md transition-all ${isPageActive
+                  className={`px-3 py-1.5 text-xs font-semibold rounded-md transition-all ${
+                    isPageActive
                       ? "bg-sky-100 dark:bg-sky-950/40 text-sky-700 dark:text-sky-400"
                       : "text-muted-foreground hover:bg-secondary hover:text-foreground"
-                    }`}
+                  }`}
                 >
                   {pageNum}
                 </button>
               );
             })}
             <button
-              onClick={() => setPage(p => Math.min(totalPages, p + 1))}
+              onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
               disabled={currentPage === totalPages}
               className="inline-flex items-center gap-1 px-3 py-1.5 rounded-md text-xs font-semibold text-muted-foreground hover:bg-secondary hover:text-foreground disabled:opacity-40 disabled:hover:bg-transparent transition-all"
             >
@@ -817,8 +848,12 @@ function LibraryCataloguePage() {
                   {readerBook.initials}
                 </div>
                 <div>
-                  <DialogTitle className="text-base font-semibold leading-none">{readerBook.title}</DialogTitle>
-                  <p className="text-xs text-muted-foreground mt-1">by {readerBook.author} • {readerBook.publisher}</p>
+                  <DialogTitle className="text-base font-semibold leading-none">
+                    {readerBook.title}
+                  </DialogTitle>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    by {readerBook.author} • {readerBook.publisher}
+                  </p>
                 </div>
               </div>
               <button
@@ -838,16 +873,27 @@ function LibraryCataloguePage() {
 
               <div className="font-serif leading-relaxed text-foreground space-y-4 text-justify">
                 <p>
-                  To the general reader, the history of this voyage needs no introduction. It is the record of a pleasure excursion which was successful and satisfactory to the highest degree. It was a new project in its conception, and its execution was a triumph of management.
+                  To the general reader, the history of this voyage needs no introduction. It is the
+                  record of a pleasure excursion which was successful and satisfactory to the
+                  highest degree. It was a new project in its conception, and its execution was a
+                  triumph of management.
                 </p>
                 <p>
-                  For months we had been planning our itinerary, checking maps, and debating routes. The steamer lay at anchor in the harbor, her sails folded, her boilers humming with latent energy. On deck, passengers conversed in eager groups, pointing toward the open sea that lay beyond the harbor walls.
+                  For months we had been planning our itinerary, checking maps, and debating routes.
+                  The steamer lay at anchor in the harbor, her sails folded, her boilers humming
+                  with latent energy. On deck, passengers conversed in eager groups, pointing toward
+                  the open sea that lay beyond the harbor walls.
                 </p>
                 <p>
-                  The air was crisp and filled with the scent of salt spray. The sun rose in majestic splendor, painting the horizon in shades of orange and gold. We felt the subtle vibrations of the engines underfoot, a signal that our journey into the unknown was finally about to commence.
+                  The air was crisp and filled with the scent of salt spray. The sun rose in
+                  majestic splendor, painting the horizon in shades of orange and gold. We felt the
+                  subtle vibrations of the engines underfoot, a signal that our journey into the
+                  unknown was finally about to commence.
                 </p>
                 <p>
-                  Every cabin was filled with the promise of exploration. Books were opened, journals initialized, and cameras inspected. We were, indeed, pilgrims on our way to see the ancient world, and our hearts beat with anticipation.
+                  Every cabin was filled with the promise of exploration. Books were opened,
+                  journals initialized, and cameras inspected. We were, indeed, pilgrims on our way
+                  to see the ancient world, and our hearts beat with anticipation.
                 </p>
               </div>
 
@@ -863,9 +909,13 @@ function LibraryCataloguePage() {
             <div className="px-6 py-4 border-t border-border bg-secondary/20 flex items-center justify-between text-xs text-muted-foreground">
               <span>ISBN: {readerBook.isbn}</span>
               <div className="flex items-center gap-2">
-                <button className="p-1 rounded hover:bg-secondary transition-all">« Previous Page</button>
+                <button className="p-1 rounded hover:bg-secondary transition-all">
+                  « Previous Page
+                </button>
                 <span className="font-medium text-foreground">Page 1 / 324</span>
-                <button className="p-1 rounded hover:bg-secondary transition-all">Next Page »</button>
+                <button className="p-1 rounded hover:bg-secondary transition-all">
+                  Next Page »
+                </button>
               </div>
               <div className="flex items-center gap-1">
                 <span>★ {readerBook.rating.toFixed(1)}</span>
@@ -874,7 +924,6 @@ function LibraryCataloguePage() {
           </DialogContent>
         </Dialog>
       )}
-
     </AppShell>
   );
 }

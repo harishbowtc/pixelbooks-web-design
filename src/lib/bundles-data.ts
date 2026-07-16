@@ -20,11 +20,56 @@ export const gradients = [
 ];
 
 const seed: Bundle[] = [
-  { id: "1", title: "Test eBook bundle", bookCount: 1, status: "Rejected", pricing: 0, active: true, cover: gradients[0], initials: "TST" },
-  { id: "2", title: "Monsoon Reads Collection", bookCount: 5, status: "Approved", pricing: 499, active: true, cover: gradients[1], initials: "MRC" },
-  { id: "3", title: "Kids Storytime Pack", bookCount: 8, status: "Approved", pricing: 799, active: false, cover: gradients[2], initials: "KSP" },
-  { id: "4", title: "Business Essentials", bookCount: 4, status: "Pending", pricing: 1299, active: true, cover: gradients[3], initials: "BUS" },
-  { id: "5", title: "Poetry Corner", bookCount: 3, status: "Rejected", pricing: 249, active: false, cover: gradients[4], initials: "POE" },
+  {
+    id: "1",
+    title: "Test eBook bundle",
+    bookCount: 1,
+    status: "Rejected",
+    pricing: 0,
+    active: true,
+    cover: gradients[0],
+    initials: "TST",
+  },
+  {
+    id: "2",
+    title: "Monsoon Reads Collection",
+    bookCount: 5,
+    status: "Approved",
+    pricing: 499,
+    active: true,
+    cover: gradients[1],
+    initials: "MRC",
+  },
+  {
+    id: "3",
+    title: "Kids Storytime Pack",
+    bookCount: 8,
+    status: "Approved",
+    pricing: 799,
+    active: false,
+    cover: gradients[2],
+    initials: "KSP",
+  },
+  {
+    id: "4",
+    title: "Business Essentials",
+    bookCount: 4,
+    status: "Pending",
+    pricing: 1299,
+    active: true,
+    cover: gradients[3],
+    initials: "BUS",
+  },
+  {
+    id: "5",
+    title: "Poetry Corner",
+    bookCount: 3,
+    status: "Rejected",
+    pricing: 249,
+    active: false,
+    cover: gradients[4],
+    initials: "POE",
+  },
 ];
 
 const LOCAL_STORAGE_KEY = "pixelbooks_bundles";

@@ -25,7 +25,7 @@ import {
   GraduationCap,
   Building2,
   Inbox,
-  Image as ImageIcon
+  Image as ImageIcon,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { useEffect, useState, type ReactNode } from "react";
@@ -67,10 +67,10 @@ function getSections(pathname: string): NavSection[] {
         items: [
           { label: "Dashboard", icon: LayoutDashboard, to: "/library-admin" },
           { label: "Catalogue", icon: BookMarked, to: "/library-admin/catalogue" },
-          { label: "Orders", icon: ShoppingBag, to: "/library-admin#orders" },
+          { label: "Orders", icon: ShoppingBag, to: "/library-admin/orders" },
           { label: "Book Store", icon: Store, to: "/library-admin#book-store" },
           { label: "Manage eBook", icon: FileEdit, to: "/library-admin#manage-ebook" },
-          { label: "Library Users", icon: Users, to: "/library-admin#users" },
+          { label: "Library Users", icon: Users, to: "/library-admin/users" },
         ],
       },
       {
@@ -159,7 +159,11 @@ function SidebarBrand({ collapsed }: { collapsed: boolean }) {
       ].join(" ")}
     >
       {collapsed ? (
-        <Link to="/" id="sidebar-logo-link-collapsed" className="flex items-center justify-center shrink-0">
+        <Link
+          to="/"
+          id="sidebar-logo-link-collapsed"
+          className="flex items-center justify-center shrink-0"
+        >
           <Logo />
         </Link>
       ) : (
@@ -173,9 +177,7 @@ function SidebarBrand({ collapsed }: { collapsed: boolean }) {
               backgroundColor: isLibraryAdmin
                 ? "color-mix(in oklab, oklch(0.55 0.13 260) 12%, transparent)"
                 : "var(--sidebar-highlight)",
-              color: isLibraryAdmin
-                ? "oklch(0.55 0.13 260)"
-                : "var(--sidebar-accent-foreground)",
+              color: isLibraryAdmin ? "oklch(0.55 0.13 260)" : "var(--sidebar-accent-foreground)",
             }}
           >
             {isLibraryAdmin ? "Library Admin" : "Publisher"}
@@ -328,12 +330,12 @@ function ProfileDropdown() {
         <DropdownMenuLabel>My account</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuItem asChild>
-          <Link to="/profile">
+          <Link to="/publisher/profile">
             <UserCircle size={16} className="mr-2" /> Profile
           </Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
-          <Link to="/settings">
+          <Link to="/publisher/settings">
             <Settings size={16} className="mr-2" /> Settings
           </Link>
         </DropdownMenuItem>

@@ -3,13 +3,19 @@ import { useState } from "react";
 import { Pencil, CheckCircle2, ChevronDown, X, Copy, Check } from "lucide-react";
 import { AppShell } from "@/components/app-shell";
 
-export const Route = createFileRoute("/profile")({
+export const Route = createFileRoute("/publisher/profile")({
   head: () => ({
     meta: [
       { title: "Profile — PixelBooks" },
-      { name: "description", content: "Manage your publisher profile, billing address, contact and account details." },
+      {
+        name: "description",
+        content: "Manage your publisher profile, billing address, contact and account details.",
+      },
       { property: "og:title", content: "Profile — PixelBooks" },
-      { property: "og:description", content: "Manage your publisher profile, billing address, contact and account details." },
+      {
+        property: "og:description",
+        content: "Manage your publisher profile, billing address, contact and account details.",
+      },
     ],
   }),
   component: ProfilePage,
@@ -38,9 +44,7 @@ function Field({ label, required, value, onChange, rightSlot, placeholder }: Fie
           onChange={(e) => onChange?.(e.target.value)}
           className="flex h-12 w-full rounded-lg border border-input bg-white px-4 pr-24 text-sm text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
         />
-        {rightSlot && (
-          <div className="absolute right-4 top-1/2 -translate-y-1/2">{rightSlot}</div>
-        )}
+        {rightSlot && <div className="absolute right-4 top-1/2 -translate-y-1/2">{rightSlot}</div>}
       </div>
     </div>
   );
@@ -78,13 +82,7 @@ function SelectField({
   );
 }
 
-function SectionCard({
-  title,
-  children,
-}: {
-  title: string;
-  children: React.ReactNode;
-}) {
+function SectionCard({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <section className="rounded-2xl border border-border bg-card p-5 md:p-7">
       <h2 className="mb-5 text-base font-semibold text-foreground">{title}</h2>
@@ -98,7 +96,9 @@ function ProfilePage() {
   const [publisherName, setPublisherName] = useState("PixelBooks");
   const [gst, setGst] = useState("32AAGCE9532N1ZB");
   const [pan, setPan] = useState("AAGCE9532N");
-  const [address1, setAddress1] = useState("BrandOptics India Private LimitedUnit 403, 4th Floor, Tower B");
+  const [address1, setAddress1] = useState(
+    "BrandOptics India Private LimitedUnit 403, 4th Floor, Tower B",
+  );
   const [address2, setAddress2] = useState("World Trade Center, Infopark Phase I");
   const [city, setCity] = useState("Kochi");
   const [state, setState] = useState("Kerala");
@@ -139,7 +139,8 @@ function ProfilePage() {
               <div>
                 <h3 className="text-base font-semibold text-foreground">Logo</h3>
                 <p className="mt-1 text-sm text-muted-foreground">
-                  Upload a logo to display on your books and publisher profile. Recommended size: 512x512px.
+                  Upload a logo to display on your books and publisher profile. Recommended size:
+                  512x512px.
                 </p>
                 <div className="mt-4 flex items-center gap-3">
                   <button className="inline-flex h-9 items-center justify-center rounded-lg border border-border bg-background px-4 text-sm font-medium text-foreground transition-colors hover:bg-secondary">
@@ -191,14 +192,22 @@ function ProfilePage() {
               required
               value={email}
               onChange={setEmail}
-              rightSlot={<span className="text-sm font-medium" style={{ color: "var(--success)" }}>Verified</span>}
+              rightSlot={
+                <span className="text-sm font-medium" style={{ color: "var(--success)" }}>
+                  Verified
+                </span>
+              }
             />
             <Field
               label="Phone Number"
               required
               value={phone}
               onChange={setPhone}
-              rightSlot={<span className="text-sm font-medium" style={{ color: "var(--success)" }}>Verified</span>}
+              rightSlot={
+                <span className="text-sm font-medium" style={{ color: "var(--success)" }}>
+                  Verified
+                </span>
+              }
             />
           </div>
         </SectionCard>
@@ -206,7 +215,12 @@ function ProfilePage() {
         {/* Billing Address */}
         <SectionCard title="Billing Address">
           <div className="grid grid-cols-1 gap-x-8 gap-y-5 md:grid-cols-2">
-            <Field label="Publisher Name" required value={publisherName} onChange={setPublisherName} />
+            <Field
+              label="Publisher Name"
+              required
+              value={publisherName}
+              onChange={setPublisherName}
+            />
             <Field label="GST Number" required value={gst} onChange={setGst} />
             <Field label="PAN" required value={pan} onChange={setPan} />
             <Field label="Address Line 1" required value={address1} onChange={setAddress1} />

@@ -177,9 +177,7 @@ function CatalogueImportPage() {
                         >
                           <FileSpreadsheet size={17} style={{ color: "var(--brand)" }} />
                         </div>
-                        <span className="font-medium text-foreground">
-                          {r.fileName}
-                        </span>
+                        <span className="font-medium text-foreground">{r.fileName}</span>
                       </div>
                     </td>
                     <td className="py-4 pr-4 text-muted-foreground">{r.date}</td>

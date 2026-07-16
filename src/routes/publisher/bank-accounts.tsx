@@ -105,7 +105,6 @@ function BankAccountsPage() {
     <AppShell title="Bank Accounts" subtitle="Manage your bank accounts for royalty payouts.">
       <div className="space-y-6 p-4 md:p-8">
         {/* Toolbar */}
-        
 
         <AddBankAccountDialog open={dialogOpen} onOpenChange={setDialogOpen} onAdd={handleAdd} />
 

@@ -11,15 +11,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-  Bar,
-  BarChart,
-  CartesianGrid,
-  ResponsiveContainer,
-  Tooltip,
-  XAxis,
-  YAxis,
-} from "recharts";
+import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
 export const Route = createFileRoute("/library-admin/")({
   component: LibraryAdminDashboard,
@@ -27,7 +19,10 @@ export const Route = createFileRoute("/library-admin/")({
 
 function LibraryAdminDashboard() {
   return (
-    <AppShell title="Dashboard" subtitle="Overview of your library users, borrowings, and digital catalogue.">
+    <AppShell
+      title="Dashboard"
+      subtitle="Overview of your library users, borrowings, and digital catalogue."
+    >
       <DashboardContent />
     </AppShell>
   );
@@ -329,7 +324,9 @@ function DashboardContent() {
                             <span className="font-medium text-foreground block truncate max-w-md">
                               {b.title}
                             </span>
-                            <span className="text-xs text-muted-foreground block">{b.publisher}</span>
+                            <span className="text-xs text-muted-foreground block">
+                              {b.publisher}
+                            </span>
                           </div>
                         </div>
                       </td>
