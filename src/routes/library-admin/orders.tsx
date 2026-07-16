@@ -1159,7 +1159,7 @@ function LibraryAdminOrdersPage() {
             {/* Dropdown Filter */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <button className="flex h-10 min-w-[150px] items-center justify-between gap-3 rounded-lg border border-border bg-white dark:bg-card px-4 text-sm font-semibold hover:bg-secondary transition-colors text-foreground shrink-0 shadow-sm cursor-pointer">
+                <button className="flex h-10 min-w-[150px] items-center justify-between gap-3 rounded-lg border border-border bg-white dark:bg-card px-4 text-sm font-semibold hover:bg-secondary transition-colors text-foreground shrink-0 cursor-pointer">
                   <span>{activeTab === "Pending" ? "Pending Approval" : activeTab}</span>
                   <ChevronDown size={15} className="text-muted-foreground" />
                 </button>
@@ -1204,7 +1204,7 @@ function LibraryAdminOrdersPage() {
                   setSearchQuery(e.target.value);
                   setPage(1);
                 }}
-                className="h-10 w-full rounded-lg border border-border bg-white dark:bg-card pl-10 pr-4 text-sm outline-none transition-all placeholder:text-muted-foreground focus:border-[var(--brand)] focus:ring-1 focus:ring-[var(--brand)] text-foreground shadow-sm"
+                className="h-10 w-full rounded-lg border border-border bg-white dark:bg-card pl-10 pr-4 text-sm outline-none transition-all placeholder:text-muted-foreground focus:border-[var(--brand)] focus:ring-1 focus:ring-[var(--brand)] text-foreground"
               />
             </div>
           </div>
@@ -1215,7 +1215,7 @@ function LibraryAdminOrdersPage() {
             <div className="relative w-full sm:w-auto">
               <button
                 onClick={() => setPresetOpen((v) => !v)}
-                className="flex h-10 w-full items-center justify-between gap-4 rounded-lg border border-border bg-white dark:bg-card px-3 text-sm font-semibold sm:w-40 text-foreground shadow-sm cursor-pointer"
+                className="flex h-10 w-full items-center justify-between gap-4 rounded-lg border border-border bg-white dark:bg-card px-3 text-sm font-semibold sm:w-40 text-foreground cursor-pointer"
               >
                 <span>{preset}</span>
                 <ChevronDown size={15} className="text-muted-foreground" />
@@ -1238,7 +1238,7 @@ function LibraryAdminOrdersPage() {
             </div>
 
             {/* Start Date */}
-            <label className="relative flex h-10 items-center rounded-lg border border-border bg-white dark:bg-card px-3 w-full sm:w-36 shadow-sm">
+            <label className="relative flex h-10 items-center rounded-lg border border-border bg-white dark:bg-card px-3 w-full sm:w-36">
               <input
                 type="date"
                 value={from}
@@ -1252,7 +1252,7 @@ function LibraryAdminOrdersPage() {
             </label>
 
             {/* End Date */}
-            <label className="relative flex h-10 items-center rounded-lg border border-border bg-white dark:bg-card px-3 w-full sm:w-36 shadow-sm">
+            <label className="relative flex h-10 items-center rounded-lg border border-border bg-white dark:bg-card px-3 w-full sm:w-36">
               <input
                 type="date"
                 value={to}

@@ -22,8 +22,13 @@ import { Route as PublisherProfileRouteImport } from './routes/publisher/profile
 import { Route as PublisherMarginReportRouteImport } from './routes/publisher/margin-report'
 import { Route as PublisherBankAccountsRouteImport } from './routes/publisher/bank-accounts'
 import { Route as LibraryAdminUsersRouteImport } from './routes/library-admin/users'
+import { Route as LibraryAdminRequestsRouteImport } from './routes/library-admin/requests'
 import { Route as LibraryAdminOrdersRouteImport } from './routes/library-admin/orders'
+import { Route as LibraryAdminDepartmentsRouteImport } from './routes/library-admin/departments'
+import { Route as LibraryAdminCoursesRouteImport } from './routes/library-admin/courses'
 import { Route as LibraryAdminCatalogueRouteImport } from './routes/library-admin/catalogue'
+import { Route as LibraryAdminCartRouteImport } from './routes/library-admin/cart'
+import { Route as LibraryAdminBannersRouteImport } from './routes/library-admin/banners'
 import { Route as PublisherPromoCodesIndexRouteImport } from './routes/publisher/promo-codes.index'
 import { Route as PublisherCatalogueIndexRouteImport } from './routes/publisher/catalogue.index'
 import { Route as PublisherCatalogueImportIndexRouteImport } from './routes/publisher/catalogue-import.index'
@@ -101,14 +106,39 @@ const LibraryAdminUsersRoute = LibraryAdminUsersRouteImport.update({
   path: '/library-admin/users',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LibraryAdminRequestsRoute = LibraryAdminRequestsRouteImport.update({
+  id: '/library-admin/requests',
+  path: '/library-admin/requests',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LibraryAdminOrdersRoute = LibraryAdminOrdersRouteImport.update({
   id: '/library-admin/orders',
   path: '/library-admin/orders',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LibraryAdminDepartmentsRoute = LibraryAdminDepartmentsRouteImport.update({
+  id: '/library-admin/departments',
+  path: '/library-admin/departments',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LibraryAdminCoursesRoute = LibraryAdminCoursesRouteImport.update({
+  id: '/library-admin/courses',
+  path: '/library-admin/courses',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LibraryAdminCatalogueRoute = LibraryAdminCatalogueRouteImport.update({
   id: '/library-admin/catalogue',
   path: '/library-admin/catalogue',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LibraryAdminCartRoute = LibraryAdminCartRouteImport.update({
+  id: '/library-admin/cart',
+  path: '/library-admin/cart',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LibraryAdminBannersRoute = LibraryAdminBannersRouteImport.update({
+  id: '/library-admin/banners',
+  path: '/library-admin/banners',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PublisherPromoCodesIndexRoute =
@@ -178,8 +208,13 @@ export interface FileRoutesByFullPath {
   '/library-user': typeof LibraryUserRoute
   '/notifications': typeof NotificationsRoute
   '/pb-admin': typeof PbAdminRoute
+  '/library-admin/banners': typeof LibraryAdminBannersRoute
+  '/library-admin/cart': typeof LibraryAdminCartRoute
   '/library-admin/catalogue': typeof LibraryAdminCatalogueRoute
+  '/library-admin/courses': typeof LibraryAdminCoursesRoute
+  '/library-admin/departments': typeof LibraryAdminDepartmentsRoute
   '/library-admin/orders': typeof LibraryAdminOrdersRoute
+  '/library-admin/requests': typeof LibraryAdminRequestsRoute
   '/library-admin/users': typeof LibraryAdminUsersRoute
   '/publisher/bank-accounts': typeof PublisherBankAccountsRoute
   '/publisher/margin-report': typeof PublisherMarginReportRoute
@@ -206,8 +241,13 @@ export interface FileRoutesByTo {
   '/library-user': typeof LibraryUserRoute
   '/notifications': typeof NotificationsRoute
   '/pb-admin': typeof PbAdminRoute
+  '/library-admin/banners': typeof LibraryAdminBannersRoute
+  '/library-admin/cart': typeof LibraryAdminCartRoute
   '/library-admin/catalogue': typeof LibraryAdminCatalogueRoute
+  '/library-admin/courses': typeof LibraryAdminCoursesRoute
+  '/library-admin/departments': typeof LibraryAdminDepartmentsRoute
   '/library-admin/orders': typeof LibraryAdminOrdersRoute
+  '/library-admin/requests': typeof LibraryAdminRequestsRoute
   '/library-admin/users': typeof LibraryAdminUsersRoute
   '/publisher/bank-accounts': typeof PublisherBankAccountsRoute
   '/publisher/margin-report': typeof PublisherMarginReportRoute
@@ -235,8 +275,13 @@ export interface FileRoutesById {
   '/library-user': typeof LibraryUserRoute
   '/notifications': typeof NotificationsRoute
   '/pb-admin': typeof PbAdminRoute
+  '/library-admin/banners': typeof LibraryAdminBannersRoute
+  '/library-admin/cart': typeof LibraryAdminCartRoute
   '/library-admin/catalogue': typeof LibraryAdminCatalogueRoute
+  '/library-admin/courses': typeof LibraryAdminCoursesRoute
+  '/library-admin/departments': typeof LibraryAdminDepartmentsRoute
   '/library-admin/orders': typeof LibraryAdminOrdersRoute
+  '/library-admin/requests': typeof LibraryAdminRequestsRoute
   '/library-admin/users': typeof LibraryAdminUsersRoute
   '/publisher/bank-accounts': typeof PublisherBankAccountsRoute
   '/publisher/margin-report': typeof PublisherMarginReportRoute
@@ -265,8 +310,13 @@ export interface FileRouteTypes {
     | '/library-user'
     | '/notifications'
     | '/pb-admin'
+    | '/library-admin/banners'
+    | '/library-admin/cart'
     | '/library-admin/catalogue'
+    | '/library-admin/courses'
+    | '/library-admin/departments'
     | '/library-admin/orders'
+    | '/library-admin/requests'
     | '/library-admin/users'
     | '/publisher/bank-accounts'
     | '/publisher/margin-report'
@@ -293,8 +343,13 @@ export interface FileRouteTypes {
     | '/library-user'
     | '/notifications'
     | '/pb-admin'
+    | '/library-admin/banners'
+    | '/library-admin/cart'
     | '/library-admin/catalogue'
+    | '/library-admin/courses'
+    | '/library-admin/departments'
     | '/library-admin/orders'
+    | '/library-admin/requests'
     | '/library-admin/users'
     | '/publisher/bank-accounts'
     | '/publisher/margin-report'
@@ -321,8 +376,13 @@ export interface FileRouteTypes {
     | '/library-user'
     | '/notifications'
     | '/pb-admin'
+    | '/library-admin/banners'
+    | '/library-admin/cart'
     | '/library-admin/catalogue'
+    | '/library-admin/courses'
+    | '/library-admin/departments'
     | '/library-admin/orders'
+    | '/library-admin/requests'
     | '/library-admin/users'
     | '/publisher/bank-accounts'
     | '/publisher/margin-report'
@@ -350,8 +410,13 @@ export interface RootRouteChildren {
   LibraryUserRoute: typeof LibraryUserRoute
   NotificationsRoute: typeof NotificationsRoute
   PbAdminRoute: typeof PbAdminRoute
+  LibraryAdminBannersRoute: typeof LibraryAdminBannersRoute
+  LibraryAdminCartRoute: typeof LibraryAdminCartRoute
   LibraryAdminCatalogueRoute: typeof LibraryAdminCatalogueRoute
+  LibraryAdminCoursesRoute: typeof LibraryAdminCoursesRoute
+  LibraryAdminDepartmentsRoute: typeof LibraryAdminDepartmentsRoute
   LibraryAdminOrdersRoute: typeof LibraryAdminOrdersRoute
+  LibraryAdminRequestsRoute: typeof LibraryAdminRequestsRoute
   LibraryAdminUsersRoute: typeof LibraryAdminUsersRoute
   PublisherBankAccountsRoute: typeof PublisherBankAccountsRoute
   PublisherMarginReportRoute: typeof PublisherMarginReportRoute
@@ -467,6 +532,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LibraryAdminUsersRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/library-admin/requests': {
+      id: '/library-admin/requests'
+      path: '/library-admin/requests'
+      fullPath: '/library-admin/requests'
+      preLoaderRoute: typeof LibraryAdminRequestsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/library-admin/orders': {
       id: '/library-admin/orders'
       path: '/library-admin/orders'
@@ -474,11 +546,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LibraryAdminOrdersRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/library-admin/departments': {
+      id: '/library-admin/departments'
+      path: '/library-admin/departments'
+      fullPath: '/library-admin/departments'
+      preLoaderRoute: typeof LibraryAdminDepartmentsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/library-admin/courses': {
+      id: '/library-admin/courses'
+      path: '/library-admin/courses'
+      fullPath: '/library-admin/courses'
+      preLoaderRoute: typeof LibraryAdminCoursesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/library-admin/catalogue': {
       id: '/library-admin/catalogue'
       path: '/library-admin/catalogue'
       fullPath: '/library-admin/catalogue'
       preLoaderRoute: typeof LibraryAdminCatalogueRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/library-admin/cart': {
+      id: '/library-admin/cart'
+      path: '/library-admin/cart'
+      fullPath: '/library-admin/cart'
+      preLoaderRoute: typeof LibraryAdminCartRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/library-admin/banners': {
+      id: '/library-admin/banners'
+      path: '/library-admin/banners'
+      fullPath: '/library-admin/banners'
+      preLoaderRoute: typeof LibraryAdminBannersRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/publisher/promo-codes/': {
@@ -566,8 +666,13 @@ const rootRouteChildren: RootRouteChildren = {
   LibraryUserRoute: LibraryUserRoute,
   NotificationsRoute: NotificationsRoute,
   PbAdminRoute: PbAdminRoute,
+  LibraryAdminBannersRoute: LibraryAdminBannersRoute,
+  LibraryAdminCartRoute: LibraryAdminCartRoute,
   LibraryAdminCatalogueRoute: LibraryAdminCatalogueRoute,
+  LibraryAdminCoursesRoute: LibraryAdminCoursesRoute,
+  LibraryAdminDepartmentsRoute: LibraryAdminDepartmentsRoute,
   LibraryAdminOrdersRoute: LibraryAdminOrdersRoute,
+  LibraryAdminRequestsRoute: LibraryAdminRequestsRoute,
   LibraryAdminUsersRoute: LibraryAdminUsersRoute,
   PublisherBankAccountsRoute: PublisherBankAccountsRoute,
   PublisherMarginReportRoute: PublisherMarginReportRoute,

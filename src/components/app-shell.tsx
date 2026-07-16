@@ -19,6 +19,7 @@ import {
   Settings,
   UserCircle,
   ShoppingBag,
+  ShoppingCart,
   Store,
   FileEdit,
   Users,
@@ -41,6 +42,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { NotificationsPopover } from "@/components/notifications-popover";
+import { toast } from "sonner";
 
 type NavItem = {
   label: string;
@@ -76,15 +78,15 @@ function getSections(pathname: string): NavSection[] {
       {
         heading: "Academic",
         items: [
-          { label: "Courses", icon: GraduationCap, to: "/library-admin#courses" },
-          { label: "Departments", icon: Building2, to: "/library-admin#departments" },
+          { label: "Courses", icon: GraduationCap, to: "/library-admin/courses" },
+          { label: "Departments", icon: Building2, to: "/library-admin/departments" },
         ],
       },
       {
         heading: "Requests & Ads",
         items: [
-          { label: "Requests", icon: Inbox, to: "/library-admin#requests" },
-          { label: "Banners", icon: ImageIcon, to: "/library-admin#banners" },
+          { label: "Requests", icon: Inbox, to: "/library-admin/requests" },
+          { label: "Banners", icon: ImageIcon, to: "/library-admin/banners" },
         ],
       },
       {
@@ -431,6 +433,25 @@ export function AppShell({
 }) {
   const { collapsed, setCollapsed } = useCollapsed();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [cartCount, setCartCount] = useState(0);
+
+  useEffect(() => {
+    const updateCount = () => {
+      const stored = localStorage.getItem("pixelbooks_cart_count");
+      setCartCount(stored ? parseInt(stored, 10) : 0);
+    };
+
+    updateCount();
+
+    window.addEventListener("pixelbooks_cart_updated", updateCount);
+    window.addEventListener("storage", updateCount);
+
+    return () => {
+      window.removeEventListener("pixelbooks_cart_updated", updateCount);
+      window.removeEventListener("storage", updateCount);
+    };
+  }, []);
+
   return (
     <div className="flex min-h-screen bg-background text-foreground">
       <DesktopSidebar collapsed={collapsed} onToggle={() => setCollapsed((v) => !v)} />
@@ -459,6 +480,18 @@ export function AppShell({
           </div>
           <div className="flex shrink-0 items-center gap-2 md:gap-3">
             <ThemeToggle />
+            {cartCount > 0 && (
+              <Link
+                to="/library-admin/cart"
+                className="relative flex h-10 w-10 items-center justify-center rounded-lg border border-border bg-card text-muted-foreground hover:bg-secondary hover:text-foreground transition-all cursor-pointer shadow-sm"
+                title={`${cartCount} items in cart`}
+              >
+                <ShoppingCart size={18} />
+                <span className="absolute -top-1.5 -right-1.5 flex h-5 min-w-5 items-center justify-center rounded-full bg-rose-600 px-1 text-[10px] font-bold text-white ring-2 ring-background">
+                  {cartCount}
+                </span>
+              </Link>
+            )}
             <NotificationsPopover />
             <ProfileDropdown />
           </div>

@@ -902,7 +902,7 @@ function LibraryAdminUsersPage() {
             {/* Status Dropdown Filter */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <button className="h-10 flex items-center justify-between rounded-lg border border-border bg-white dark:bg-card px-3 text-xs font-semibold text-muted-foreground hover:text-foreground transition-all cursor-pointer min-w-36 gap-2 shadow-sm">
+                <button className="h-10 flex items-center justify-between rounded-lg border border-border bg-white dark:bg-card px-3 text-xs font-semibold text-muted-foreground hover:text-foreground transition-all cursor-pointer min-w-36 gap-2">
                   <span>Status: {statusFilter}</span>
                   <ChevronDown size={14} className="text-muted-foreground" />
                 </button>
@@ -944,7 +944,7 @@ function LibraryAdminUsersPage() {
             {/* Type Dropdown Filter */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <button className="h-10 flex items-center justify-between rounded-lg border border-border bg-white dark:bg-card px-3 text-xs font-semibold text-muted-foreground hover:text-foreground transition-all cursor-pointer min-w-36 gap-2 shadow-sm">
+                <button className="h-10 flex items-center justify-between rounded-lg border border-border bg-white dark:bg-card px-3 text-xs font-semibold text-muted-foreground hover:text-foreground transition-all cursor-pointer min-w-36 gap-2">
                   <span>Type: {typeFilter}</span>
                   <ChevronDown size={14} className="text-muted-foreground" />
                 </button>
@@ -984,7 +984,7 @@ function LibraryAdminUsersPage() {
             </DropdownMenu>
 
             {/* Search Input */}
-            <label className="relative flex h-10 items-center rounded-lg border border-border bg-white dark:bg-card px-3 w-full sm:max-w-xs shadow-sm">
+            <label className="relative flex h-10 items-center rounded-lg border border-border bg-white dark:bg-card px-3 w-full sm:max-w-xs">
               <Search size={14} className="text-muted-foreground shrink-0" />
               <input
                 type="text"
@@ -1004,7 +1004,7 @@ function LibraryAdminUsersPage() {
             {/* Date Preset Dropdown */}
             <DropdownMenu open={presetOpen} onOpenChange={setPresetOpen}>
               <DropdownMenuTrigger asChild>
-                <button className="h-10 flex items-center justify-between rounded-lg border border-border bg-white dark:bg-card px-3 text-xs font-semibold text-muted-foreground hover:text-foreground transition-all cursor-pointer gap-2 min-w-36 shadow-sm">
+                <button className="h-10 flex items-center justify-between rounded-lg border border-border bg-white dark:bg-card px-3 text-xs font-semibold text-muted-foreground hover:text-foreground transition-all cursor-pointer gap-2 min-w-36">
                   <span className="flex items-center gap-1.5">
                     <Calendar size={14} />
                     {preset === "Custom" ? "Custom Range" : preset}
@@ -1032,7 +1032,7 @@ function LibraryAdminUsersPage() {
 
             {/* Custom Dates Container */}
             <div className="flex items-center gap-2">
-              <label className="relative flex h-10 items-center rounded-lg border border-border bg-white dark:bg-card px-3 w-full sm:w-36 shadow-sm">
+              <label className="relative flex h-10 items-center rounded-lg border border-border bg-white dark:bg-card px-3 w-full sm:w-36">
                 <input
                   type="date"
                   value={from}
@@ -1047,7 +1047,7 @@ function LibraryAdminUsersPage() {
 
               <span className="text-muted-foreground text-xs font-semibold">to</span>
 
-              <label className="relative flex h-10 items-center rounded-lg border border-border bg-white dark:bg-card px-3 w-full sm:w-36 shadow-sm">
+              <label className="relative flex h-10 items-center rounded-lg border border-border bg-white dark:bg-card px-3 w-full sm:w-36">
                 <input
                   type="date"
                   value={to}
