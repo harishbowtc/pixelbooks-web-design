@@ -9,11 +9,11 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as PbAdminRouteImport } from './routes/pb-admin'
 import { Route as NotificationsRouteImport } from './routes/notifications'
 import { Route as LibraryUserRouteImport } from './routes/library-user'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as PublisherIndexRouteImport } from './routes/publisher/index'
+import { Route as PbAdminIndexRouteImport } from './routes/pb-admin/index'
 import { Route as LibraryAdminIndexRouteImport } from './routes/library-admin/index'
 import { Route as PublisherSupportRouteImport } from './routes/publisher/support'
 import { Route as PublisherSettingsRouteImport } from './routes/publisher/settings'
@@ -21,6 +21,7 @@ import { Route as PublisherSalesReportRouteImport } from './routes/publisher/sal
 import { Route as PublisherProfileRouteImport } from './routes/publisher/profile'
 import { Route as PublisherMarginReportRouteImport } from './routes/publisher/margin-report'
 import { Route as PublisherBankAccountsRouteImport } from './routes/publisher/bank-accounts'
+import { Route as PbAdminCommissionRatesRouteImport } from './routes/pb-admin/commission-rates'
 import { Route as LibraryAdminUsersRouteImport } from './routes/library-admin/users'
 import { Route as LibraryAdminSupportRouteImport } from './routes/library-admin/support'
 import { Route as LibraryAdminRequestsRouteImport } from './routes/library-admin/requests'
@@ -43,12 +44,8 @@ import { Route as PublisherCatalogueImportNewRouteImport } from './routes/publis
 import { Route as PublisherCatalogueImportFileNameRouteImport } from './routes/publisher/catalogue-import.$fileName'
 import { Route as PublisherBundlesNewRouteImport } from './routes/publisher/bundles.new'
 import { Route as PublisherBundlesBundleIdRouteImport } from './routes/publisher/bundles.$bundleId'
+import { Route as PbAdminCommissionRatesIdRouteImport } from './routes/pb-admin/commission-rates_/$id'
 
-const PbAdminRoute = PbAdminRouteImport.update({
-  id: '/pb-admin',
-  path: '/pb-admin',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const NotificationsRoute = NotificationsRouteImport.update({
   id: '/notifications',
   path: '/notifications',
@@ -67,6 +64,11 @@ const IndexRoute = IndexRouteImport.update({
 const PublisherIndexRoute = PublisherIndexRouteImport.update({
   id: '/publisher/',
   path: '/publisher/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PbAdminIndexRoute = PbAdminIndexRouteImport.update({
+  id: '/pb-admin/',
+  path: '/pb-admin/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LibraryAdminIndexRoute = LibraryAdminIndexRouteImport.update({
@@ -102,6 +104,11 @@ const PublisherMarginReportRoute = PublisherMarginReportRouteImport.update({
 const PublisherBankAccountsRoute = PublisherBankAccountsRouteImport.update({
   id: '/publisher/bank-accounts',
   path: '/publisher/bank-accounts',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PbAdminCommissionRatesRoute = PbAdminCommissionRatesRouteImport.update({
+  id: '/pb-admin/commission-rates',
+  path: '/pb-admin/commission-rates',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LibraryAdminUsersRoute = LibraryAdminUsersRouteImport.update({
@@ -221,12 +228,17 @@ const PublisherBundlesBundleIdRoute =
     path: '/publisher/bundles/$bundleId',
     getParentRoute: () => rootRouteImport,
   } as any)
+const PbAdminCommissionRatesIdRoute =
+  PbAdminCommissionRatesIdRouteImport.update({
+    id: '/pb-admin/commission-rates_/$id',
+    path: '/pb-admin/commission-rates/$id',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/library-user': typeof LibraryUserRoute
   '/notifications': typeof NotificationsRoute
-  '/pb-admin': typeof PbAdminRoute
   '/library-admin/banners': typeof LibraryAdminBannersRoute
   '/library-admin/cart': typeof LibraryAdminCartRoute
   '/library-admin/catalogue': typeof LibraryAdminCatalogueRoute
@@ -238,6 +250,7 @@ export interface FileRoutesByFullPath {
   '/library-admin/requests': typeof LibraryAdminRequestsRoute
   '/library-admin/support': typeof LibraryAdminSupportRoute
   '/library-admin/users': typeof LibraryAdminUsersRoute
+  '/pb-admin/commission-rates': typeof PbAdminCommissionRatesRoute
   '/publisher/bank-accounts': typeof PublisherBankAccountsRoute
   '/publisher/margin-report': typeof PublisherMarginReportRoute
   '/publisher/profile': typeof PublisherProfileRoute
@@ -245,7 +258,9 @@ export interface FileRoutesByFullPath {
   '/publisher/settings': typeof PublisherSettingsRoute
   '/publisher/support': typeof PublisherSupportRoute
   '/library-admin/': typeof LibraryAdminIndexRoute
+  '/pb-admin/': typeof PbAdminIndexRoute
   '/publisher/': typeof PublisherIndexRoute
+  '/pb-admin/commission-rates/$id': typeof PbAdminCommissionRatesIdRoute
   '/publisher/bundles/$bundleId': typeof PublisherBundlesBundleIdRoute
   '/publisher/bundles/new': typeof PublisherBundlesNewRoute
   '/publisher/catalogue-import/$fileName': typeof PublisherCatalogueImportFileNameRoute
@@ -262,7 +277,6 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/library-user': typeof LibraryUserRoute
   '/notifications': typeof NotificationsRoute
-  '/pb-admin': typeof PbAdminRoute
   '/library-admin/banners': typeof LibraryAdminBannersRoute
   '/library-admin/cart': typeof LibraryAdminCartRoute
   '/library-admin/catalogue': typeof LibraryAdminCatalogueRoute
@@ -274,6 +288,7 @@ export interface FileRoutesByTo {
   '/library-admin/requests': typeof LibraryAdminRequestsRoute
   '/library-admin/support': typeof LibraryAdminSupportRoute
   '/library-admin/users': typeof LibraryAdminUsersRoute
+  '/pb-admin/commission-rates': typeof PbAdminCommissionRatesRoute
   '/publisher/bank-accounts': typeof PublisherBankAccountsRoute
   '/publisher/margin-report': typeof PublisherMarginReportRoute
   '/publisher/profile': typeof PublisherProfileRoute
@@ -281,7 +296,9 @@ export interface FileRoutesByTo {
   '/publisher/settings': typeof PublisherSettingsRoute
   '/publisher/support': typeof PublisherSupportRoute
   '/library-admin': typeof LibraryAdminIndexRoute
+  '/pb-admin': typeof PbAdminIndexRoute
   '/publisher': typeof PublisherIndexRoute
+  '/pb-admin/commission-rates/$id': typeof PbAdminCommissionRatesIdRoute
   '/publisher/bundles/$bundleId': typeof PublisherBundlesBundleIdRoute
   '/publisher/bundles/new': typeof PublisherBundlesNewRoute
   '/publisher/catalogue-import/$fileName': typeof PublisherCatalogueImportFileNameRoute
@@ -299,7 +316,6 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/library-user': typeof LibraryUserRoute
   '/notifications': typeof NotificationsRoute
-  '/pb-admin': typeof PbAdminRoute
   '/library-admin/banners': typeof LibraryAdminBannersRoute
   '/library-admin/cart': typeof LibraryAdminCartRoute
   '/library-admin/catalogue': typeof LibraryAdminCatalogueRoute
@@ -311,6 +327,7 @@ export interface FileRoutesById {
   '/library-admin/requests': typeof LibraryAdminRequestsRoute
   '/library-admin/support': typeof LibraryAdminSupportRoute
   '/library-admin/users': typeof LibraryAdminUsersRoute
+  '/pb-admin/commission-rates': typeof PbAdminCommissionRatesRoute
   '/publisher/bank-accounts': typeof PublisherBankAccountsRoute
   '/publisher/margin-report': typeof PublisherMarginReportRoute
   '/publisher/profile': typeof PublisherProfileRoute
@@ -318,7 +335,9 @@ export interface FileRoutesById {
   '/publisher/settings': typeof PublisherSettingsRoute
   '/publisher/support': typeof PublisherSupportRoute
   '/library-admin/': typeof LibraryAdminIndexRoute
+  '/pb-admin/': typeof PbAdminIndexRoute
   '/publisher/': typeof PublisherIndexRoute
+  '/pb-admin/commission-rates_/$id': typeof PbAdminCommissionRatesIdRoute
   '/publisher/bundles/$bundleId': typeof PublisherBundlesBundleIdRoute
   '/publisher/bundles/new': typeof PublisherBundlesNewRoute
   '/publisher/catalogue-import/$fileName': typeof PublisherCatalogueImportFileNameRoute
@@ -337,7 +356,6 @@ export interface FileRouteTypes {
     | '/'
     | '/library-user'
     | '/notifications'
-    | '/pb-admin'
     | '/library-admin/banners'
     | '/library-admin/cart'
     | '/library-admin/catalogue'
@@ -349,6 +367,7 @@ export interface FileRouteTypes {
     | '/library-admin/requests'
     | '/library-admin/support'
     | '/library-admin/users'
+    | '/pb-admin/commission-rates'
     | '/publisher/bank-accounts'
     | '/publisher/margin-report'
     | '/publisher/profile'
@@ -356,7 +375,9 @@ export interface FileRouteTypes {
     | '/publisher/settings'
     | '/publisher/support'
     | '/library-admin/'
+    | '/pb-admin/'
     | '/publisher/'
+    | '/pb-admin/commission-rates/$id'
     | '/publisher/bundles/$bundleId'
     | '/publisher/bundles/new'
     | '/publisher/catalogue-import/$fileName'
@@ -373,7 +394,6 @@ export interface FileRouteTypes {
     | '/'
     | '/library-user'
     | '/notifications'
-    | '/pb-admin'
     | '/library-admin/banners'
     | '/library-admin/cart'
     | '/library-admin/catalogue'
@@ -385,6 +405,7 @@ export interface FileRouteTypes {
     | '/library-admin/requests'
     | '/library-admin/support'
     | '/library-admin/users'
+    | '/pb-admin/commission-rates'
     | '/publisher/bank-accounts'
     | '/publisher/margin-report'
     | '/publisher/profile'
@@ -392,7 +413,9 @@ export interface FileRouteTypes {
     | '/publisher/settings'
     | '/publisher/support'
     | '/library-admin'
+    | '/pb-admin'
     | '/publisher'
+    | '/pb-admin/commission-rates/$id'
     | '/publisher/bundles/$bundleId'
     | '/publisher/bundles/new'
     | '/publisher/catalogue-import/$fileName'
@@ -409,7 +432,6 @@ export interface FileRouteTypes {
     | '/'
     | '/library-user'
     | '/notifications'
-    | '/pb-admin'
     | '/library-admin/banners'
     | '/library-admin/cart'
     | '/library-admin/catalogue'
@@ -421,6 +443,7 @@ export interface FileRouteTypes {
     | '/library-admin/requests'
     | '/library-admin/support'
     | '/library-admin/users'
+    | '/pb-admin/commission-rates'
     | '/publisher/bank-accounts'
     | '/publisher/margin-report'
     | '/publisher/profile'
@@ -428,7 +451,9 @@ export interface FileRouteTypes {
     | '/publisher/settings'
     | '/publisher/support'
     | '/library-admin/'
+    | '/pb-admin/'
     | '/publisher/'
+    | '/pb-admin/commission-rates_/$id'
     | '/publisher/bundles/$bundleId'
     | '/publisher/bundles/new'
     | '/publisher/catalogue-import/$fileName'
@@ -446,7 +471,6 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   LibraryUserRoute: typeof LibraryUserRoute
   NotificationsRoute: typeof NotificationsRoute
-  PbAdminRoute: typeof PbAdminRoute
   LibraryAdminBannersRoute: typeof LibraryAdminBannersRoute
   LibraryAdminCartRoute: typeof LibraryAdminCartRoute
   LibraryAdminCatalogueRoute: typeof LibraryAdminCatalogueRoute
@@ -458,6 +482,7 @@ export interface RootRouteChildren {
   LibraryAdminRequestsRoute: typeof LibraryAdminRequestsRoute
   LibraryAdminSupportRoute: typeof LibraryAdminSupportRoute
   LibraryAdminUsersRoute: typeof LibraryAdminUsersRoute
+  PbAdminCommissionRatesRoute: typeof PbAdminCommissionRatesRoute
   PublisherBankAccountsRoute: typeof PublisherBankAccountsRoute
   PublisherMarginReportRoute: typeof PublisherMarginReportRoute
   PublisherProfileRoute: typeof PublisherProfileRoute
@@ -465,7 +490,9 @@ export interface RootRouteChildren {
   PublisherSettingsRoute: typeof PublisherSettingsRoute
   PublisherSupportRoute: typeof PublisherSupportRoute
   LibraryAdminIndexRoute: typeof LibraryAdminIndexRoute
+  PbAdminIndexRoute: typeof PbAdminIndexRoute
   PublisherIndexRoute: typeof PublisherIndexRoute
+  PbAdminCommissionRatesIdRoute: typeof PbAdminCommissionRatesIdRoute
   PublisherBundlesBundleIdRoute: typeof PublisherBundlesBundleIdRoute
   PublisherBundlesNewRoute: typeof PublisherBundlesNewRoute
   PublisherCatalogueImportFileNameRoute: typeof PublisherCatalogueImportFileNameRoute
@@ -481,13 +508,6 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/pb-admin': {
-      id: '/pb-admin'
-      path: '/pb-admin'
-      fullPath: '/pb-admin'
-      preLoaderRoute: typeof PbAdminRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/notifications': {
       id: '/notifications'
       path: '/notifications'
@@ -514,6 +534,13 @@ declare module '@tanstack/react-router' {
       path: '/publisher'
       fullPath: '/publisher/'
       preLoaderRoute: typeof PublisherIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/pb-admin/': {
+      id: '/pb-admin/'
+      path: '/pb-admin'
+      fullPath: '/pb-admin/'
+      preLoaderRoute: typeof PbAdminIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/library-admin/': {
@@ -563,6 +590,13 @@ declare module '@tanstack/react-router' {
       path: '/publisher/bank-accounts'
       fullPath: '/publisher/bank-accounts'
       preLoaderRoute: typeof PublisherBankAccountsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/pb-admin/commission-rates': {
+      id: '/pb-admin/commission-rates'
+      path: '/pb-admin/commission-rates'
+      fullPath: '/pb-admin/commission-rates'
+      preLoaderRoute: typeof PbAdminCommissionRatesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/library-admin/users': {
@@ -719,6 +753,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PublisherBundlesBundleIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/pb-admin/commission-rates_/$id': {
+      id: '/pb-admin/commission-rates_/$id'
+      path: '/pb-admin/commission-rates/$id'
+      fullPath: '/pb-admin/commission-rates/$id'
+      preLoaderRoute: typeof PbAdminCommissionRatesIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -726,7 +767,6 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   LibraryUserRoute: LibraryUserRoute,
   NotificationsRoute: NotificationsRoute,
-  PbAdminRoute: PbAdminRoute,
   LibraryAdminBannersRoute: LibraryAdminBannersRoute,
   LibraryAdminCartRoute: LibraryAdminCartRoute,
   LibraryAdminCatalogueRoute: LibraryAdminCatalogueRoute,
@@ -738,6 +778,7 @@ const rootRouteChildren: RootRouteChildren = {
   LibraryAdminRequestsRoute: LibraryAdminRequestsRoute,
   LibraryAdminSupportRoute: LibraryAdminSupportRoute,
   LibraryAdminUsersRoute: LibraryAdminUsersRoute,
+  PbAdminCommissionRatesRoute: PbAdminCommissionRatesRoute,
   PublisherBankAccountsRoute: PublisherBankAccountsRoute,
   PublisherMarginReportRoute: PublisherMarginReportRoute,
   PublisherProfileRoute: PublisherProfileRoute,
@@ -745,7 +786,9 @@ const rootRouteChildren: RootRouteChildren = {
   PublisherSettingsRoute: PublisherSettingsRoute,
   PublisherSupportRoute: PublisherSupportRoute,
   LibraryAdminIndexRoute: LibraryAdminIndexRoute,
+  PbAdminIndexRoute: PbAdminIndexRoute,
   PublisherIndexRoute: PublisherIndexRoute,
+  PbAdminCommissionRatesIdRoute: PbAdminCommissionRatesIdRoute,
   PublisherBundlesBundleIdRoute: PublisherBundlesBundleIdRoute,
   PublisherBundlesNewRoute: PublisherBundlesNewRoute,
   PublisherCatalogueImportFileNameRoute: PublisherCatalogueImportFileNameRoute,

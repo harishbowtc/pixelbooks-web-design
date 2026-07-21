@@ -27,6 +27,9 @@ import {
   Building2,
   Inbox,
   Image as ImageIcon,
+  BadgePercent,
+  Megaphone,
+  ClipboardList,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { useEffect, useState, type ReactNode } from "react";
@@ -49,6 +52,7 @@ type NavItem = {
   icon: LucideIcon;
   to: string;
   badge?: string;
+  subItems?: { label: string; to: string; icon: LucideIcon }[];
 };
 
 type NavSection = { heading: string; items: NavItem[] };
@@ -61,7 +65,76 @@ function isActivePath(pathname: string, to: string) {
   return pathname === to || pathname.startsWith(`${to}/`);
 }
 
-function getSections(pathname: string): NavSection[] {
+function getSections(pathname: string, adminMode?: "retail" | "library"): NavSection[] {
+  if (pathname.startsWith("/pb-admin")) {
+    if (adminMode === "library") {
+      return [
+        {
+          heading: "Main",
+          items: [
+            { label: "Dashboard", icon: LayoutDashboard, to: "/pb-admin" },
+            {
+              label: "Manage Library",
+              icon: BookMarked,
+              to: "/library-admin/manage-ebooks",
+              subItems: [
+                { label: "Library Admin", to: "/library-admin/users", icon: Users },
+                { label: "Manage Orders", to: "/library-admin/orders", icon: ShoppingBag },
+                { label: "Catalogue Mapper", to: "/library-admin/catalogue", icon: Users },
+              ],
+            },
+            { label: "Report", icon: BarChart3, to: "/library-admin/reports" },
+          ],
+        },
+        {
+          heading: "Settings",
+          items: [
+            { label: "Settings", icon: Settings, to: "/library-admin/support" },
+          ],
+        },
+      ];
+    }
+
+    return [
+      {
+        heading: "Main",
+        items: [
+          { label: "Dashboard", icon: LayoutDashboard, to: "/pb-admin" },
+          { label: "Manage PixelBooks", icon: BookMarked, to: "/publisher/catalogue/" },
+        ],
+      },
+      {
+        heading: "Pricing & Promotions",
+        items: [
+          { label: "Commission Rates", icon: Landmark, to: "/pb-admin/commission-rates" },
+          { label: "Promo Codes", icon: TicketPercent, to: "/publisher/promo-codes/" },
+        ],
+      },
+      {
+        heading: "Reports",
+        items: [
+          { label: "Margin/Royalty Report", icon: Landmark, to: "/publisher/margin-report" },
+          { label: "Sales Report", icon: BarChart3, to: "/publisher/sales-report" },
+        ],
+      },
+      {
+        heading: "Marketing & Growth",
+        items: [
+          { label: "Analytics", icon: TrendingUp, to: "/publisher/analytics" },
+          { label: "Marketing", icon: Megaphone, to: "/publisher/support" },
+        ],
+      },
+      {
+        heading: "Content & Insights",
+        items: [
+          { label: "Ad Banners", icon: ImageIcon, to: "/publisher/ad-banners" },
+          { label: "Quizzes & Rewards", icon: Store, to: "/publisher/rewards" },
+          { label: "Audit Log", icon: ClipboardList, to: "/publisher/profile" },
+        ],
+      },
+    ];
+  }
+
   if (pathname.startsWith("/library-admin")) {
     return [
       {
@@ -153,6 +226,7 @@ function useCollapsed() {
 function SidebarBrand({ collapsed }: { collapsed: boolean }) {
   const { pathname } = useLocation();
   const isLibraryAdmin = pathname.startsWith("/library-admin");
+  const isPBAdmin = pathname.startsWith("/pb-admin");
   return (
     <div
       className={[
@@ -176,13 +250,19 @@ function SidebarBrand({ collapsed }: { collapsed: boolean }) {
           <span
             className="shrink-0 rounded-md px-2 py-0.5 text-[11px] font-semibold"
             style={{
-              backgroundColor: isLibraryAdmin
+              backgroundColor: isPBAdmin
+                ? "color-mix(in oklab, oklch(0.60 0.18 30) 16%, transparent)"
+                : isLibraryAdmin
                 ? "color-mix(in oklab, oklch(0.55 0.13 260) 12%, transparent)"
                 : "var(--sidebar-highlight)",
-              color: isLibraryAdmin ? "oklch(0.55 0.13 260)" : "var(--sidebar-accent-foreground)",
+              color: isPBAdmin
+                ? "oklch(0.60 0.18 30)"
+                : isLibraryAdmin
+                  ? "oklch(0.55 0.13 260)"
+                  : "var(--sidebar-accent-foreground)",
             }}
           >
-            {isLibraryAdmin ? "Library Admin" : "Publisher"}
+            {isPBAdmin ? "Admin" : isLibraryAdmin ? "Library Admin" : "Publisher"}
           </span>
         </div>
       )}
@@ -194,56 +274,100 @@ function NavRow({
   item,
   active,
   collapsed,
+  pathname,
   onNavigate,
 }: {
   item: NavItem;
   active: boolean;
   collapsed: boolean;
+  pathname: string;
   onNavigate?: () => void;
 }) {
   const Icon = item.icon;
+  // Always expand if subItems exist, rather than relying on active state
+  const hasSubItems = item.subItems && item.subItems.length > 0;
+
   const content = (
-    <Link
-      to={item.to}
-      onClick={onNavigate}
-      className={[
-        "group relative flex items-center gap-3 rounded-lg px-3 py-2.5 text-[14.5px] font-medium transition-all",
-        collapsed ? "justify-center" : "",
-        active
-          ? "text-sidebar-accent-foreground shadow-sm"
-          : "text-sidebar-foreground/85 hover:bg-secondary hover:text-sidebar-foreground",
-      ].join(" ")}
-      style={
-        active
-          ? {
-              backgroundColor: "var(--sidebar-highlight)",
-              boxShadow: "0 6px 20px -12px var(--brand-glow)",
-            }
-          : undefined
-      }
-    >
-      {active && !collapsed && (
-        <span
-          className="absolute left-0 top-1/2 h-6 w-[3px] -translate-y-1/2 rounded-r-full"
-          style={{ backgroundColor: "var(--brand)" }}
+    <div className="space-y-1">
+      <Link
+        to={item.to}
+        onClick={onNavigate}
+        className={[
+          "group relative flex items-center gap-3 rounded-lg px-3 py-2.5 text-[14.5px] font-medium transition-all",
+          collapsed ? "justify-center" : "",
+          active
+            ? "text-sidebar-accent-foreground shadow-sm"
+            : "text-sidebar-foreground/85 hover:bg-secondary hover:text-sidebar-foreground",
+        ].join(" ")}
+        style={
+          active
+            ? {
+                backgroundColor: "var(--sidebar-highlight)",
+                boxShadow: "0 6px 20px -12px var(--brand-glow)",
+              }
+            : undefined
+        }
+      >
+        {active && !collapsed && (
+          <span
+            className="absolute left-0 top-1/2 h-6 w-[3px] -translate-y-1/2 rounded-r-full"
+            style={{ backgroundColor: "var(--brand)" }}
+          />
+        )}
+        <Icon
+          size={19}
+          strokeWidth={active ? 2.25 : 1.9}
+          className={active ? "" : "text-muted-foreground group-hover:text-sidebar-foreground"}
+          style={active ? { color: "var(--sidebar-highlight-icon)" } : undefined}
         />
+        {!collapsed && <span className="flex-1 truncate">{item.label}</span>}
+        {!collapsed && item.badge && (
+          <span
+            className="rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider"
+            style={{ backgroundColor: "var(--brand)", color: "var(--brand-contrast)" }}
+          >
+            {item.badge}
+          </span>
+        )}
+      </Link>
+      {!collapsed && hasSubItems && (
+        <ul className="mt-1 ml-4 space-y-1 pl-3">
+          {item.subItems!.map((subItem) => {
+            const SubIcon = subItem.icon;
+            const subActive = isActivePath(pathname, subItem.to);
+            return (
+              <li key={subItem.label}>
+                <Link
+                  to={subItem.to}
+                  onClick={onNavigate}
+                  className={[
+                    "flex items-center gap-3 rounded-lg px-2 py-2 text-[14.5px] font-medium transition-all",
+                    subActive
+                      ? "text-sidebar-accent-foreground shadow-sm bg-[var(--sidebar-highlight)]"
+                      : "text-sidebar-foreground/85 hover:bg-secondary hover:text-sidebar-foreground",
+                  ].join(" ")}
+                  style={
+                    subActive
+                      ? {
+                          boxShadow: "0 6px 20px -12px var(--brand-glow)",
+                        }
+                      : undefined
+                  }
+                >
+                  <SubIcon 
+                    size={19} 
+                    strokeWidth={subActive ? 2.25 : 1.9}
+                    className={subActive ? "" : "text-muted-foreground group-hover:text-sidebar-foreground"}
+                    style={subActive ? { color: "var(--sidebar-highlight-icon)" } : undefined}
+                  />
+                  <span className="truncate">{subItem.label}</span>
+                </Link>
+              </li>
+            );
+          })}
+        </ul>
       )}
-      <Icon
-        size={19}
-        strokeWidth={active ? 2.25 : 1.9}
-        className={active ? "" : "text-muted-foreground group-hover:text-sidebar-foreground"}
-        style={active ? { color: "var(--sidebar-highlight-icon)" } : undefined}
-      />
-      {!collapsed && <span className="flex-1 truncate">{item.label}</span>}
-      {!collapsed && item.badge && (
-        <span
-          className="rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider"
-          style={{ backgroundColor: "var(--brand)", color: "var(--brand-contrast)" }}
-        >
-          {item.badge}
-        </span>
-      )}
-    </Link>
+    </div>
   );
   if (!collapsed) return content;
   return (
@@ -266,10 +390,46 @@ function NavRow({
 
 function SidebarBody({ collapsed, onNavigate }: { collapsed: boolean; onNavigate?: () => void }) {
   const { pathname } = useLocation();
-  const currentSections = getSections(pathname);
+  const isPBAdmin = pathname.startsWith("/pb-admin");
+  const [adminMode, setAdminMode] = useState<"retail" | "library">("retail");
+  const currentSections = getSections(pathname, adminMode);
+
   return (
     <TooltipProvider delayDuration={100}>
       <nav className="flex-1 overflow-y-auto px-3">
+        {isPBAdmin && !collapsed && (
+          <div className="mb-6 px-3">
+            <p className="mb-2 px-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-sidebar-foreground/55">
+              Mode
+            </p>
+            <div className="flex items-center gap-1 rounded-full border border-sidebar-border p-1">
+              <button
+                onClick={() => setAdminMode("retail")}
+                aria-pressed={adminMode === "retail"}
+                className={[
+                  "flex-1 rounded-full py-1.5 text-xs font-semibold transition-all duration-150",
+                  adminMode === "retail"
+                    ? "bg-sidebar-accent text-sidebar-accent-foreground shadow-sm"
+                    : "text-sidebar-foreground/60 hover:text-sidebar-foreground",
+                ].join(" ")}
+              >
+                Retail
+              </button>
+              <button
+                onClick={() => setAdminMode("library")}
+                aria-pressed={adminMode === "library"}
+                className={[
+                  "flex-1 rounded-full py-1.5 text-xs font-semibold transition-all duration-150",
+                  adminMode === "library"
+                    ? "bg-sidebar-accent text-sidebar-accent-foreground shadow-sm"
+                    : "text-sidebar-foreground/60 hover:text-sidebar-foreground",
+                ].join(" ")}
+              >
+                Library
+              </button>
+            </div>
+          </div>
+        )}
         {currentSections.map((section) => (
           <div key={section.heading} className="mb-6">
             {!collapsed ? (
@@ -289,6 +449,7 @@ function SidebarBody({ collapsed, onNavigate }: { collapsed: boolean; onNavigate
                     item={item}
                     active={isActivePath(pathname, item.to)}
                     collapsed={collapsed}
+                    pathname={pathname}
                     onNavigate={onNavigate}
                   />
                 </li>
@@ -304,6 +465,7 @@ function SidebarBody({ collapsed, onNavigate }: { collapsed: boolean; onNavigate
 function ProfileDropdown() {
   const { pathname } = useLocation();
   const isLibraryAdmin = pathname.startsWith("/library-admin");
+  const isPBAdmin = pathname.startsWith("/pb-admin");
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -322,7 +484,7 @@ function ProfileDropdown() {
               Anya Ramanathan
             </span>
             <span className="block truncate text-[11px] text-muted-foreground">
-              {isLibraryAdmin ? "Library Admin · Pro" : "Publisher · Pro"}
+              {isPBAdmin ? "PB Admin · Pro" : isLibraryAdmin ? "Library Admin · Pro" : "Publisher · Pro"}
             </span>
           </span>
           <ChevronDown size={14} className="hidden text-muted-foreground sm:block" />
@@ -435,6 +597,9 @@ export function AppShell({
   const [mobileOpen, setMobileOpen] = useState(false);
   const [cartCount, setCartCount] = useState(0);
 
+  const { pathname } = useLocation();
+  const isPBAdmin = pathname.startsWith("/pb-admin");
+
   useEffect(() => {
     const updateCount = () => {
       const stored = localStorage.getItem("pixelbooks_cart_count");
@@ -480,7 +645,7 @@ export function AppShell({
           </div>
           <div className="flex shrink-0 items-center gap-2 md:gap-3">
             <ThemeToggle />
-            {cartCount > 0 && (
+            {!isPBAdmin && cartCount > 0 && (
               <Link
                 to="/library-admin/cart"
                 className="relative flex h-10 w-10 items-center justify-center rounded-lg border border-border bg-card text-muted-foreground hover:bg-secondary hover:text-foreground transition-all cursor-pointer shadow-sm"
@@ -492,7 +657,7 @@ export function AppShell({
                 </span>
               </Link>
             )}
-            <NotificationsPopover />
+            {!isPBAdmin && <NotificationsPopover />}
             <ProfileDropdown />
           </div>
         </header>

@@ -46,7 +46,10 @@ function NotFoundComponent() {
     </div>
   );
 
-  const isInPortal = pathname.startsWith("/library-admin") || pathname.startsWith("/publisher");
+  const isInPortal =
+    pathname.startsWith("/library-admin") ||
+    pathname.startsWith("/publisher") ||
+    pathname.startsWith("/pb-admin");
 
   if (isInPortal) {
     return (
