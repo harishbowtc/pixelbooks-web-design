@@ -4,6 +4,7 @@ import {
   Search,
   Plus,
   Upload,
+  Download,
   Trash2,
   X,
   ChevronDown,
@@ -427,9 +428,9 @@ export function LibraryAdminCoursesPage() {
                       setUploadProgress(null);
                       setIsImportOpen(true);
                     }}
-                    className="inline-flex h-8 items-center justify-center gap-1 rounded-lg border border-border bg-white dark:bg-card text-foreground px-2.5 text-xs font-semibold hover:bg-secondary/40 active:scale-[0.98] transition-all shadow-sm cursor-pointer"
+                    className="inline-flex h-8 items-center justify-center gap-1 rounded-lg border border-border bg-white dark:bg-card text-foreground px-2.5 text-xs font-semibold hover:bg-secondary/40 active:scale-[0.98] transition-all cursor-pointer"
                   >
-                    <Upload size={13} className="text-muted-foreground" />
+                    <Download size={13} className="text-muted-foreground" />
                     <span>Import</span>
                   </button>
                 </div>

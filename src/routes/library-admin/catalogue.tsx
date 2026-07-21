@@ -8,7 +8,6 @@ import {
   ChevronLeft,
   ChevronRight,
   BookOpen,
-  X,
   Star,
   CheckCircle2,
 } from "lucide-react";
@@ -484,7 +483,7 @@ function LibraryCataloguePage() {
             {/* Dropdown Filter */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <button className="flex h-10 min-w-[120px] items-center justify-between gap-3 rounded-lg border border-border bg-white dark:bg-card px-4 text-sm font-semibold hover:bg-secondary transition-colors text-foreground shrink-0">
+                <button className="flex h-11 min-w-[120px] items-center justify-between gap-6 rounded-lg border border-border bg-card px-3 text-sm font-medium hover:bg-secondary transition-colors text-foreground shrink-0 cursor-pointer">
                   <span>{activeTab}</span>
                   <ChevronDown size={15} className="text-muted-foreground" />
                 </button>
@@ -500,9 +499,9 @@ function LibraryCataloguePage() {
                       setActiveTab(tab);
                       setPage(1);
                     }}
-                    className={`cursor-pointer text-xs font-semibold px-4 py-2 hover:bg-secondary outline-none transition-colors ${
+                    className={`cursor-pointer text-sm font-medium px-4 py-2 hover:bg-secondary outline-none transition-colors ${
                       activeTab === tab
-                        ? "text-[var(--brand)] bg-secondary/40"
+                        ? "text-[var(--brand)] bg-secondary/40 font-medium"
                         : "text-muted-foreground"
                     }`}
                   >
@@ -537,7 +536,7 @@ function LibraryCataloguePage() {
             <div className="relative w-full sm:w-auto">
               <button
                 onClick={() => setPresetOpen((v) => !v)}
-                className="flex h-10 w-full items-center justify-between gap-4 rounded-lg border border-border bg-white dark:bg-card px-3 text-sm font-semibold sm:w-40 text-foreground"
+                className="flex h-11 w-full items-center justify-between gap-6 rounded-lg border border-border bg-card px-3 text-sm font-medium sm:w-40 text-foreground cursor-pointer"
               >
                 <span> {preset}</span>
                 <ChevronDown size={15} className="text-muted-foreground" />
@@ -838,7 +837,13 @@ function LibraryCataloguePage() {
       {/* eBook Reader Overlay Modal */}
       {readerBook && (
         <Dialog open={!!readerBook} onOpenChange={() => setReaderBook(null)}>
-          <DialogContent className="max-w-4xl h-[85vh] p-0 overflow-hidden flex flex-col bg-card border border-border">
+          <DialogContent
+            className="p-0 overflow-hidden flex flex-col bg-card border border-border"
+            style={{
+              width: "min(92vw, 60.71vh)",
+              height: "calc(min(92vw, 60.71vh) * 1.4)",
+            }}
+          >
             <div className="flex items-center justify-between px-6 py-4 border-b border-border">
               <div className="flex items-center gap-3">
                 <div
@@ -856,13 +861,6 @@ function LibraryCataloguePage() {
                   </p>
                 </div>
               </div>
-              <button
-                onClick={() => setReaderBook(null)}
-                className="p-2 rounded-lg hover:bg-secondary transition-colors"
-                aria-label="Close reader"
-              >
-                <X size={18} className="text-muted-foreground" />
-              </button>
             </div>
 
             {/* Reader Mock Area */}

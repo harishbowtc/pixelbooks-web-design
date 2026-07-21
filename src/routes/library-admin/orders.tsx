@@ -1145,7 +1145,7 @@ function LibraryAdminOrdersPage() {
           </button>
           <button
             onClick={() => setIsUploadOpen(true)}
-            className="flex h-10 items-center justify-center gap-2 rounded-lg border border-border bg-white dark:bg-card px-4 text-sm font-semibold hover:bg-secondary/60 active:scale-[0.98] transition-all shadow-sm text-muted-foreground hover:text-foreground cursor-pointer"
+            className="flex h-10 items-center justify-center gap-2 rounded-lg border border-border bg-white dark:bg-card px-4 text-sm font-semibold hover:bg-secondary/60 active:scale-[0.98] transition-all text-muted-foreground hover:text-foreground cursor-pointer"
           >
             <Upload size={16} />
             <span>Upload Order</span>
@@ -1159,7 +1159,7 @@ function LibraryAdminOrdersPage() {
             {/* Dropdown Filter */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <button className="flex h-10 min-w-[150px] items-center justify-between gap-3 rounded-lg border border-border bg-white dark:bg-card px-4 text-sm font-semibold hover:bg-secondary transition-colors text-foreground shrink-0 cursor-pointer">
+                <button className="flex h-11 min-w-[150px] items-center justify-between gap-6 rounded-lg border border-border bg-card px-3 text-sm font-medium hover:bg-secondary transition-colors text-foreground shrink-0 cursor-pointer">
                   <span>{activeTab === "Pending" ? "Pending Approval" : activeTab}</span>
                   <ChevronDown size={15} className="text-muted-foreground" />
                 </button>
@@ -1177,9 +1177,9 @@ function LibraryAdminOrdersPage() {
                         setActiveTab(tab);
                         setPage(1);
                       }}
-                      className={`cursor-pointer text-xs font-semibold px-4 py-2 hover:bg-secondary outline-none transition-colors ${
+                      className={`cursor-pointer text-sm font-medium px-4 py-2 hover:bg-secondary outline-none transition-colors ${
                         activeTab === tab
-                          ? "text-[var(--brand)] bg-secondary/40"
+                          ? "text-[var(--brand)] bg-secondary/40 font-medium"
                           : "text-muted-foreground"
                       }`}
                     >
@@ -1215,7 +1215,7 @@ function LibraryAdminOrdersPage() {
             <div className="relative w-full sm:w-auto">
               <button
                 onClick={() => setPresetOpen((v) => !v)}
-                className="flex h-10 w-full items-center justify-between gap-4 rounded-lg border border-border bg-white dark:bg-card px-3 text-sm font-semibold sm:w-40 text-foreground cursor-pointer"
+                className="flex h-11 w-full items-center justify-between gap-6 rounded-lg border border-border bg-card px-3 text-sm font-medium sm:w-40 text-foreground cursor-pointer"
               >
                 <span>{preset}</span>
                 <ChevronDown size={15} className="text-muted-foreground" />

@@ -4,6 +4,7 @@ import {
   Search,
   Plus,
   Upload,
+  Download,
   FileText,
   Eye,
   Calendar,
@@ -887,105 +888,86 @@ function LibraryAdminUsersPage() {
             </button>
             <button
               onClick={() => setIsUploadOpen(true)}
-              className="h-10 rounded-lg border border-border bg-white dark:bg-card px-4 text-xs font-semibold text-muted-foreground hover:bg-secondary/40 hover:text-foreground transition-all flex items-center gap-1.5 shadow-sm cursor-pointer"
+              className="h-10 rounded-lg border border-border bg-white dark:bg-card px-4 text-xs font-semibold text-muted-foreground hover:bg-secondary/40 hover:text-foreground transition-all flex items-center gap-1.5 cursor-pointer"
             >
-              <Upload size={15} />
-              Import User
+              <Download size={15} />
+              Import
             </button>
           </div>
         </div>
 
-        {/* Unified Toolbar */}
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 bg-card border border-border rounded-xl p-4 shadow-sm">
-          {/* Left Side: Status Dropdown & Search Input */}
-          <div className="flex flex-col sm:flex-row sm:items-center gap-3 flex-1">
+        {/* Redesigned Unified Toolbar */}
+        <div className="flex flex-col gap-4 rounded-xl border border-border bg-card p-4 lg:flex-row lg:items-center lg:justify-between lg:p-5">
+          {/* Left Side: Status, Type Dropdowns + Search Input */}
+          <div className="flex flex-wrap items-center gap-3 flex-1 w-full lg:max-w-4xl">
             {/* Status Dropdown Filter */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <button className="h-10 flex items-center justify-between rounded-lg border border-border bg-white dark:bg-card px-3 text-xs font-semibold text-muted-foreground hover:text-foreground transition-all cursor-pointer min-w-36 gap-2">
-                  <span>Status: {statusFilter}</span>
-                  <ChevronDown size={14} className="text-muted-foreground" />
+                <button className="flex h-11 min-w-[150px] items-center justify-between gap-6 rounded-lg border border-border bg-card px-3 text-sm font-medium hover:bg-secondary transition-colors text-foreground cursor-pointer shrink-0">
+                  <span>{statusFilter === "All" ? "All Statuses" : `${statusFilter} Users`}</span>
+                  <ChevronDown size={15} className="text-muted-foreground" />
                 </button>
               </DropdownMenuTrigger>
               <DropdownMenuContent
                 align="start"
-                className="w-36 bg-card border border-border shadow-md"
+                className="w-[150px] bg-card border border-border rounded-lg shadow-md z-50"
               >
-                <DropdownMenuItem
-                  onClick={() => {
-                    setStatusFilter("All");
-                    setPage(1);
-                  }}
-                  className="text-xs hover:bg-secondary cursor-pointer"
-                >
-                  All
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  onClick={() => {
-                    setStatusFilter("Active");
-                    setPage(1);
-                  }}
-                  className="text-xs hover:bg-secondary cursor-pointer"
-                >
-                  Active
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  onClick={() => {
-                    setStatusFilter("Inactive");
-                    setPage(1);
-                  }}
-                  className="text-xs hover:bg-secondary cursor-pointer"
-                >
-                  Inactive
-                </DropdownMenuItem>
+                {(["All", "Active", "Inactive"] as const).map((tab) => (
+                  <DropdownMenuItem
+                    key={tab}
+                    onClick={() => {
+                      setStatusFilter(tab);
+                      setPage(1);
+                    }}
+                    className={`cursor-pointer text-sm font-medium px-4 py-2 hover:bg-secondary outline-none transition-colors ${
+                      statusFilter === tab
+                        ? "text-[var(--brand)] bg-secondary/40 font-medium"
+                        : "text-muted-foreground"
+                    }`}
+                  >
+                    {tab}
+                  </DropdownMenuItem>
+                ))}
               </DropdownMenuContent>
             </DropdownMenu>
 
             {/* Type Dropdown Filter */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <button className="h-10 flex items-center justify-between rounded-lg border border-border bg-white dark:bg-card px-3 text-xs font-semibold text-muted-foreground hover:text-foreground transition-all cursor-pointer min-w-36 gap-2">
-                  <span>Type: {typeFilter}</span>
-                  <ChevronDown size={14} className="text-muted-foreground" />
+                <button className="flex h-11 min-w-[150px] items-center justify-between gap-6 rounded-lg border border-border bg-card px-3 text-sm font-medium hover:bg-secondary transition-colors text-foreground cursor-pointer shrink-0">
+                  <span>{typeFilter === "All" ? "All Types" : `${typeFilter}s`}</span>
+                  <ChevronDown size={15} className="text-muted-foreground" />
                 </button>
               </DropdownMenuTrigger>
               <DropdownMenuContent
                 align="start"
-                className="w-36 bg-card border border-border shadow-md"
+                className="w-[150px] bg-card border border-border rounded-lg shadow-md z-50"
               >
-                <DropdownMenuItem
-                  onClick={() => {
-                    setTypeFilter("All");
-                    setPage(1);
-                  }}
-                  className="text-xs hover:bg-secondary cursor-pointer"
-                >
-                  All
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  onClick={() => {
-                    setTypeFilter("Staff");
-                    setPage(1);
-                  }}
-                  className="text-xs hover:bg-secondary cursor-pointer"
-                >
-                  Staff
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  onClick={() => {
-                    setTypeFilter("Student");
-                    setPage(1);
-                  }}
-                  className="text-xs hover:bg-secondary cursor-pointer"
-                >
-                  Student
-                </DropdownMenuItem>
+                {(["All", "Staff", "Student"] as const).map((tab) => (
+                  <DropdownMenuItem
+                    key={tab}
+                    onClick={() => {
+                      setTypeFilter(tab);
+                      setPage(1);
+                    }}
+                    className={`cursor-pointer text-sm font-medium px-4 py-2 hover:bg-secondary outline-none transition-colors ${
+                      typeFilter === tab
+                        ? "text-[var(--brand)] bg-secondary/40 font-medium"
+                        : "text-muted-foreground"
+                    }`}
+                  >
+                    {tab}
+                  </DropdownMenuItem>
+                ))}
               </DropdownMenuContent>
             </DropdownMenu>
 
-            {/* Search Input */}
-            <label className="relative flex h-10 items-center rounded-lg border border-border bg-white dark:bg-card px-3 w-full sm:max-w-xs">
-              <Search size={14} className="text-muted-foreground shrink-0" />
+            {/* Search Input Box */}
+            <div className="relative w-full sm:w-60">
+              <Search
+                size={16}
+                className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-muted-foreground"
+              />
               <input
                 type="text"
                 placeholder="Search users..."
@@ -994,41 +976,38 @@ function LibraryAdminUsersPage() {
                   setSearchQuery(e.target.value);
                   setPage(1);
                 }}
-                className="w-full bg-transparent pl-2 text-xs outline-none text-foreground"
+                className="h-10 w-full rounded-lg border border-border bg-white dark:bg-card pl-10 pr-4 text-sm outline-none transition-all placeholder:text-muted-foreground focus:border-[var(--brand)] focus:ring-1 focus:ring-[var(--brand)] text-foreground"
               />
-            </label>
+            </div>
           </div>
 
           {/* Right Side: Date Presets & Custom Date Pickers (filters Join Date) */}
-          <div className="flex flex-col sm:flex-row sm:items-center gap-3">
-            {/* Date Preset Dropdown */}
-            <DropdownMenu open={presetOpen} onOpenChange={setPresetOpen}>
-              <DropdownMenuTrigger asChild>
-                <button className="h-10 flex items-center justify-between rounded-lg border border-border bg-white dark:bg-card px-3 text-xs font-semibold text-muted-foreground hover:text-foreground transition-all cursor-pointer gap-2 min-w-36">
-                  <span className="flex items-center gap-1.5">
-                    <Calendar size={14} />
-                    {preset === "Custom" ? "Custom Range" : preset}
-                  </span>
-                  <ChevronDown size={14} className="text-muted-foreground" />
-                </button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent
-                align="end"
-                className="w-40 bg-card border border-border shadow-md"
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-center md:gap-3 w-full lg:w-auto shrink-0">
+            {/* Preset Dropdown */}
+            <div className="relative w-full sm:w-auto">
+              <button
+                onClick={() => setPresetOpen((v) => !v)}
+                className="flex h-11 w-full items-center justify-between gap-6 rounded-lg border border-border bg-card px-3 text-sm font-medium sm:w-40 text-foreground cursor-pointer"
               >
-                {PRESETS.map((p) => (
-                  <DropdownMenuItem
-                    key={p}
-                    onClick={() => handlePresetSelect(p)}
-                    className={`text-xs hover:bg-secondary cursor-pointer ${
-                      preset === p ? "font-bold text-[var(--brand)]" : ""
-                    }`}
-                  >
-                    {p}
-                  </DropdownMenuItem>
-                ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
+                <span>{preset}</span>
+                <ChevronDown size={15} className="text-muted-foreground" />
+              </button>
+              {presetOpen && (
+                <div className="absolute right-0 z-20 mt-2 w-full overflow-hidden rounded-lg border border-border bg-card shadow-lg sm:w-40">
+                  {PRESETS.map((p) => (
+                    <button
+                      key={p}
+                      onClick={() => handlePresetSelect(p)}
+                      className={`flex w-full items-center px-3 py-2 text-left text-sm transition-colors hover:bg-secondary ${
+                        p === preset ? "font-medium text-foreground" : "text-muted-foreground"
+                      }`}
+                    >
+                      {p}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
 
             {/* Custom Dates Container */}
             <div className="flex items-center gap-2">
@@ -1041,11 +1020,11 @@ function LibraryAdminUsersPage() {
                     setPreset("Custom");
                     setPage(1);
                   }}
-                  className="w-full bg-transparent text-sm outline-none text-foreground"
+                  className="w-full bg-transparent text-sm outline-none text-foreground cursor-pointer"
                 />
               </label>
 
-              <span className="text-muted-foreground text-xs font-semibold">to</span>
+              <span className="text-muted-foreground text-xs font-semibold self-center">to</span>
 
               <label className="relative flex h-10 items-center rounded-lg border border-border bg-white dark:bg-card px-3 w-full sm:w-36">
                 <input
@@ -1056,7 +1035,7 @@ function LibraryAdminUsersPage() {
                     setPreset("Custom");
                     setPage(1);
                   }}
-                  className="w-full bg-transparent text-sm outline-none text-foreground"
+                  className="w-full bg-transparent text-sm outline-none text-foreground cursor-pointer"
                 />
               </label>
             </div>

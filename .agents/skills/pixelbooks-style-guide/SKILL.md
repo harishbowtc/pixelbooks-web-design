@@ -65,3 +65,32 @@ This skill enforces visual consistency across all PixelBooks portals by ensuring
    - Do NOT create or download image files for book covers in any case.
    - Use CSS gradients and centered initials (matching the styling from the publisher catalogue page).
    - The preferred ratio/size for book covers is 438 × 678 (width-to-height ratio of ~1:1.55, e.g., using `aspect-[438/678]` or classes like `w-11 h-17` / `w-10 h-15` or inline styles representing this ratio).
+
+5. **Filter Toolbars, Inputs, Dropdowns, and Calendar Controls (Sales Report Style)**:
+   - **Toolbar Container**: Use a rounded container card for filters:
+     ```tsx
+     <div className="flex flex-col gap-3 rounded-xl border border-border bg-card p-4 md:flex-row md:flex-nowrap md:items-center md:gap-2 md:p-4">
+     ```
+   - **Text & Search Boxes**: Use a label wrapper for inputs with embedded search icons:
+     ```tsx
+     <label className="relative flex h-11 flex-1 items-center rounded-lg border border-border bg-card px-3 md:min-w-[240px]">
+       <Search size={15} className="mr-2 text-muted-foreground" />
+       <input className="w-full bg-transparent text-sm outline-none placeholder:text-muted-foreground" />
+     </label>
+     ```
+   - **Selects & Dropdown Triggers**: Trigger buttons must be styled flat without shadows (`shadow-none`), `h-11`, `bg-card`, and `text-sm font-medium`:
+     ```tsx
+     <SelectTrigger className="h-11 w-full rounded-lg bg-card shadow-none text-sm font-medium">
+       <SelectValue />
+     </SelectTrigger>
+     ```
+   - **Calendar / Date Pickers**: Wrap HTML native `date` inputs in a flat wrapper:
+     ```tsx
+     <label className="relative flex h-11 items-center rounded-lg border border-border bg-card px-3">
+       <input type="date" className="w-full bg-transparent text-sm outline-none cursor-pointer" />
+     </label>
+     ```
+   - **Grids / Table Structure**: Grids and tables must follow standard overflow wrapping:
+     ```tsx
+     <div className="rounded-xl border border-border bg-card p-4 md:p-6 overflow-hidden shadow-sm">
+     ```

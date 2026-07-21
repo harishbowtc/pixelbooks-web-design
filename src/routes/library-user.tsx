@@ -8,7 +8,6 @@ import {
   Bookmark,
   ChevronLeft,
   ChevronRight,
-  Minimize2,
   Type,
   FileText,
   Star,
@@ -294,14 +293,6 @@ function LibraryUserDashboard() {
       {selectedBook && (
         <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in duration-200">
           <div className="bg-card border border-border w-full max-w-md rounded-2xl p-6 relative shadow-2xl flex flex-col space-y-6">
-            <button
-              onClick={() => setSelectedBook(null)}
-              aria-label="Close book details"
-              className="absolute right-4 top-4 h-8 w-8 rounded-full bg-secondary flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors"
-            >
-              <Minimize2 size={15} />
-            </button>
-
             <div className="flex gap-4">
               <div
                 className="h-28 w-20 shrink-0 rounded-lg flex items-center justify-center text-white font-bold text-base shadow"

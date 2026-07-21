@@ -651,7 +651,7 @@ function MarginReportPage() {
                 <div className="relative">
                   <button
                     onClick={() => setLedgerOpen((v) => !v)}
-                    className="flex h-10 w-full items-center justify-between gap-4 rounded-lg border border-border bg-card px-3 text-sm font-medium sm:w-60"
+                    className="flex h-11 w-full items-center justify-between gap-6 rounded-lg border border-border bg-card px-3 text-sm font-medium sm:w-60"
                   >
                     <span className="truncate">{ledgerType}</span>
                     <ChevronDown size={15} className="text-muted-foreground" />

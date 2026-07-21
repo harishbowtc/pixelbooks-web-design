@@ -22,8 +22,11 @@ import { Route as PublisherProfileRouteImport } from './routes/publisher/profile
 import { Route as PublisherMarginReportRouteImport } from './routes/publisher/margin-report'
 import { Route as PublisherBankAccountsRouteImport } from './routes/publisher/bank-accounts'
 import { Route as LibraryAdminUsersRouteImport } from './routes/library-admin/users'
+import { Route as LibraryAdminSupportRouteImport } from './routes/library-admin/support'
 import { Route as LibraryAdminRequestsRouteImport } from './routes/library-admin/requests'
+import { Route as LibraryAdminReportsRouteImport } from './routes/library-admin/reports'
 import { Route as LibraryAdminOrdersRouteImport } from './routes/library-admin/orders'
+import { Route as LibraryAdminManageEbooksRouteImport } from './routes/library-admin/manage-ebooks'
 import { Route as LibraryAdminDepartmentsRouteImport } from './routes/library-admin/departments'
 import { Route as LibraryAdminCoursesRouteImport } from './routes/library-admin/courses'
 import { Route as LibraryAdminCatalogueRouteImport } from './routes/library-admin/catalogue'
@@ -106,9 +109,19 @@ const LibraryAdminUsersRoute = LibraryAdminUsersRouteImport.update({
   path: '/library-admin/users',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LibraryAdminSupportRoute = LibraryAdminSupportRouteImport.update({
+  id: '/library-admin/support',
+  path: '/library-admin/support',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LibraryAdminRequestsRoute = LibraryAdminRequestsRouteImport.update({
   id: '/library-admin/requests',
   path: '/library-admin/requests',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LibraryAdminReportsRoute = LibraryAdminReportsRouteImport.update({
+  id: '/library-admin/reports',
+  path: '/library-admin/reports',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LibraryAdminOrdersRoute = LibraryAdminOrdersRouteImport.update({
@@ -116,6 +129,12 @@ const LibraryAdminOrdersRoute = LibraryAdminOrdersRouteImport.update({
   path: '/library-admin/orders',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LibraryAdminManageEbooksRoute =
+  LibraryAdminManageEbooksRouteImport.update({
+    id: '/library-admin/manage-ebooks',
+    path: '/library-admin/manage-ebooks',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const LibraryAdminDepartmentsRoute = LibraryAdminDepartmentsRouteImport.update({
   id: '/library-admin/departments',
   path: '/library-admin/departments',
@@ -213,8 +232,11 @@ export interface FileRoutesByFullPath {
   '/library-admin/catalogue': typeof LibraryAdminCatalogueRoute
   '/library-admin/courses': typeof LibraryAdminCoursesRoute
   '/library-admin/departments': typeof LibraryAdminDepartmentsRoute
+  '/library-admin/manage-ebooks': typeof LibraryAdminManageEbooksRoute
   '/library-admin/orders': typeof LibraryAdminOrdersRoute
+  '/library-admin/reports': typeof LibraryAdminReportsRoute
   '/library-admin/requests': typeof LibraryAdminRequestsRoute
+  '/library-admin/support': typeof LibraryAdminSupportRoute
   '/library-admin/users': typeof LibraryAdminUsersRoute
   '/publisher/bank-accounts': typeof PublisherBankAccountsRoute
   '/publisher/margin-report': typeof PublisherMarginReportRoute
@@ -246,8 +268,11 @@ export interface FileRoutesByTo {
   '/library-admin/catalogue': typeof LibraryAdminCatalogueRoute
   '/library-admin/courses': typeof LibraryAdminCoursesRoute
   '/library-admin/departments': typeof LibraryAdminDepartmentsRoute
+  '/library-admin/manage-ebooks': typeof LibraryAdminManageEbooksRoute
   '/library-admin/orders': typeof LibraryAdminOrdersRoute
+  '/library-admin/reports': typeof LibraryAdminReportsRoute
   '/library-admin/requests': typeof LibraryAdminRequestsRoute
+  '/library-admin/support': typeof LibraryAdminSupportRoute
   '/library-admin/users': typeof LibraryAdminUsersRoute
   '/publisher/bank-accounts': typeof PublisherBankAccountsRoute
   '/publisher/margin-report': typeof PublisherMarginReportRoute
@@ -280,8 +305,11 @@ export interface FileRoutesById {
   '/library-admin/catalogue': typeof LibraryAdminCatalogueRoute
   '/library-admin/courses': typeof LibraryAdminCoursesRoute
   '/library-admin/departments': typeof LibraryAdminDepartmentsRoute
+  '/library-admin/manage-ebooks': typeof LibraryAdminManageEbooksRoute
   '/library-admin/orders': typeof LibraryAdminOrdersRoute
+  '/library-admin/reports': typeof LibraryAdminReportsRoute
   '/library-admin/requests': typeof LibraryAdminRequestsRoute
+  '/library-admin/support': typeof LibraryAdminSupportRoute
   '/library-admin/users': typeof LibraryAdminUsersRoute
   '/publisher/bank-accounts': typeof PublisherBankAccountsRoute
   '/publisher/margin-report': typeof PublisherMarginReportRoute
@@ -315,8 +343,11 @@ export interface FileRouteTypes {
     | '/library-admin/catalogue'
     | '/library-admin/courses'
     | '/library-admin/departments'
+    | '/library-admin/manage-ebooks'
     | '/library-admin/orders'
+    | '/library-admin/reports'
     | '/library-admin/requests'
+    | '/library-admin/support'
     | '/library-admin/users'
     | '/publisher/bank-accounts'
     | '/publisher/margin-report'
@@ -348,8 +379,11 @@ export interface FileRouteTypes {
     | '/library-admin/catalogue'
     | '/library-admin/courses'
     | '/library-admin/departments'
+    | '/library-admin/manage-ebooks'
     | '/library-admin/orders'
+    | '/library-admin/reports'
     | '/library-admin/requests'
+    | '/library-admin/support'
     | '/library-admin/users'
     | '/publisher/bank-accounts'
     | '/publisher/margin-report'
@@ -381,8 +415,11 @@ export interface FileRouteTypes {
     | '/library-admin/catalogue'
     | '/library-admin/courses'
     | '/library-admin/departments'
+    | '/library-admin/manage-ebooks'
     | '/library-admin/orders'
+    | '/library-admin/reports'
     | '/library-admin/requests'
+    | '/library-admin/support'
     | '/library-admin/users'
     | '/publisher/bank-accounts'
     | '/publisher/margin-report'
@@ -415,8 +452,11 @@ export interface RootRouteChildren {
   LibraryAdminCatalogueRoute: typeof LibraryAdminCatalogueRoute
   LibraryAdminCoursesRoute: typeof LibraryAdminCoursesRoute
   LibraryAdminDepartmentsRoute: typeof LibraryAdminDepartmentsRoute
+  LibraryAdminManageEbooksRoute: typeof LibraryAdminManageEbooksRoute
   LibraryAdminOrdersRoute: typeof LibraryAdminOrdersRoute
+  LibraryAdminReportsRoute: typeof LibraryAdminReportsRoute
   LibraryAdminRequestsRoute: typeof LibraryAdminRequestsRoute
+  LibraryAdminSupportRoute: typeof LibraryAdminSupportRoute
   LibraryAdminUsersRoute: typeof LibraryAdminUsersRoute
   PublisherBankAccountsRoute: typeof PublisherBankAccountsRoute
   PublisherMarginReportRoute: typeof PublisherMarginReportRoute
@@ -532,6 +572,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LibraryAdminUsersRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/library-admin/support': {
+      id: '/library-admin/support'
+      path: '/library-admin/support'
+      fullPath: '/library-admin/support'
+      preLoaderRoute: typeof LibraryAdminSupportRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/library-admin/requests': {
       id: '/library-admin/requests'
       path: '/library-admin/requests'
@@ -539,11 +586,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LibraryAdminRequestsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/library-admin/reports': {
+      id: '/library-admin/reports'
+      path: '/library-admin/reports'
+      fullPath: '/library-admin/reports'
+      preLoaderRoute: typeof LibraryAdminReportsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/library-admin/orders': {
       id: '/library-admin/orders'
       path: '/library-admin/orders'
       fullPath: '/library-admin/orders'
       preLoaderRoute: typeof LibraryAdminOrdersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/library-admin/manage-ebooks': {
+      id: '/library-admin/manage-ebooks'
+      path: '/library-admin/manage-ebooks'
+      fullPath: '/library-admin/manage-ebooks'
+      preLoaderRoute: typeof LibraryAdminManageEbooksRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/library-admin/departments': {
@@ -671,8 +732,11 @@ const rootRouteChildren: RootRouteChildren = {
   LibraryAdminCatalogueRoute: LibraryAdminCatalogueRoute,
   LibraryAdminCoursesRoute: LibraryAdminCoursesRoute,
   LibraryAdminDepartmentsRoute: LibraryAdminDepartmentsRoute,
+  LibraryAdminManageEbooksRoute: LibraryAdminManageEbooksRoute,
   LibraryAdminOrdersRoute: LibraryAdminOrdersRoute,
+  LibraryAdminReportsRoute: LibraryAdminReportsRoute,
   LibraryAdminRequestsRoute: LibraryAdminRequestsRoute,
+  LibraryAdminSupportRoute: LibraryAdminSupportRoute,
   LibraryAdminUsersRoute: LibraryAdminUsersRoute,
   PublisherBankAccountsRoute: PublisherBankAccountsRoute,
   PublisherMarginReportRoute: PublisherMarginReportRoute,

@@ -1,6 +1,15 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState, useMemo } from "react";
-import { Search, Plus, Upload, Trash2, X, Building2, FileSpreadsheet } from "lucide-react";
+import {
+  Search,
+  Plus,
+  Upload,
+  Download,
+  Trash2,
+  X,
+  Building2,
+  FileSpreadsheet,
+} from "lucide-react";
 import { AppShell } from "@/components/app-shell";
 import { toast } from "sonner";
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
@@ -200,9 +209,9 @@ export function LibraryAdminDepartmentsPage() {
               setUploadProgress(null);
               setIsImportOpen(true);
             }}
-            className="inline-flex h-10 items-center justify-center gap-1.5 rounded-lg border border-border bg-white dark:bg-card text-foreground px-4 text-xs font-semibold hover:bg-secondary/40 active:scale-[0.98] transition-all shadow-sm cursor-pointer"
+            className="inline-flex h-10 items-center justify-center gap-1.5 rounded-lg border border-border bg-white dark:bg-card text-foreground px-4 text-xs font-semibold hover:bg-secondary/40 active:scale-[0.98] transition-all cursor-pointer"
           >
-            <Upload size={14} className="text-muted-foreground" />
+            <Download size={14} className="text-muted-foreground" />
             <span>Import</span>
           </button>
         </div>

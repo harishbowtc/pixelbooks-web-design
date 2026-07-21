@@ -271,7 +271,7 @@ function SalesReportPage() {
               setPage(1);
             }}
           >
-            <SelectTrigger className="h-11 w-full rounded-lg bg-card md:w-40">
+            <SelectTrigger className="h-11 w-full rounded-lg bg-card md:w-40 shadow-none">
               <SelectValue placeholder="View" />
             </SelectTrigger>
             <SelectContent>
@@ -290,7 +290,7 @@ function SalesReportPage() {
               setPage(1);
             }}
           >
-            <SelectTrigger className="h-11 w-full rounded-lg bg-card md:w-44">
+            <SelectTrigger className="h-11 w-full rounded-lg bg-card md:w-44 shadow-none">
               <SelectValue placeholder="Sale type" />
             </SelectTrigger>
             <SelectContent>
@@ -303,7 +303,7 @@ function SalesReportPage() {
           </Select>
 
           <Select value={preset} onValueChange={(value) => applyPreset(value as Preset)}>
-            <SelectTrigger className="h-11 w-full rounded-lg bg-card md:w-36">
+            <SelectTrigger className="h-11 w-full rounded-lg bg-card md:w-36 shadow-none">
               <SelectValue placeholder="Preset" />
             </SelectTrigger>
             <SelectContent>

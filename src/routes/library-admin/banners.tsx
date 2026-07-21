@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState, useMemo } from "react";
-import { Plus, Trash2, X, ChevronDown, ImageIcon, Calendar, ArrowLeft, Upload } from "lucide-react";
+import { Plus, Trash2, X, ChevronDown, ImageIcon, Calendar, ArrowLeft, Upload, Search } from "lucide-react";
 import { AppShell } from "@/components/app-shell";
 import { toast } from "sonner";
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
@@ -50,6 +50,7 @@ type Preset = (typeof PRESETS)[number];
 export function LibraryAdminBannersPage() {
   const [banners, setBanners] = useState<BannerItem[]>(INITIAL_BANNERS);
   const [statusFilter, setStatusFilter] = useState<"All" | "Active" | "Inactive">("All");
+  const [searchQuery, setSearchQuery] = useState("");
 
   // Date Filtering states
   const [preset, setPreset] = useState<Preset>("All Time");
@@ -129,14 +130,22 @@ export function LibraryAdminBannersPage() {
     setTo(toDate.toISOString().split("T")[0]);
   };
 
-  // Filter banners list based on dropdown status and date selections
+  // Filter banners list based on dropdown status, search query, and date selections
   const filteredBanners = useMemo(() => {
     return banners.filter((b) => {
       // 1. Status Filter
       if (statusFilter === "Active" && !b.enabled) return false;
       if (statusFilter === "Inactive" && b.enabled) return false;
 
-      // 2. Date Preset / Range overlap filter
+      // 2. Search Query filter (matches title or ID)
+      const query = searchQuery.trim().toLowerCase();
+      if (query) {
+        const matchesTitle = b.title.toLowerCase().includes(query);
+        const matchesId = b.id.toLowerCase().includes(query);
+        if (!matchesTitle && !matchesId) return false;
+      }
+
+      // 3. Date Preset / Range overlap filter
       if (preset !== "All Time") {
         if (from && b.toDate < from) return false;
         if (to && b.fromDate > to) return false;
@@ -144,7 +153,7 @@ export function LibraryAdminBannersPage() {
 
       return true;
     });
-  }, [banners, statusFilter, preset, from, to]);
+  }, [banners, statusFilter, searchQuery, preset, from, to]);
 
   // Handlers
   const handleOpenAddBanner = () => {
@@ -402,95 +411,109 @@ export function LibraryAdminBannersPage() {
           </button>
         </div>
 
-        {/* Unified Toolbar for filters */}
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 bg-card border border-border rounded-xl p-4">
-          {/* Left Side: Status Dropdown Filter */}
-          <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+        {/* Redesigned Unified Toolbar */}
+        <div className="flex flex-col gap-4 rounded-xl border border-border bg-card p-4 lg:flex-row lg:items-center lg:justify-between lg:p-5">
+          {/* Left Side: Status Dropdown + Search Input */}
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center flex-1 w-full lg:max-w-xl">
+            {/* Dropdown Filter */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <button className="flex h-10 min-w-[155px] items-center justify-between gap-3 rounded-lg border border-border bg-white dark:bg-card px-4 text-sm font-semibold hover:bg-secondary transition-colors text-foreground cursor-pointer">
-                  <span>Status: {statusFilter}</span>
+                <button className="flex h-11 min-w-[150px] items-center justify-between gap-6 rounded-lg border border-border bg-card px-3 text-sm font-medium hover:bg-secondary transition-colors text-foreground shrink-0 cursor-pointer">
+                  <span>{statusFilter === "All" ? "All Banners" : `${statusFilter} Banners`}</span>
                   <ChevronDown size={15} className="text-muted-foreground" />
                 </button>
               </DropdownMenuTrigger>
               <DropdownMenuContent
                 align="start"
-                className="w-[155px] bg-card border border-border rounded-lg shadow-md z-50"
+                className="w-[150px] bg-card border border-border rounded-lg shadow-md z-50"
               >
                 {(["All", "Active", "Inactive"] as const).map((tab) => (
                   <DropdownMenuItem
                     key={tab}
                     onClick={() => setStatusFilter(tab)}
-                    className={`cursor-pointer text-xs font-semibold px-4 py-2 hover:bg-secondary outline-none transition-colors ${
-                      statusFilter === tab ? "font-bold text-[var(--brand)]" : "text-foreground"
+                    className={`cursor-pointer text-sm font-medium px-4 py-2 hover:bg-secondary outline-none transition-colors ${
+                      statusFilter === tab
+                        ? "text-[var(--brand)] bg-secondary/40 font-medium"
+                        : "text-muted-foreground"
                     }`}
                   >
-                    {tab}
+                    {tab === "All" ? "All Banners" : `${tab} Banners`}
                   </DropdownMenuItem>
                 ))}
               </DropdownMenuContent>
             </DropdownMenu>
+
+            {/* Search Input */}
+            <div className="relative flex-1">
+              <Search
+                size={16}
+                className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-muted-foreground"
+              />
+              <input
+                type="text"
+                placeholder="Search banners..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="h-10 w-full rounded-lg border border-border bg-white dark:bg-card pl-10 pr-4 text-sm outline-none transition-all placeholder:text-muted-foreground focus:border-[var(--brand)] focus:ring-1 focus:ring-[var(--brand)] text-foreground"
+              />
+            </div>
           </div>
 
-          {/* Right Side: Date Presets & Custom Calendar Date Pickers */}
-          <div className="flex flex-col sm:flex-row sm:items-center gap-3">
-            {/* Date Preset Dropdown */}
-            <DropdownMenu open={presetOpen} onOpenChange={setPresetOpen}>
-              <DropdownMenuTrigger asChild>
-                <button className="h-10 flex items-center justify-between rounded-lg border border-border bg-white dark:bg-card px-3 text-xs font-semibold text-muted-foreground hover:text-foreground transition-all cursor-pointer gap-2 min-w-36">
-                  <span className="flex items-center gap-1.5">
-                    <Calendar size={14} />
-                    {preset === "Custom" ? "Custom Range" : preset}
-                  </span>
-                  <ChevronDown size={14} className="text-muted-foreground" />
-                </button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent
-                align="end"
-                className="w-40 bg-card border border-border shadow-md z-50"
+          {/* Right Side: Date Presets & Date Pickers */}
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-center md:gap-3 w-full lg:w-auto">
+            {/* Preset Dropdown */}
+            <div className="relative w-full sm:w-auto">
+              <button
+                onClick={() => setPresetOpen((v) => !v)}
+                className="flex h-11 w-full items-center justify-between gap-6 rounded-lg border border-border bg-card px-3 text-sm font-medium sm:w-40 text-foreground cursor-pointer"
               >
-                {PRESETS.map((p) => (
-                  <DropdownMenuItem
-                    key={p}
-                    onClick={() => handlePresetSelect(p)}
-                    className={`text-xs hover:bg-secondary cursor-pointer ${
-                      preset === p ? "font-bold text-[var(--brand)]" : "text-foreground"
-                    }`}
-                  >
-                    {p}
-                  </DropdownMenuItem>
-                ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
-
-            {/* Custom Dates Container */}
-            <div className="flex items-center gap-2">
-              <label className="relative flex h-10 items-center rounded-lg border border-border bg-white dark:bg-card px-3 w-full sm:w-36">
-                <input
-                  type="date"
-                  value={from}
-                  onChange={(e) => {
-                    setFrom(e.target.value);
-                    setPreset("Custom");
-                  }}
-                  className="w-full bg-transparent text-sm outline-none text-foreground cursor-pointer"
-                />
-              </label>
-
-              <span className="text-muted-foreground text-xs font-semibold">to</span>
-
-              <label className="relative flex h-10 items-center rounded-lg border border-border bg-white dark:bg-card px-3 w-full sm:w-36">
-                <input
-                  type="date"
-                  value={to}
-                  onChange={(e) => {
-                    setTo(e.target.value);
-                    setPreset("Custom");
-                  }}
-                  className="w-full bg-transparent text-sm outline-none text-foreground cursor-pointer"
-                />
-              </label>
+                <span>{preset === "All Time" ? "All Time" : preset}</span>
+                <ChevronDown size={15} className="text-muted-foreground" />
+              </button>
+              {presetOpen && (
+                <div className="absolute right-0 z-20 mt-2 w-full overflow-hidden rounded-lg border border-border bg-card shadow-lg sm:w-40">
+                  {PRESETS.map((p) => (
+                    <button
+                      key={p}
+                      onClick={() => handlePresetSelect(p)}
+                      className={`flex w-full items-center px-3 py-2 text-left text-sm transition-colors hover:bg-secondary ${
+                        p === preset ? "font-semibold text-foreground" : "text-muted-foreground"
+                      }`}
+                    >
+                      {p}
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
+
+            {/* Start Date */}
+            <label className="relative flex h-10 items-center rounded-lg border border-border bg-white dark:bg-card px-3 w-full sm:w-36">
+              <input
+                type="date"
+                value={from}
+                onChange={(e) => {
+                  setFrom(e.target.value);
+                  setPreset("Custom");
+                }}
+                className="w-full bg-transparent text-sm outline-none text-foreground cursor-pointer"
+              />
+            </label>
+
+            <span className="text-muted-foreground text-xs font-semibold self-center">to</span>
+
+            {/* End Date */}
+            <label className="relative flex h-10 items-center rounded-lg border border-border bg-white dark:bg-card px-3 w-full sm:w-36">
+              <input
+                type="date"
+                value={to}
+                onChange={(e) => {
+                  setTo(e.target.value);
+                  setPreset("Custom");
+                }}
+                className="w-full bg-transparent text-sm outline-none text-foreground cursor-pointer"
+              />
+            </label>
           </div>
         </div>
 

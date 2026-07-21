@@ -142,7 +142,7 @@ export function LibraryAdminRequestsPage() {
                           <button
                             onClick={() => handleAddToCart(r)}
                             disabled={isInCart}
-                            className={`inline-flex h-8 items-center justify-center gap-1.5 rounded-lg px-4 text-xs font-semibold transition-all shadow-sm cursor-pointer ${
+                            className={`inline-flex h-8 items-center justify-center gap-1.5 rounded-lg px-4 text-xs font-semibold transition-all cursor-pointer ${
                               isInCart
                                 ? "bg-white dark:bg-card border border-border text-muted-foreground cursor-default"
                                 : "bg-[var(--brand)] text-white hover:opacity-90 active:scale-[0.98]"
@@ -181,7 +181,7 @@ export function LibraryAdminRequestsPage() {
                   window.dispatchEvent(new Event("pixelbooks_cart_updated"));
                   toast.success("Order cart cleared successfully!");
                 }}
-                className="h-11 px-5 rounded-lg border border-border bg-white dark:bg-card text-muted-foreground hover:text-rose-600 hover:border-rose-200 hover:bg-rose-50/40 dark:hover:bg-rose-950/10 transition-all cursor-pointer shadow-sm text-sm font-semibold flex items-center justify-center gap-1.5"
+                className="h-11 px-5 rounded-lg border border-border bg-white dark:bg-card text-muted-foreground hover:text-rose-600 hover:border-rose-200 hover:bg-rose-50/40 dark:hover:bg-rose-950/10 transition-all cursor-pointer text-sm font-semibold flex items-center justify-center gap-1.5"
               >
                 <Trash2 size={16} />
                 <span>Clear Cart</span>

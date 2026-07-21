@@ -70,8 +70,8 @@ function getSections(pathname: string): NavSection[] {
           { label: "Dashboard", icon: LayoutDashboard, to: "/library-admin" },
           { label: "Catalogue", icon: BookMarked, to: "/library-admin/catalogue" },
           { label: "Orders", icon: ShoppingBag, to: "/library-admin/orders" },
-          { label: "Book Store", icon: Store, to: "/library-admin#book-store" },
-          { label: "Manage eBook", icon: FileEdit, to: "/library-admin#manage-ebook" },
+          { label: "Book Store", icon: Store, to: "/library-admin/book-store" },
+          { label: "Manage Borrowings", icon: FileEdit, to: "/library-admin/manage-ebooks" },
           { label: "Library Users", icon: Users, to: "/library-admin/users" },
         ],
       },
@@ -92,8 +92,8 @@ function getSections(pathname: string): NavSection[] {
       {
         heading: "Reports & Utilities",
         items: [
-          { label: "Reports", icon: BarChart3, to: "/library-admin#reports" },
-          { label: "Support", icon: LifeBuoy, to: "/library-admin#support" },
+          { label: "Reports", icon: BarChart3, to: "/library-admin/reports" },
+          { label: "Support", icon: LifeBuoy, to: "/library-admin/support" },
         ],
       },
     ];

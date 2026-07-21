@@ -151,27 +151,27 @@ export function LibraryAdminCartPage() {
   return (
     <AppShell title="eBook Store">
       <div className="p-4 md:p-8 space-y-6">
-        {/* Back navigation arrow */}
-        <Link
-          to="/library-admin/requests"
-          className="inline-flex items-center justify-center h-10 w-10 rounded-lg border border-border bg-card text-muted-foreground hover:text-foreground hover:bg-secondary transition-all shadow-sm"
-          title="Back to eBook Requests"
-        >
-          <ArrowLeft size={18} />
-        </Link>
-
         {cartBooks.length === 0 ? (
-          <div className="rounded-xl border border-border bg-card p-12 text-center text-muted-foreground shadow-sm">
-            <div className="flex flex-col items-center justify-center gap-3">
-              <ShoppingBag size={48} className="text-muted-foreground/60" />
-              <p className="font-semibold text-lg">Your cart is empty</p>
-              <p className="text-sm">Please select books from the requests page first.</p>
-              <Link
-                to="/library-admin/requests"
-                className="mt-2 h-9 px-5 rounded-lg bg-[var(--brand)] text-white text-xs font-semibold hover:opacity-90 inline-flex items-center justify-center shadow-sm"
-              >
-                Go to Requests
-              </Link>
+          <div className="space-y-4">
+            <Link
+              to="/library-admin/requests"
+              className="flex items-center gap-2 text-sm font-semibold text-slate-700 dark:text-slate-200 hover:text-foreground cursor-pointer"
+            >
+              <ArrowLeft size={16} />
+              Back to Requests
+            </Link>
+            <div className="rounded-xl border border-border bg-card p-12 text-center text-muted-foreground shadow-sm">
+              <div className="flex flex-col items-center justify-center gap-3">
+                <ShoppingBag size={48} className="text-muted-foreground/60" />
+                <p className="font-semibold text-lg">Your cart is empty</p>
+                <p className="text-sm">Please select books from the requests page first.</p>
+                <Link
+                  to="/library-admin/requests"
+                  className="mt-2 h-9 px-5 rounded-lg bg-[var(--brand)] text-white text-xs font-semibold hover:opacity-90 inline-flex items-center justify-center shadow-sm"
+                >
+                  Go to Requests
+                </Link>
+              </div>
             </div>
           </div>
         ) : (
@@ -179,8 +179,15 @@ export function LibraryAdminCartPage() {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
             {/* Left side: Search & eBook Orders Table */}
             <div className="lg:col-span-8 space-y-4">
-              {/* Search input field */}
-              <div className="flex justify-end">
+              {/* Toolbar: Back to cart button & Search input field */}
+              <div className="flex items-center justify-between gap-4">
+                <Link
+                  to="/library-admin/requests"
+                  className="flex items-center gap-2 text-sm font-semibold text-slate-700 dark:text-slate-200 hover:text-foreground cursor-pointer"
+                >
+                  <ArrowLeft size={16} />
+                  Back to Requests
+                </Link>
                 <label className="relative flex h-10 items-center rounded-lg border border-border bg-white dark:bg-card px-3 w-full sm:max-w-xs">
                   <Search size={16} className="text-muted-foreground shrink-0" />
                   <input
