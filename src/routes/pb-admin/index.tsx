@@ -193,7 +193,10 @@ function PBAdminDashboard() {
   const [viewRange, setViewRange] = useState("Monthly");
 
   return (
-    <AppShell title="Dashboard" subtitle="Global administration overview for sales and publishing activity.">
+    <AppShell
+      title="Dashboard"
+      subtitle="Global administration overview for sales and publishing activity."
+    >
       <div className="space-y-6 p-4 md:p-8">
         <section className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
           {stats.map((s) => (
@@ -280,7 +283,10 @@ function PBAdminDashboard() {
                     paddingAngle={0}
                   >
                     {viewsData.map((entry, index) => (
-                      <Cell key={`${entry.name}-${index}`} fill={viewsColors[index % viewsColors.length]} />
+                      <Cell
+                        key={`${entry.name}-${index}`}
+                        fill={viewsColors[index % viewsColors.length]}
+                      />
                     ))}
                   </Pie>
                   <Tooltip
@@ -322,7 +328,9 @@ function PBAdminDashboard() {
               </DialogTrigger>
               <DialogContent className="max-w-5xl p-0 overflow-hidden bg-background">
                 <DialogHeader className="p-6 pb-2">
-                  <DialogTitle className="text-xl font-bold text-foreground">Recently Added Library</DialogTitle>
+                  <DialogTitle className="text-xl font-bold text-foreground">
+                    Recently Added Library
+                  </DialogTitle>
                 </DialogHeader>
                 <div className="px-6 pb-6 overflow-x-auto">
                   <table className="w-full text-sm">
@@ -337,11 +345,56 @@ function PBAdminDashboard() {
                     </thead>
                     <tbody className="divide-y divide-border/20">
                       {[
-                        { name: "BH Library", loc: "Kochi", active: 0, total: 1, books: 0, amount: "₹0.00", initials: "BH", bg: "var(--brand)" },
-                        { name: "ICAI", loc: "Chennai", active: 0, total: 0, books: 0, amount: "₹0.00", initials: "IC", bg: "oklch(0.66 0.15 145)" },
-                        { name: "St Saniga Library", loc: "Ernakulam", active: 0, total: 8, books: 0, amount: "₹0.00", initials: "SL", bg: "var(--muted-foreground)" },
-                        { name: "test lib", loc: "gggg", active: 0, total: 1, books: 0, amount: "₹0.00", initials: "TL", bg: "oklch(0.55 0.13 260)" },
-                        { name: "Public Library", loc: "TEST", active: 0, total: 3, books: 0, amount: "₹0.00", initials: "PL", bg: "var(--muted-foreground)" },
+                        {
+                          name: "BH Library",
+                          loc: "Kochi",
+                          active: 0,
+                          total: 1,
+                          books: 0,
+                          amount: "₹0.00",
+                          initials: "BH",
+                          bg: "var(--brand)",
+                        },
+                        {
+                          name: "ICAI",
+                          loc: "Chennai",
+                          active: 0,
+                          total: 0,
+                          books: 0,
+                          amount: "₹0.00",
+                          initials: "IC",
+                          bg: "oklch(0.66 0.15 145)",
+                        },
+                        {
+                          name: "St Saniga Library",
+                          loc: "Ernakulam",
+                          active: 0,
+                          total: 8,
+                          books: 0,
+                          amount: "₹0.00",
+                          initials: "SL",
+                          bg: "var(--muted-foreground)",
+                        },
+                        {
+                          name: "test lib",
+                          loc: "gggg",
+                          active: 0,
+                          total: 1,
+                          books: 0,
+                          amount: "₹0.00",
+                          initials: "TL",
+                          bg: "oklch(0.55 0.13 260)",
+                        },
+                        {
+                          name: "Public Library",
+                          loc: "TEST",
+                          active: 0,
+                          total: 3,
+                          books: 0,
+                          amount: "₹0.00",
+                          initials: "PL",
+                          bg: "var(--muted-foreground)",
+                        },
                       ].map((lib) => (
                         <tr key={lib.name} className="hover:bg-secondary/20 transition-colors">
                           <td className="py-4 pr-4">
@@ -358,10 +411,18 @@ function PBAdminDashboard() {
                               </div>
                             </div>
                           </td>
-                          <td className="py-4 px-4 text-center font-medium text-foreground">{lib.active}</td>
-                          <td className="py-4 px-4 text-center font-medium text-foreground">{lib.total}</td>
-                          <td className="py-4 px-4 text-center font-medium text-foreground">{lib.books}</td>
-                          <td className="py-4 pl-4 text-right font-medium text-foreground">{lib.amount}</td>
+                          <td className="py-4 px-4 text-center font-medium text-foreground">
+                            {lib.active}
+                          </td>
+                          <td className="py-4 px-4 text-center font-medium text-foreground">
+                            {lib.total}
+                          </td>
+                          <td className="py-4 px-4 text-center font-medium text-foreground">
+                            {lib.books}
+                          </td>
+                          <td className="py-4 pl-4 text-right font-medium text-foreground">
+                            {lib.amount}
+                          </td>
                         </tr>
                       ))}
                     </tbody>
@@ -428,9 +489,15 @@ function PBAdminDashboard() {
                         </div>
                       </div>
                     </td>
-                    <td className="py-4 px-4 text-center font-medium text-foreground">{book.views}</td>
-                    <td className="py-4 px-4 text-center font-medium text-foreground">{book.sales}</td>
-                    <td className="py-4 pl-4 pr-2 text-right font-medium text-foreground">{book.revenue}</td>
+                    <td className="py-4 px-4 text-center font-medium text-foreground">
+                      {book.views}
+                    </td>
+                    <td className="py-4 px-4 text-center font-medium text-foreground">
+                      {book.sales}
+                    </td>
+                    <td className="py-4 pl-4 pr-2 text-right font-medium text-foreground">
+                      {book.revenue}
+                    </td>
                   </tr>
                 ))}
               </tbody>

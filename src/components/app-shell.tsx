@@ -88,9 +88,7 @@ function getSections(pathname: string, adminMode?: "retail" | "library"): NavSec
         },
         {
           heading: "Settings",
-          items: [
-            { label: "Settings", icon: Settings, to: "/library-admin/support" },
-          ],
+          items: [{ label: "Settings", icon: Settings, to: "/library-admin/support" }],
         },
       ];
     }
@@ -253,8 +251,8 @@ function SidebarBrand({ collapsed }: { collapsed: boolean }) {
               backgroundColor: isPBAdmin
                 ? "color-mix(in oklab, oklch(0.60 0.18 30) 16%, transparent)"
                 : isLibraryAdmin
-                ? "color-mix(in oklab, oklch(0.55 0.13 260) 12%, transparent)"
-                : "var(--sidebar-highlight)",
+                  ? "color-mix(in oklab, oklch(0.55 0.13 260) 12%, transparent)"
+                  : "var(--sidebar-highlight)",
               color: isPBAdmin
                 ? "oklch(0.60 0.18 30)"
                 : isLibraryAdmin
@@ -354,10 +352,12 @@ function NavRow({
                       : undefined
                   }
                 >
-                  <SubIcon 
-                    size={19} 
+                  <SubIcon
+                    size={19}
                     strokeWidth={subActive ? 2.25 : 1.9}
-                    className={subActive ? "" : "text-muted-foreground group-hover:text-sidebar-foreground"}
+                    className={
+                      subActive ? "" : "text-muted-foreground group-hover:text-sidebar-foreground"
+                    }
                     style={subActive ? { color: "var(--sidebar-highlight-icon)" } : undefined}
                   />
                   <span className="truncate">{subItem.label}</span>
@@ -484,7 +484,11 @@ function ProfileDropdown() {
               Anya Ramanathan
             </span>
             <span className="block truncate text-[11px] text-muted-foreground">
-              {isPBAdmin ? "PB Admin · Pro" : isLibraryAdmin ? "Library Admin · Pro" : "Publisher · Pro"}
+              {isPBAdmin
+                ? "PB Admin · Pro"
+                : isLibraryAdmin
+                  ? "Library Admin · Pro"
+                  : "Publisher · Pro"}
             </span>
           </span>
           <ChevronDown size={14} className="hidden text-muted-foreground sm:block" />

@@ -650,10 +650,11 @@ export function LibraryAdminReportsPage() {
                     <button
                       key={i}
                       onClick={() => setDetailsPage(i + 1)}
-                      className={`h-8 w-8 rounded-lg flex items-center justify-center font-bold transition-colors cursor-pointer ${detailsPage === i + 1
+                      className={`h-8 w-8 rounded-lg flex items-center justify-center font-bold transition-colors cursor-pointer ${
+                        detailsPage === i + 1
                           ? "bg-[var(--sidebar-highlight)] text-[var(--brand)] border border-[var(--brand)]/10"
                           : "border border-border hover:bg-secondary/40 text-muted-foreground"
-                        }`}
+                      }`}
                     >
                       {i + 1}
                     </button>
@@ -701,7 +702,9 @@ export function LibraryAdminReportsPage() {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <button className="flex h-11 min-w-[140px] items-center justify-between gap-3 rounded-lg border border-border bg-card px-3 text-sm font-medium hover:bg-secondary transition-colors text-foreground cursor-pointer shrink-0">
-                <span className="truncate">{selectedPublisher === "All" ? "All Publishers" : selectedPublisher}</span>
+                <span className="truncate">
+                  {selectedPublisher === "All" ? "All Publishers" : selectedPublisher}
+                </span>
                 <ChevronDown size={15} className="text-muted-foreground shrink-0" />
               </button>
             </DropdownMenuTrigger>
@@ -732,7 +735,9 @@ export function LibraryAdminReportsPage() {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <button className="flex h-11 min-w-[140px] items-center justify-between gap-3 rounded-lg border border-border bg-card px-3 text-sm font-medium hover:bg-secondary transition-colors text-foreground cursor-pointer shrink-0">
-                <span className="truncate">{selectedCategory === "All" ? "All Categories" : selectedCategory}</span>
+                <span className="truncate">
+                  {selectedCategory === "All" ? "All Categories" : selectedCategory}
+                </span>
                 <ChevronDown size={15} className="text-muted-foreground shrink-0" />
               </button>
             </DropdownMenuTrigger>
@@ -763,7 +768,9 @@ export function LibraryAdminReportsPage() {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <button className="flex h-11 min-w-[140px] items-center justify-between gap-3 rounded-lg border border-border bg-card px-3 text-sm font-medium hover:bg-secondary transition-colors text-foreground cursor-pointer shrink-0">
-                <span className="truncate">{selectedTitle === "All" ? "All Titles" : selectedTitle}</span>
+                <span className="truncate">
+                  {selectedTitle === "All" ? "All Titles" : selectedTitle}
+                </span>
                 <ChevronDown size={15} className="text-muted-foreground shrink-0" />
               </button>
             </DropdownMenuTrigger>
@@ -830,7 +837,9 @@ export function LibraryAdminReportsPage() {
             />
           </label>
 
-          <span className="text-muted-foreground text-xs font-semibold self-center shrink-0">to</span>
+          <span className="text-muted-foreground text-xs font-semibold self-center shrink-0">
+            to
+          </span>
 
           {/* End Date */}
           <label className="relative flex h-11 items-center rounded-lg border border-border bg-white dark:bg-card px-3 w-full sm:w-36 shrink-0">
@@ -1010,10 +1019,11 @@ export function LibraryAdminReportsPage() {
                 <button
                   key={i}
                   onClick={() => setPage(i + 1)}
-                  className={`h-8 w-8 rounded-lg flex items-center justify-center font-bold transition-colors cursor-pointer ${page === i + 1
+                  className={`h-8 w-8 rounded-lg flex items-center justify-center font-bold transition-colors cursor-pointer ${
+                    page === i + 1
                       ? "bg-[var(--sidebar-highlight)] text-[var(--brand)] border border-[var(--brand)]/10"
                       : "border border-border hover:bg-secondary/40 text-muted-foreground"
-                    }`}
+                  }`}
                 >
                   {i + 1}
                 </button>

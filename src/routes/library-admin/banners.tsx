@@ -1,6 +1,16 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState, useMemo } from "react";
-import { Plus, Trash2, X, ChevronDown, ImageIcon, Calendar, ArrowLeft, Upload, Search } from "lucide-react";
+import {
+  Plus,
+  Trash2,
+  X,
+  ChevronDown,
+  ImageIcon,
+  Calendar,
+  ArrowLeft,
+  Upload,
+  Search,
+} from "lucide-react";
 import { AppShell } from "@/components/app-shell";
 import { toast } from "sonner";
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
