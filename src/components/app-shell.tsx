@@ -57,12 +57,53 @@ type NavItem = {
 
 type NavSection = { heading: string; items: NavItem[] };
 
-function isActivePath(pathname: string, to: string) {
-  if (to === "/") return pathname === "/";
-  if (to === "/library-admin" || to === "/publisher") {
-    return pathname === to;
+export function getRoleTheme(pathname: string) {
+  if (pathname.startsWith("/pb-admin")) {
+    return {
+      color: "oklch(0.60 0.18 30)", // warm coral
+      bgLight: "color-mix(in oklab, oklch(0.60 0.18 30) 14%, transparent)",
+      name: "PB Admin",
+    };
   }
-  return pathname === to || pathname.startsWith(`${to}/`);
+  if (pathname.startsWith("/library-admin")) {
+    return {
+      color: "oklch(0.55 0.13 260)", // royal blue/purple
+      bgLight: "color-mix(in oklab, oklch(0.55 0.13 260) 14%, transparent)",
+      name: "Library Admin",
+    };
+  }
+  if (pathname.startsWith("/author")) {
+    return {
+      color: "oklch(0.62 0.15 155)", // emerald green
+      bgLight: "color-mix(in oklab, oklch(0.62 0.15 155) 14%, transparent)",
+      name: "Author",
+    };
+  }
+  return {
+    color: "oklch(0.55 0.11 195)", // brand teal
+    bgLight: "color-mix(in oklab, oklch(0.55 0.11 195) 14%, transparent)",
+    name: "Publisher",
+  };
+}
+
+function normalizePath(p: string) {
+  if (!p) return "";
+  const trimmed = p.trim();
+  if (trimmed.length > 1 && trimmed.endsWith("/")) {
+    return trimmed.slice(0, -1);
+  }
+  return trimmed;
+}
+
+function isActivePath(pathname: string, to: string) {
+  const normPath = normalizePath(pathname);
+  const normTo = normalizePath(to);
+
+  if (normTo === "/") return normPath === "/";
+  if (normTo === "/library-admin" || normTo === "/publisher" || normTo === "/author" || normTo === "/pb-admin") {
+    return normPath === normTo;
+  }
+  return normPath === normTo || normPath.startsWith(`${normTo}/`);
 }
 
 function getSections(pathname: string, adminMode?: "retail" | "library"): NavSection[] {
@@ -98,21 +139,21 @@ function getSections(pathname: string, adminMode?: "retail" | "library"): NavSec
         heading: "Main",
         items: [
           { label: "Dashboard", icon: LayoutDashboard, to: "/pb-admin" },
-          { label: "Manage PixelBooks", icon: BookMarked, to: "/publisher/catalogue/" },
+          { label: "Manage PixelBooks", icon: BookMarked, to: "/publisher/catalogue" },
         ],
       },
       {
         heading: "Pricing & Promotions",
         items: [
           { label: "Commission Rates", icon: Landmark, to: "/pb-admin/commission-rates" },
-          { label: "Promo Codes", icon: TicketPercent, to: "/publisher/promo-codes/" },
+          { label: "Promo Codes", icon: TicketPercent, to: "/pb-admin/promo-codes" },
         ],
       },
       {
         heading: "Reports",
         items: [
-          { label: "Margin/Royalty Report", icon: Landmark, to: "/publisher/margin-report" },
-          { label: "Sales Report", icon: BarChart3, to: "/publisher/sales-report" },
+          { label: "Margin/Royalty Report", icon: Landmark, to: "/pb-admin/margin-report" },
+          { label: "Sales Report", icon: BarChart3, to: "/pb-admin/sales-report" },
         ],
       },
       {
@@ -170,15 +211,45 @@ function getSections(pathname: string, adminMode?: "retail" | "library"): NavSec
     ];
   }
 
+  if (pathname.startsWith("/author")) {
+    return [
+      {
+        heading: "Main",
+        items: [
+          { label: "Dashboard", icon: LayoutDashboard, to: "/author" },
+          { label: "My Catalogue", icon: BookMarked, to: "/publisher/catalogue" },
+          { label: "Catalogue Import", icon: FileUp, to: "/publisher/catalogue-import" },
+          { label: "eBook Bundles", icon: Library, to: "/publisher/bundles", badge: "New" },
+          { label: "Promo Codes", icon: TicketPercent, to: "/publisher/promo-codes" },
+        ],
+      },
+      {
+        heading: "Reports",
+        items: [
+          { label: "Margin Report", icon: TrendingUp, to: "/publisher/margin-report" },
+          { label: "Sales Report", icon: BarChart3, to: "/publisher/sales-report" },
+        ],
+      },
+      {
+        heading: "Payment",
+        items: [{ label: "Bank Accounts", icon: Landmark, to: "/publisher/bank-accounts" }],
+      },
+      {
+        heading: "Utilities",
+        items: [{ label: "Support", icon: LifeBuoy, to: "/publisher/support" }],
+      },
+    ];
+  }
+
   return [
     {
       heading: "Main",
       items: [
         { label: "Dashboard", icon: LayoutDashboard, to: "/publisher" },
-        { label: "My Catalogue", icon: BookMarked, to: "/publisher/catalogue/" },
-        { label: "Catalogue Import", icon: FileUp, to: "/publisher/catalogue-import/" },
-        { label: "eBook Bundles", icon: Library, to: "/publisher/bundles/", badge: "New" },
-        { label: "Promo Codes", icon: TicketPercent, to: "/publisher/promo-codes/" },
+        { label: "My Catalogue", icon: BookMarked, to: "/publisher/catalogue" },
+        { label: "Catalogue Import", icon: FileUp, to: "/publisher/catalogue-import" },
+        { label: "eBook Bundles", icon: Library, to: "/publisher/bundles", badge: "New" },
+        { label: "Promo Codes", icon: TicketPercent, to: "/publisher/promo-codes" },
       ],
     },
     {
@@ -225,6 +296,7 @@ function SidebarBrand({ collapsed }: { collapsed: boolean }) {
   const { pathname } = useLocation();
   const isLibraryAdmin = pathname.startsWith("/library-admin");
   const isPBAdmin = pathname.startsWith("/pb-admin");
+  const isAuthor = pathname.startsWith("/author");
   return (
     <div
       className={[
@@ -252,15 +324,19 @@ function SidebarBrand({ collapsed }: { collapsed: boolean }) {
                 ? "color-mix(in oklab, oklch(0.60 0.18 30) 16%, transparent)"
                 : isLibraryAdmin
                   ? "color-mix(in oklab, oklch(0.55 0.13 260) 12%, transparent)"
-                  : "var(--sidebar-highlight)",
+                  : isAuthor
+                    ? "color-mix(in oklab, oklch(0.62 0.15 155) 16%, transparent)"
+                    : "var(--sidebar-highlight)",
               color: isPBAdmin
                 ? "oklch(0.60 0.18 30)"
                 : isLibraryAdmin
                   ? "oklch(0.55 0.13 260)"
-                  : "var(--sidebar-accent-foreground)",
+                  : isAuthor
+                    ? "oklch(0.62 0.15 155)"
+                    : "var(--sidebar-accent-foreground)",
             }}
           >
-            {isPBAdmin ? "Admin" : isLibraryAdmin ? "Library Admin" : "Publisher"}
+            {isPBAdmin ? "Admin" : isLibraryAdmin ? "Library Admin" : isAuthor ? "Author" : "Publisher"}
           </span>
         </div>
       )}
@@ -282,6 +358,7 @@ function NavRow({
   onNavigate?: () => void;
 }) {
   const Icon = item.icon;
+  const roleTheme = getRoleTheme(pathname);
   // Always expand if subItems exist, rather than relying on active state
   const hasSubItems = item.subItems && item.subItems.length > 0;
 
@@ -300,15 +377,15 @@ function NavRow({
         style={
           active
             ? {
-                backgroundColor: "var(--sidebar-highlight)",
-                boxShadow: "0 6px 20px -12px var(--brand-glow)",
-              }
+              backgroundColor: "var(--sidebar-highlight)",
+              boxShadow: "0 6px 20px -12px var(--brand-glow)",
+            }
             : undefined
         }
       >
-        {active && !collapsed && (
+        {active && (
           <span
-            className="absolute left-0 top-1/2 h-6 w-[3px] -translate-y-1/2 rounded-r-full"
+            className="absolute left-0 top-1/2 h-6 w-[3px] -translate-y-1/2 rounded-r-full transition-all"
             style={{ backgroundColor: "var(--brand)" }}
           />
         )}
@@ -347,8 +424,8 @@ function NavRow({
                   style={
                     subActive
                       ? {
-                          boxShadow: "0 6px 20px -12px var(--brand-glow)",
-                        }
+                        boxShadow: "0 6px 20px -12px var(--brand-glow)",
+                      }
                       : undefined
                   }
                 >
@@ -464,38 +541,58 @@ function SidebarBody({ collapsed, onNavigate }: { collapsed: boolean; onNavigate
 
 function ProfileDropdown() {
   const { pathname } = useLocation();
-  const isLibraryAdmin = pathname.startsWith("/library-admin");
+  const roleTheme = getRoleTheme(pathname);
+  const isAuthor = pathname.startsWith("/author");
   const isPBAdmin = pathname.startsWith("/pb-admin");
+  const isLibraryAdmin = pathname.startsWith("/library-admin");
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <button className="flex items-center gap-2 rounded-lg border border-border bg-card px-2 py-1.5 text-left transition-colors hover:bg-secondary hover:border-border/80">
-          <span
-            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-xs font-semibold"
-            style={{
-              backgroundColor: "var(--sidebar-highlight)",
-              color: "var(--brand)",
-            }}
-          >
-            AR
-          </span>
+        <button className="flex items-center gap-2 rounded-lg border border-border bg-card px-2.5 py-1.5 text-left transition-all hover:bg-secondary hover:border-border/80">
+          <div className="relative flex shrink-0">
+            <span
+              className="flex h-8 w-8 items-center justify-center rounded-full text-xs font-bold transition-all"
+              style={{
+                backgroundColor: roleTheme.bgLight,
+                color: roleTheme.color,
+                boxShadow: `0 0 0 2px color-mix(in oklab, ${roleTheme.color} 40%, transparent)`,
+              }}
+            >
+              {isAuthor ? "KR" : "AR"}
+            </span>
+            <span
+              className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full ring-2 ring-card"
+              style={{ backgroundColor: roleTheme.color }}
+              title={`${roleTheme.name} Online`}
+            />
+          </div>
           <span className="hidden min-w-0 sm:block">
             <span className="block truncate text-sm font-semibold text-foreground">
-              Anya Ramanathan
+              {isAuthor ? "Dr. K. Raghavan" : "Anya Ramanathan"}
             </span>
-            <span className="block truncate text-[11px] text-muted-foreground">
+            <span className="block truncate text-[11px] font-medium text-muted-foreground">
               {isPBAdmin
                 ? "PB Admin · Pro"
                 : isLibraryAdmin
                   ? "Library Admin · Pro"
-                  : "Publisher · Pro"}
+                  : isAuthor
+                    ? "Author · Pro"
+                    : "Publisher · Pro"}
             </span>
           </span>
           <ChevronDown size={14} className="hidden text-muted-foreground sm:block" />
         </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent side="bottom" align="end" className="w-56">
-        <DropdownMenuLabel>My account</DropdownMenuLabel>
+        <DropdownMenuLabel className="flex items-center justify-between text-xs font-semibold">
+          <span>My account</span>
+          <span
+            className="rounded-full px-2 py-0.5 text-[10px] font-semibold"
+            style={{ backgroundColor: roleTheme.bgLight, color: roleTheme.color }}
+          >
+            {roleTheme.name}
+          </span>
+        </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuItem asChild>
           <Link to="/publisher/profile">
@@ -530,11 +627,18 @@ function SidebarFooter({ collapsed }: { collapsed: boolean }) {
 }
 
 function DesktopSidebar({ collapsed, onToggle }: { collapsed: boolean; onToggle: () => void }) {
+  const { pathname } = useLocation();
+  const roleTheme = getRoleTheme(pathname);
   return (
     <aside
-      className="hidden h-screen shrink-0 flex-col border-r border-sidebar-border bg-sidebar text-sidebar-foreground transition-[width] duration-200 md:sticky md:top-0 md:flex"
+      className="relative hidden h-screen shrink-0 flex-col border-r border-sidebar-border bg-sidebar text-sidebar-foreground transition-[width] duration-200 md:sticky md:top-0 md:flex"
       style={{ width: collapsed ? 72 : 280 }}
     >
+      {/* Top 3px Workspace Role Accent Bar */}
+      <div
+        className="absolute top-0 left-0 right-0 h-[3px] transition-colors duration-300 z-20"
+        style={{ backgroundColor: roleTheme.color }}
+      />
       <div className="flex items-center justify-between">
         <SidebarBrand collapsed={collapsed} />
         <button
@@ -558,12 +662,19 @@ function MobileSidebar({
   open: boolean;
   onOpenChange: (o: boolean) => void;
 }) {
+  const { pathname } = useLocation();
+  const roleTheme = getRoleTheme(pathname);
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent
         side="left"
-        className="flex w-[280px] flex-col bg-sidebar p-0 text-sidebar-foreground [&>button]:hidden"
+        className="relative flex w-[280px] flex-col bg-sidebar p-0 text-sidebar-foreground [&>button]:hidden overflow-hidden"
       >
+        {/* Top 3px Workspace Role Accent Bar */}
+        <div
+          className="absolute top-0 left-0 right-0 h-[3px] transition-colors duration-300 z-20"
+          style={{ backgroundColor: roleTheme.color }}
+        />
         <SheetTitle className="sr-only">Navigation</SheetTitle>
         <SidebarBrand collapsed={false} />
         <SidebarBody collapsed={false} onNavigate={() => onOpenChange(false)} />
@@ -603,6 +714,7 @@ export function AppShell({
 
   const { pathname } = useLocation();
   const isPBAdmin = pathname.startsWith("/pb-admin");
+  const roleTheme = getRoleTheme(pathname);
 
   useEffect(() => {
     const updateCount = () => {
@@ -626,7 +738,12 @@ export function AppShell({
       <DesktopSidebar collapsed={collapsed} onToggle={() => setCollapsed((v) => !v)} />
       <MobileSidebar open={mobileOpen} onOpenChange={setMobileOpen} />
       <main className="flex min-w-0 flex-1 flex-col overflow-x-hidden">
-        <header className="sticky top-0 z-10 grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 border-b border-border bg-background/85 px-4 py-4 backdrop-blur md:px-8 md:py-5">
+        <header className="relative sticky top-0 z-10 grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 border-b border-border bg-background/85 px-4 py-4 backdrop-blur md:px-8 md:py-5">
+          {/* Top 3px Workspace Role Accent Bar */}
+          <div
+            className="absolute top-0 left-0 right-0 h-[3px] transition-colors duration-300"
+            style={{ backgroundColor: roleTheme.color }}
+          />
           <div className="flex min-w-0 items-center gap-3">
             <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
               <SheetTrigger asChild>

@@ -246,9 +246,8 @@ function PromoCodesPage() {
                       setFilterOpen(false);
                       setPage(1);
                     }}
-                    className={`flex w-full items-center px-4 py-2.5 text-left text-sm transition-colors hover:bg-secondary ${
-                      f === filter ? "font-semibold text-foreground" : "text-muted-foreground"
-                    }`}
+                    className={`flex w-full items-center px-4 py-2.5 text-left text-sm transition-colors hover:bg-secondary ${f === filter ? "font-semibold text-foreground" : "text-muted-foreground"
+                      }`}
                   >
                     {f}
                   </button>
@@ -261,7 +260,6 @@ function PromoCodesPage() {
             className="flex h-11 items-center gap-2 rounded-lg px-5 text-sm font-semibold shadow-sm transition-opacity hover:opacity-90"
             style={{ backgroundColor: "var(--brand)", color: "var(--brand-contrast)" }}
           >
-            <Plus size={17} strokeWidth={2.4} />
             Add Promo Code
           </Link>
         </div>
@@ -395,10 +393,10 @@ function PromoCodesPage() {
                         style={
                           n === currentPage
                             ? {
-                                backgroundColor: "var(--brand)",
-                                color: "var(--brand-contrast)",
-                                borderColor: "transparent",
-                              }
+                              backgroundColor: "var(--brand)",
+                              color: "var(--brand-contrast)",
+                              borderColor: "transparent",
+                            }
                             : undefined
                         }
                       >

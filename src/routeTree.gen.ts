@@ -15,12 +15,16 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as PublisherIndexRouteImport } from './routes/publisher/index'
 import { Route as PbAdminIndexRouteImport } from './routes/pb-admin/index'
 import { Route as LibraryAdminIndexRouteImport } from './routes/library-admin/index'
+import { Route as AuthorIndexRouteImport } from './routes/author/index'
 import { Route as PublisherSupportRouteImport } from './routes/publisher/support'
 import { Route as PublisherSettingsRouteImport } from './routes/publisher/settings'
 import { Route as PublisherSalesReportRouteImport } from './routes/publisher/sales-report'
 import { Route as PublisherProfileRouteImport } from './routes/publisher/profile'
 import { Route as PublisherMarginReportRouteImport } from './routes/publisher/margin-report'
 import { Route as PublisherBankAccountsRouteImport } from './routes/publisher/bank-accounts'
+import { Route as PbAdminSalesReportRouteImport } from './routes/pb-admin/sales-report'
+import { Route as PbAdminPromoCodesRouteImport } from './routes/pb-admin/promo-codes'
+import { Route as PbAdminMarginReportRouteImport } from './routes/pb-admin/margin-report'
 import { Route as PbAdminCommissionRatesRouteImport } from './routes/pb-admin/commission-rates'
 import { Route as LibraryAdminUsersRouteImport } from './routes/library-admin/users'
 import { Route as LibraryAdminSupportRouteImport } from './routes/library-admin/support'
@@ -76,6 +80,11 @@ const LibraryAdminIndexRoute = LibraryAdminIndexRouteImport.update({
   path: '/library-admin/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthorIndexRoute = AuthorIndexRouteImport.update({
+  id: '/author/',
+  path: '/author/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PublisherSupportRoute = PublisherSupportRouteImport.update({
   id: '/publisher/support',
   path: '/publisher/support',
@@ -104,6 +113,21 @@ const PublisherMarginReportRoute = PublisherMarginReportRouteImport.update({
 const PublisherBankAccountsRoute = PublisherBankAccountsRouteImport.update({
   id: '/publisher/bank-accounts',
   path: '/publisher/bank-accounts',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PbAdminSalesReportRoute = PbAdminSalesReportRouteImport.update({
+  id: '/pb-admin/sales-report',
+  path: '/pb-admin/sales-report',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PbAdminPromoCodesRoute = PbAdminPromoCodesRouteImport.update({
+  id: '/pb-admin/promo-codes',
+  path: '/pb-admin/promo-codes',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PbAdminMarginReportRoute = PbAdminMarginReportRouteImport.update({
+  id: '/pb-admin/margin-report',
+  path: '/pb-admin/margin-report',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PbAdminCommissionRatesRoute = PbAdminCommissionRatesRouteImport.update({
@@ -251,12 +275,16 @@ export interface FileRoutesByFullPath {
   '/library-admin/support': typeof LibraryAdminSupportRoute
   '/library-admin/users': typeof LibraryAdminUsersRoute
   '/pb-admin/commission-rates': typeof PbAdminCommissionRatesRoute
+  '/pb-admin/margin-report': typeof PbAdminMarginReportRoute
+  '/pb-admin/promo-codes': typeof PbAdminPromoCodesRoute
+  '/pb-admin/sales-report': typeof PbAdminSalesReportRoute
   '/publisher/bank-accounts': typeof PublisherBankAccountsRoute
   '/publisher/margin-report': typeof PublisherMarginReportRoute
   '/publisher/profile': typeof PublisherProfileRoute
   '/publisher/sales-report': typeof PublisherSalesReportRoute
   '/publisher/settings': typeof PublisherSettingsRoute
   '/publisher/support': typeof PublisherSupportRoute
+  '/author/': typeof AuthorIndexRoute
   '/library-admin/': typeof LibraryAdminIndexRoute
   '/pb-admin/': typeof PbAdminIndexRoute
   '/publisher/': typeof PublisherIndexRoute
@@ -289,12 +317,16 @@ export interface FileRoutesByTo {
   '/library-admin/support': typeof LibraryAdminSupportRoute
   '/library-admin/users': typeof LibraryAdminUsersRoute
   '/pb-admin/commission-rates': typeof PbAdminCommissionRatesRoute
+  '/pb-admin/margin-report': typeof PbAdminMarginReportRoute
+  '/pb-admin/promo-codes': typeof PbAdminPromoCodesRoute
+  '/pb-admin/sales-report': typeof PbAdminSalesReportRoute
   '/publisher/bank-accounts': typeof PublisherBankAccountsRoute
   '/publisher/margin-report': typeof PublisherMarginReportRoute
   '/publisher/profile': typeof PublisherProfileRoute
   '/publisher/sales-report': typeof PublisherSalesReportRoute
   '/publisher/settings': typeof PublisherSettingsRoute
   '/publisher/support': typeof PublisherSupportRoute
+  '/author': typeof AuthorIndexRoute
   '/library-admin': typeof LibraryAdminIndexRoute
   '/pb-admin': typeof PbAdminIndexRoute
   '/publisher': typeof PublisherIndexRoute
@@ -328,12 +360,16 @@ export interface FileRoutesById {
   '/library-admin/support': typeof LibraryAdminSupportRoute
   '/library-admin/users': typeof LibraryAdminUsersRoute
   '/pb-admin/commission-rates': typeof PbAdminCommissionRatesRoute
+  '/pb-admin/margin-report': typeof PbAdminMarginReportRoute
+  '/pb-admin/promo-codes': typeof PbAdminPromoCodesRoute
+  '/pb-admin/sales-report': typeof PbAdminSalesReportRoute
   '/publisher/bank-accounts': typeof PublisherBankAccountsRoute
   '/publisher/margin-report': typeof PublisherMarginReportRoute
   '/publisher/profile': typeof PublisherProfileRoute
   '/publisher/sales-report': typeof PublisherSalesReportRoute
   '/publisher/settings': typeof PublisherSettingsRoute
   '/publisher/support': typeof PublisherSupportRoute
+  '/author/': typeof AuthorIndexRoute
   '/library-admin/': typeof LibraryAdminIndexRoute
   '/pb-admin/': typeof PbAdminIndexRoute
   '/publisher/': typeof PublisherIndexRoute
@@ -368,12 +404,16 @@ export interface FileRouteTypes {
     | '/library-admin/support'
     | '/library-admin/users'
     | '/pb-admin/commission-rates'
+    | '/pb-admin/margin-report'
+    | '/pb-admin/promo-codes'
+    | '/pb-admin/sales-report'
     | '/publisher/bank-accounts'
     | '/publisher/margin-report'
     | '/publisher/profile'
     | '/publisher/sales-report'
     | '/publisher/settings'
     | '/publisher/support'
+    | '/author/'
     | '/library-admin/'
     | '/pb-admin/'
     | '/publisher/'
@@ -406,12 +446,16 @@ export interface FileRouteTypes {
     | '/library-admin/support'
     | '/library-admin/users'
     | '/pb-admin/commission-rates'
+    | '/pb-admin/margin-report'
+    | '/pb-admin/promo-codes'
+    | '/pb-admin/sales-report'
     | '/publisher/bank-accounts'
     | '/publisher/margin-report'
     | '/publisher/profile'
     | '/publisher/sales-report'
     | '/publisher/settings'
     | '/publisher/support'
+    | '/author'
     | '/library-admin'
     | '/pb-admin'
     | '/publisher'
@@ -444,12 +488,16 @@ export interface FileRouteTypes {
     | '/library-admin/support'
     | '/library-admin/users'
     | '/pb-admin/commission-rates'
+    | '/pb-admin/margin-report'
+    | '/pb-admin/promo-codes'
+    | '/pb-admin/sales-report'
     | '/publisher/bank-accounts'
     | '/publisher/margin-report'
     | '/publisher/profile'
     | '/publisher/sales-report'
     | '/publisher/settings'
     | '/publisher/support'
+    | '/author/'
     | '/library-admin/'
     | '/pb-admin/'
     | '/publisher/'
@@ -483,12 +531,16 @@ export interface RootRouteChildren {
   LibraryAdminSupportRoute: typeof LibraryAdminSupportRoute
   LibraryAdminUsersRoute: typeof LibraryAdminUsersRoute
   PbAdminCommissionRatesRoute: typeof PbAdminCommissionRatesRoute
+  PbAdminMarginReportRoute: typeof PbAdminMarginReportRoute
+  PbAdminPromoCodesRoute: typeof PbAdminPromoCodesRoute
+  PbAdminSalesReportRoute: typeof PbAdminSalesReportRoute
   PublisherBankAccountsRoute: typeof PublisherBankAccountsRoute
   PublisherMarginReportRoute: typeof PublisherMarginReportRoute
   PublisherProfileRoute: typeof PublisherProfileRoute
   PublisherSalesReportRoute: typeof PublisherSalesReportRoute
   PublisherSettingsRoute: typeof PublisherSettingsRoute
   PublisherSupportRoute: typeof PublisherSupportRoute
+  AuthorIndexRoute: typeof AuthorIndexRoute
   LibraryAdminIndexRoute: typeof LibraryAdminIndexRoute
   PbAdminIndexRoute: typeof PbAdminIndexRoute
   PublisherIndexRoute: typeof PublisherIndexRoute
@@ -550,6 +602,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LibraryAdminIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/author/': {
+      id: '/author/'
+      path: '/author'
+      fullPath: '/author/'
+      preLoaderRoute: typeof AuthorIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/publisher/support': {
       id: '/publisher/support'
       path: '/publisher/support'
@@ -590,6 +649,27 @@ declare module '@tanstack/react-router' {
       path: '/publisher/bank-accounts'
       fullPath: '/publisher/bank-accounts'
       preLoaderRoute: typeof PublisherBankAccountsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/pb-admin/sales-report': {
+      id: '/pb-admin/sales-report'
+      path: '/pb-admin/sales-report'
+      fullPath: '/pb-admin/sales-report'
+      preLoaderRoute: typeof PbAdminSalesReportRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/pb-admin/promo-codes': {
+      id: '/pb-admin/promo-codes'
+      path: '/pb-admin/promo-codes'
+      fullPath: '/pb-admin/promo-codes'
+      preLoaderRoute: typeof PbAdminPromoCodesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/pb-admin/margin-report': {
+      id: '/pb-admin/margin-report'
+      path: '/pb-admin/margin-report'
+      fullPath: '/pb-admin/margin-report'
+      preLoaderRoute: typeof PbAdminMarginReportRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/pb-admin/commission-rates': {
@@ -779,12 +859,16 @@ const rootRouteChildren: RootRouteChildren = {
   LibraryAdminSupportRoute: LibraryAdminSupportRoute,
   LibraryAdminUsersRoute: LibraryAdminUsersRoute,
   PbAdminCommissionRatesRoute: PbAdminCommissionRatesRoute,
+  PbAdminMarginReportRoute: PbAdminMarginReportRoute,
+  PbAdminPromoCodesRoute: PbAdminPromoCodesRoute,
+  PbAdminSalesReportRoute: PbAdminSalesReportRoute,
   PublisherBankAccountsRoute: PublisherBankAccountsRoute,
   PublisherMarginReportRoute: PublisherMarginReportRoute,
   PublisherProfileRoute: PublisherProfileRoute,
   PublisherSalesReportRoute: PublisherSalesReportRoute,
   PublisherSettingsRoute: PublisherSettingsRoute,
   PublisherSupportRoute: PublisherSupportRoute,
+  AuthorIndexRoute: AuthorIndexRoute,
   LibraryAdminIndexRoute: LibraryAdminIndexRoute,
   PbAdminIndexRoute: PbAdminIndexRoute,
   PublisherIndexRoute: PublisherIndexRoute,

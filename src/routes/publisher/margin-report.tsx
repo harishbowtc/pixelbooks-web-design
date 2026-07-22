@@ -5,12 +5,14 @@ import {
   Clock,
   BookOpen,
   ChevronDown,
-  Download,
+  Upload,
   ChevronLeft,
   ChevronRight,
   ArrowLeft,
+  Calendar,
+  ScrollText,
+  Table,
 } from "lucide-react";
-import { ScrollText, Table } from "lucide-react";
 import { AppShell } from "@/components/app-shell";
 import {
   Pagination,
@@ -19,6 +21,7 @@ import {
   PaginationLink,
   PaginationEllipsis,
 } from "@/components/ui/pagination";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/publisher/margin-report")({
   head: () => ({
@@ -49,7 +52,15 @@ type LedgerRow = {
   mode: string;
 };
 
-const PRESETS = ["MTD", "QTD", "YTD", "Last 30 days", "Custom"] as const;
+const PRESETS = [
+  "MTD",
+  "QTD",
+  "YTD",
+  "Current FY",
+  "Last FY",
+  "Last 30 days",
+  "Custom",
+] as const;
 type Preset = (typeof PRESETS)[number];
 
 const LEDGER_TYPES = ["Margin & Payments Received", "Margin only", "Payments only"] as const;
@@ -206,44 +217,26 @@ function StatCard({
   icon: Icon,
   label,
   value,
-  meta,
-  pill,
 }: {
-  icon: typeof Tag;
+  icon: React.ComponentType<{ size?: number }>;
   label: string;
   value: string;
-  meta?: string;
-  pill?: string;
 }) {
   return (
-    <div className="rounded-xl border border-border bg-card p-5">
-      <div className="flex items-center gap-3">
+    <div className="rounded-xl border border-border bg-card p-4 transition-shadow hover:shadow-xs flex flex-col justify-between">
+      <div className="flex items-center gap-2.5">
         <span
-          className="flex h-9 w-9 items-center justify-center rounded-lg"
+          className="flex h-8 w-8 items-center justify-center rounded-lg shrink-0"
           style={{
             backgroundColor: "var(--sidebar-highlight)",
             color: "var(--brand)",
           }}
         >
-          <Icon size={18} />
+          <Icon size={16} />
         </span>
-        <span className="text-sm font-medium text-muted-foreground">{label}</span>
+        <span className="text-xs font-semibold text-muted-foreground">{label}</span>
       </div>
-      <p className="mt-5 text-3xl font-semibold tracking-tight">{value}</p>
-      <div className="mt-3 flex items-center gap-2">
-        {meta && <span className="text-xs text-muted-foreground">{meta}</span>}
-        {pill && (
-          <span
-            className="rounded-md px-2 py-0.5 text-[11px] font-medium"
-            style={{
-              backgroundColor: `color-mix(in oklch, var(--success) 12%, transparent)`,
-              color: "var(--success)",
-            }}
-          >
-            {pill}
-          </span>
-        )}
-      </div>
+      <p className="mt-3 text-2xl font-bold tracking-tight text-foreground">{value}</p>
     </div>
   );
 }
@@ -256,7 +249,7 @@ function PaymentDetailView({ detail, onBack }: { detail: PaymentDetail; onBack: 
         <button
           type="button"
           onClick={onBack}
-          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-border bg-card text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
+          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-border bg-card text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground cursor-pointer"
         >
           <ArrowLeft size={16} />
         </button>
@@ -414,7 +407,7 @@ function TransactionDetail({ detail, onBack }: { detail: TxnDetail; onBack: () =
         <button
           type="button"
           onClick={onBack}
-          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-border bg-card text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
+          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-border bg-card text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground cursor-pointer"
         >
           <ArrowLeft size={16} />
         </button>
@@ -542,6 +535,32 @@ function MarginReportPage() {
   const [exportOpen, setExportOpen] = useState(false);
   const [page, setPage] = useState(1);
 
+  const handlePresetSelect = (opt: Preset) => {
+    setPreset(opt);
+    setPresetOpen(false);
+    setPage(1);
+
+    if (opt === "MTD") {
+      setFrom("2026-07-01");
+      setTo("2026-07-04");
+    } else if (opt === "QTD") {
+      setFrom("2026-07-01");
+      setTo("2026-07-04");
+    } else if (opt === "YTD") {
+      setFrom("2026-01-01");
+      setTo("2026-07-04");
+    } else if (opt === "Current FY") {
+      setFrom("2026-04-01");
+      setTo("2027-03-31");
+    } else if (opt === "Last FY") {
+      setFrom("2025-04-01");
+      setTo("2026-03-31");
+    } else if (opt === "Last 30 days") {
+      setFrom("2026-06-04");
+      setTo("2026-07-04");
+    }
+  };
+
   const rows = seed;
   const dataRows = rows.filter((r) => r.type !== "Opening Balance" && r.type !== "Closing Balance");
   const opening = rows.find((r) => r.type === "Opening Balance");
@@ -571,42 +590,70 @@ function MarginReportPage() {
         <PaymentDetailView detail={selectedPayment} onBack={() => setSelectedPayment(null)} />
       ) : (
         <div className="space-y-6 p-4 md:p-8">
-          {/* Publisher + Range */}
-          <div className="flex flex-col gap-4 rounded-xl border border-border bg-card p-4 md:flex-row md:items-center md:justify-between md:p-5">
-            <div className="flex items-center gap-3">
+          {/* Top Highlight Banner: Total Outstanding Receivable Till Date */}
+          <div className="rounded-xl border border-emerald-200/80 bg-emerald-500/10 dark:bg-emerald-950/30 dark:border-emerald-800/40 p-4 sm:p-5 shadow-2xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="flex items-center gap-3.5">
+              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-emerald-500/20 text-emerald-700 dark:text-emerald-400">
+                <BookOpen size={22} />
+              </span>
+              <div>
+                <div className="flex items-center gap-2">
+                  <h2 className="text-xs font-bold uppercase tracking-wider text-emerald-800 dark:text-emerald-400">
+                    Total Receivable Till Date
+                  </h2>
+                  <span className="inline-flex items-center rounded-md bg-emerald-500/20 px-2 py-0.5 text-[10px] font-bold text-emerald-800 dark:text-emerald-300">
+                    All-Time Cumulative Balance
+                  </span>
+                </div>
+                <p className="text-2xl sm:text-3xl font-extrabold tracking-tight text-foreground mt-0.5">
+                  ₹8.45
+                </p>
+                <p className="text-xs text-muted-foreground mt-1">
+                  Cumulative net margin receivable till date. Unaffected by date range filters.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Top Header Row with Date Range Filter Controls placed ABOVE stat boxes */}
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 bg-card border border-border rounded-xl p-4 shadow-2xs">
+            <div className="flex items-center gap-2">
               <span
-                className="flex h-11 w-11 items-center justify-center rounded-lg"
+                className="flex h-8 w-8 items-center justify-center rounded-lg"
                 style={{
                   backgroundColor: "var(--sidebar-highlight)",
                   color: "var(--brand)",
                 }}
               >
-                <BookOpen size={20} />
+                <Calendar size={16} />
               </span>
               <div>
-                <p className="text-sm font-semibold text-foreground">PixelBooks</p>
-                <p className="text-xs text-muted-foreground">Publisher</p>
+                <h3 className="text-sm font-bold text-foreground">Date Range & Period</h3>
+                <p className="text-xs text-muted-foreground">Select period to update summary metrics</p>
               </div>
             </div>
-            <div className="grid grid-cols-1 gap-2 sm:grid-cols-3 md:w-auto md:gap-3">
+
+            <div className="flex flex-wrap items-center gap-2.5">
+              {/* Preset Dropdown with Current FY, Last FY, Custom, etc. */}
               <div className="relative">
                 <button
+                  type="button"
                   onClick={() => setPresetOpen((v) => !v)}
-                  className="flex h-11 w-full items-center justify-between gap-6 rounded-lg border border-border bg-card px-3 text-sm font-medium sm:w-44"
+                  className="flex h-11 min-w-[130px] items-center justify-between gap-3 rounded-lg border border-border bg-card px-3.5 text-sm font-medium transition-colors hover:bg-secondary/50 cursor-pointer shadow-2xs"
                 >
-                  {preset}
-                  <ChevronDown size={15} className="text-muted-foreground" />
+                  <span>{preset}</span>
+                  <ChevronDown size={15} className="text-muted-foreground shrink-0" />
                 </button>
                 {presetOpen && (
-                  <div className="absolute right-0 z-20 mt-2 w-full overflow-hidden rounded-lg border border-border bg-card shadow-lg sm:w-44">
+                  <div className="absolute right-0 z-30 mt-2 w-44 overflow-hidden rounded-lg border border-border bg-card shadow-lg py-1 text-sm">
                     {PRESETS.map((p) => (
                       <button
                         key={p}
-                        onClick={() => {
-                          setPreset(p);
-                          setPresetOpen(false);
-                        }}
-                        className={`flex w-full items-center px-3 py-2 text-left text-sm transition-colors hover:bg-secondary ${p === preset ? "font-semibold" : "text-muted-foreground"}`}
+                        type="button"
+                        onClick={() => handlePresetSelect(p)}
+                        className={`flex w-full items-center px-3.5 py-2 text-left text-xs font-medium transition-colors hover:bg-secondary cursor-pointer ${
+                          p === preset ? "font-bold text-brand bg-secondary/60" : "text-foreground"
+                        }`}
                       >
                         {p}
                       </button>
@@ -614,30 +661,40 @@ function MarginReportPage() {
                   </div>
                 )}
               </div>
-              <label className="relative flex h-11 items-center rounded-lg border border-border bg-card px-3 sm:w-44">
-                <input
-                  type="date"
-                  value={from}
-                  onChange={(e) => setFrom(e.target.value)}
-                  className="w-full bg-transparent text-sm outline-none"
-                />
-              </label>
-              <label className="relative flex h-11 items-center rounded-lg border border-border bg-card px-3 sm:w-44">
-                <input
-                  type="date"
-                  value={to}
-                  onChange={(e) => setTo(e.target.value)}
-                  className="w-full bg-transparent text-sm outline-none"
-                />
-              </label>
+
+              {/* Date Pickers */}
+              <div className="flex items-center gap-2">
+                <label className="relative flex h-11 items-center rounded-lg border border-border bg-card px-3 shadow-2xs">
+                  <input
+                    type="date"
+                    value={from}
+                    onChange={(e) => {
+                      setFrom(e.target.value);
+                      setPreset("Custom");
+                    }}
+                    className="w-full bg-transparent text-sm outline-none text-foreground cursor-pointer"
+                  />
+                </label>
+                <span className="text-xs font-medium text-muted-foreground">to</span>
+                <label className="relative flex h-11 items-center rounded-lg border border-border bg-card px-3 shadow-2xs">
+                  <input
+                    type="date"
+                    value={to}
+                    onChange={(e) => {
+                      setTo(e.target.value);
+                      setPreset("Custom");
+                    }}
+                    className="w-full bg-transparent text-sm outline-none text-foreground cursor-pointer"
+                  />
+                </label>
+              </div>
             </div>
           </div>
 
-          {/* Stat cards */}
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-            <StatCard icon={Tag} label="Total Sales" value="₹0.00" meta={rangeLabel} />
-            <StatCard icon={Clock} label="Total Royalty Amount" value="₹0.00" meta={rangeLabel} />
-            <StatCard icon={BookOpen} label="Total Receivable" value="₹8.45" pill="Till Date" />
+          {/* Compact Period Stat cards */}
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <StatCard icon={Tag} label="Total Sales" value="₹0.00" />
+            <StatCard icon={Clock} label="Total Royalty Amount" value="₹0.00" />
           </div>
 
           {/* Ledger */}
@@ -650,22 +707,26 @@ function MarginReportPage() {
               <div className="flex items-center gap-2">
                 <div className="relative">
                   <button
+                    type="button"
                     onClick={() => setLedgerOpen((v) => !v)}
-                    className="flex h-11 w-full items-center justify-between gap-6 rounded-lg border border-border bg-card px-3 text-sm font-medium sm:w-60"
+                    className="flex h-11 w-full items-center justify-between gap-6 rounded-lg border border-border bg-card px-3 text-sm font-medium sm:w-60 cursor-pointer"
                   >
                     <span className="truncate">{ledgerType}</span>
-                    <ChevronDown size={15} className="text-muted-foreground" />
+                    <ChevronDown size={15} className="text-muted-foreground shrink-0" />
                   </button>
                   {ledgerOpen && (
-                    <div className="absolute right-0 z-20 mt-2 w-64 overflow-hidden rounded-lg border border-border bg-card shadow-lg">
+                    <div className="absolute right-0 z-20 mt-2 w-64 overflow-hidden rounded-lg border border-border bg-card shadow-lg py-1 text-sm">
                       {LEDGER_TYPES.map((t) => (
                         <button
                           key={t}
+                          type="button"
                           onClick={() => {
                             setLedgerType(t);
                             setLedgerOpen(false);
                           }}
-                          className={`flex w-full items-center px-3 py-2 text-left text-sm transition-colors hover:bg-secondary ${t === ledgerType ? "font-semibold" : "text-muted-foreground"}`}
+                          className={`flex w-full items-center px-3 py-2 text-left text-sm transition-colors hover:bg-secondary cursor-pointer ${
+                            t === ledgerType ? "font-semibold text-foreground bg-secondary/50" : "text-muted-foreground"
+                          }`}
                         >
                           {t}
                         </button>
@@ -675,29 +736,38 @@ function MarginReportPage() {
                 </div>
                 <div className="relative">
                   <button
+                    type="button"
                     onClick={() => setExportOpen((v) => !v)}
-                    className="inline-flex h-10 items-center gap-2 rounded-lg px-4 text-sm font-semibold shadow-sm transition-opacity hover:opacity-90"
+                    className="inline-flex h-10 items-center gap-2 rounded-lg px-4 text-sm font-semibold shadow-sm transition-opacity hover:opacity-90 cursor-pointer"
                     style={{ backgroundColor: "var(--brand)", color: "var(--brand-contrast)" }}
                   >
-                    <Download size={15} />
-                    Export
+                    <Upload size={15} />
+                    <span>Export</span>
                     <ChevronDown size={14} />
                   </button>
                   {exportOpen && (
                     <div className="absolute right-0 z-20 mt-2 w-48 overflow-hidden rounded-lg border border-border bg-card shadow-lg">
                       <button
-                        onClick={() => setExportOpen(false)}
-                        className="flex w-full items-center gap-2 px-3 py-2.5 text-left text-sm transition-colors hover:bg-secondary"
+                        type="button"
+                        onClick={() => {
+                          setExportOpen(false);
+                          toast.success("Downloading Publisher Margin Report (PDF)...");
+                        }}
+                        className="flex w-full items-center gap-2 px-3.5 py-2.5 text-left text-sm font-medium transition-colors hover:bg-secondary cursor-pointer"
                       >
                         <ScrollText size={15} className="text-muted-foreground" />
-                        Export PDF
+                        <span>Export PDF</span>
                       </button>
                       <button
-                        onClick={() => setExportOpen(false)}
-                        className="flex w-full items-center gap-2 px-3 py-2.5 text-left text-sm transition-colors hover:bg-secondary"
+                        type="button"
+                        onClick={() => {
+                          setExportOpen(false);
+                          toast.success("Downloading Publisher Margin Report (Excel)...");
+                        }}
+                        className="flex w-full items-center gap-2 px-3.5 py-2.5 text-left text-sm font-medium transition-colors hover:bg-secondary cursor-pointer"
                       >
                         <Table size={15} className="text-muted-foreground" />
-                        Export Excel
+                        <span>Export Excel</span>
                       </button>
                     </div>
                   )}
@@ -849,7 +919,7 @@ function MarginReportPage() {
                     <button
                       disabled={currentPage === 1}
                       onClick={() => setPage((n) => Math.max(1, n - 1))}
-                      className="flex h-9 items-center gap-1 rounded-md border border-border bg-card px-3 text-xs font-medium disabled:opacity-40"
+                      className="flex h-9 items-center gap-1 rounded-md border border-border bg-card px-3 text-xs font-medium disabled:opacity-40 cursor-pointer"
                     >
                       <ChevronLeft size={14} /> Prev
                     </button>
@@ -887,7 +957,7 @@ function MarginReportPage() {
                     <button
                       disabled={currentPage === totalPages}
                       onClick={() => setPage((n) => Math.min(totalPages, n + 1))}
-                      className="flex h-9 items-center gap-1 rounded-md border border-border bg-card px-3 text-xs font-medium disabled:opacity-40"
+                      className="flex h-9 items-center gap-1 rounded-md border border-border bg-card px-3 text-xs font-medium disabled:opacity-40 cursor-pointer"
                     >
                       Next <ChevronRight size={14} />
                     </button>

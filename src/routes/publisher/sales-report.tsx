@@ -1,17 +1,20 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import {
-  BookOpen,
+  Tag,
+  BookMarked,
   ChevronDown,
-  Download,
+  Upload,
   ChevronLeft,
   ChevronRight,
   Search,
   ScrollText,
   Table,
   X,
+  Calendar,
 } from "lucide-react";
 import { AppShell } from "@/components/app-shell";
+import { toast } from "sonner";
 import {
   Pagination,
   PaginationContent,
@@ -58,7 +61,15 @@ type SalesRow = {
   netSales: number;
 };
 
-const PRESETS = ["MTD", "QTD", "YTD", "Last 30 days", "Custom"] as const;
+const PRESETS = [
+  "MTD",
+  "QTD",
+  "YTD",
+  "Current FY",
+  "Last FY",
+  "Last 30 days",
+  "Custom",
+] as const;
 type Preset = (typeof PRESETS)[number];
 
 const VIEW_MODES = ["Detailed", "Consolidated"] as const;
@@ -94,120 +105,84 @@ function formatINR(n: number) {
   return `₹${n.toFixed(2)}`;
 }
 
-function toInputDate(date: Date) {
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const day = String(date.getDate()).padStart(2, "0");
-  return `${year}-${month}-${day}`;
-}
-
-function getPresetRange(preset: Preset, now = new Date()) {
-  const end = new Date(now);
-  end.setHours(0, 0, 0, 0);
-  const start = new Date(end);
-
-  if (preset === "MTD") {
-    start.setDate(1);
-  } else if (preset === "QTD") {
-    const quarterStartMonth = Math.floor(start.getMonth() / 3) * 3;
-    start.setMonth(quarterStartMonth, 1);
-  } else if (preset === "YTD") {
-    start.setMonth(0, 1);
-  } else if (preset === "Last 30 days") {
-    start.setDate(start.getDate() - 29);
-  }
-
-  return {
-    from: toInputDate(start),
-    to: toInputDate(end),
-  };
-}
-
-function detectPresetFromRange(from: string, to: string): Preset {
-  for (const option of PRESETS) {
-    if (option === "Custom") continue;
-    const range = getPresetRange(option);
-    if (range.from === from && range.to === to) return option;
-  }
-  return "Custom";
-}
-
-function StatCard({ label, value, meta }: { label: string; value: string; meta: string }) {
+function StatCard({
+  icon: Icon,
+  label,
+  value,
+}: {
+  icon: React.ComponentType<{ size?: number }>;
+  label: string;
+  value: string;
+}) {
   return (
-    <div className="rounded-xl border border-border bg-card p-5">
-      <div className="flex items-center gap-3">
+    <div className="rounded-xl border border-border bg-card p-4 transition-shadow hover:shadow-xs flex flex-col justify-between">
+      <div className="flex items-center gap-2.5">
         <span
-          className="flex h-9 w-9 items-center justify-center rounded-lg"
+          className="flex h-8 w-8 items-center justify-center rounded-lg shrink-0"
           style={{
             backgroundColor: "var(--sidebar-highlight)",
             color: "var(--brand)",
           }}
         >
-          <BookOpen size={18} />
+          <Icon size={16} />
         </span>
-        <span className="text-sm font-medium text-muted-foreground">{label}</span>
+        <span className="text-xs font-semibold text-muted-foreground">{label}</span>
       </div>
-      <p className="mt-5 text-3xl font-semibold tracking-tight">{value}</p>
-      <p className="mt-3 text-xs text-muted-foreground">{meta}</p>
+      <p className="mt-3 text-2xl font-bold tracking-tight text-foreground">{value}</p>
     </div>
   );
 }
 
 function SalesReportPage() {
-  const defaultRange = useMemo(() => getPresetRange(DEFAULT_PRESET), []);
   const [preset, setPreset] = useState<Preset>(DEFAULT_PRESET);
+  const [presetOpen, setPresetOpen] = useState(false);
   const [viewMode, setViewMode] = useState<ViewMode>(DEFAULT_VIEW);
   const [saleType, setSaleType] = useState<SaleType>(DEFAULT_SALE_TYPE);
   const [exportOpen, setExportOpen] = useState(false);
   const [query, setQuery] = useState("");
-  const [from, setFrom] = useState(defaultRange.from);
-  const [to, setTo] = useState(defaultRange.to);
+  const [from, setFrom] = useState("2026-07-01");
+  const [to, setTo] = useState("2026-07-04");
   const [page, setPage] = useState(1);
+
+  const handlePresetSelect = (opt: Preset) => {
+    setPreset(opt);
+    setPresetOpen(false);
+    setPage(1);
+
+    if (opt === "MTD") {
+      setFrom("2026-07-01");
+      setTo("2026-07-04");
+    } else if (opt === "QTD") {
+      setFrom("2026-07-01");
+      setTo("2026-07-04");
+    } else if (opt === "YTD") {
+      setFrom("2026-01-01");
+      setTo("2026-07-04");
+    } else if (opt === "Current FY") {
+      setFrom("2026-04-01");
+      setTo("2027-03-31");
+    } else if (opt === "Last FY") {
+      setFrom("2025-04-01");
+      setTo("2026-03-31");
+    } else if (opt === "Last 30 days") {
+      setFrom("2026-06-04");
+      setTo("2026-07-04");
+    }
+  };
 
   const hasActiveFilters =
     query.trim().length > 0 ||
     viewMode !== DEFAULT_VIEW ||
     saleType !== DEFAULT_SALE_TYPE ||
-    from !== defaultRange.from ||
-    to !== defaultRange.to;
+    preset !== DEFAULT_PRESET;
 
   function resetFilters() {
     setQuery("");
     setViewMode(DEFAULT_VIEW);
     setSaleType(DEFAULT_SALE_TYPE);
     setPreset(DEFAULT_PRESET);
-    setFrom(defaultRange.from);
-    setTo(defaultRange.to);
-    setPage(1);
-  }
-
-  function applyPreset(nextPreset: Preset) {
-    setPreset(nextPreset);
-    if (nextPreset !== "Custom") {
-      const range = getPresetRange(nextPreset);
-      setFrom(range.from);
-      setTo(range.to);
-    }
-    setPage(1);
-  }
-
-  function handleFromChange(nextFrom: string) {
-    let adjustedTo = to;
-    if (nextFrom > adjustedTo) adjustedTo = nextFrom;
-
-    setFrom(nextFrom);
-    setTo(adjustedTo);
-    setPreset(detectPresetFromRange(nextFrom, adjustedTo));
-    setPage(1);
-  }
-
-  function handleToChange(nextTo: string) {
-    let adjustedFrom = from;
-    if (nextTo < adjustedFrom) adjustedFrom = nextTo;
-
-    setFrom(adjustedFrom);
-    setTo(nextTo);
-    setPreset(detectPresetFromRange(adjustedFrom, nextTo));
+    setFrom("2026-07-01");
+    setTo("2026-07-04");
     setPage(1);
   }
 
@@ -235,134 +210,191 @@ function SalesReportPage() {
     return nums;
   }, [totalPages, currentPage]);
 
-  const rangeLabel = `${new Date(from).toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" })} – ${new Date(to).toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" })}`;
-
   const totalNet = rows.reduce((s, r) => s + r.netSales, 0);
   const totalBooks = rows.reduce((s, r) => s + r.qty, 0);
 
   return (
     <AppShell title="Sales Report" subtitle="Track book sales, rentals and net revenue.">
       <div className="space-y-6 p-4 md:p-8">
-        {/* Stat cards */}
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-          <StatCard label="Total Sales" value={formatINR(totalNet)} meta={rangeLabel} />
-          <StatCard label="Total Books Sold" value={String(totalBooks)} meta={rangeLabel} />
+        {/* Top Header Row with Date Range Filter Controls placed ABOVE stat boxes */}
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 bg-card border border-border rounded-xl p-4 shadow-2xs">
+          <div className="flex items-center gap-2">
+            <span
+              className="flex h-8 w-8 items-center justify-center rounded-lg"
+              style={{
+                backgroundColor: "var(--sidebar-highlight)",
+                color: "var(--brand)",
+              }}
+            >
+              <Calendar size={16} />
+            </span>
+            <div>
+              <h3 className="text-sm font-bold text-foreground">Date Range & Period</h3>
+              <p className="text-xs text-muted-foreground">Select period to update summary metrics</p>
+            </div>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-2.5">
+            {/* Preset Dropdown with Current FY, Last FY, Custom, etc. */}
+            <div className="relative">
+              <button
+                type="button"
+                onClick={() => setPresetOpen((v) => !v)}
+                className="flex h-11 min-w-[130px] items-center justify-between gap-3 rounded-lg border border-border bg-card px-3.5 text-sm font-medium transition-colors hover:bg-secondary/50 cursor-pointer shadow-2xs"
+              >
+                <span>{preset}</span>
+                <ChevronDown size={15} className="text-muted-foreground shrink-0" />
+              </button>
+              {presetOpen && (
+                <div className="absolute right-0 z-30 mt-2 w-44 overflow-hidden rounded-lg border border-border bg-card shadow-lg py-1 text-sm">
+                  {PRESETS.map((p) => (
+                    <button
+                      key={p}
+                      type="button"
+                      onClick={() => handlePresetSelect(p)}
+                      className={`flex w-full items-center px-3.5 py-2 text-left text-xs font-medium transition-colors hover:bg-secondary cursor-pointer ${p === preset ? "font-bold text-brand bg-secondary/60" : "text-foreground"
+                        }`}
+                    >
+                      {p}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Date Pickers */}
+            <div className="flex items-center gap-2">
+              <label className="relative flex h-11 items-center rounded-lg border border-border bg-card px-3 shadow-2xs">
+                <input
+                  type="date"
+                  value={from}
+                  onChange={(e) => {
+                    setFrom(e.target.value);
+                    setPreset("Custom");
+                  }}
+                  className="w-full bg-transparent text-sm outline-none text-foreground cursor-pointer"
+                />
+              </label>
+              <span className="text-xs font-medium text-muted-foreground">to</span>
+              <label className="relative flex h-11 items-center rounded-lg border border-border bg-card px-3 shadow-2xs">
+                <input
+                  type="date"
+                  value={to}
+                  onChange={(e) => {
+                    setTo(e.target.value);
+                    setPreset("Custom");
+                  }}
+                  className="w-full bg-transparent text-sm outline-none text-foreground cursor-pointer"
+                />
+              </label>
+            </div>
+          </div>
         </div>
 
-        {/* Filters */}
-        <div className="flex flex-col gap-3 rounded-xl border border-border bg-card p-4 md:flex-row md:flex-nowrap md:items-center md:gap-2 md:p-4">
-          <label className="relative flex h-11 flex-1 items-center rounded-lg border border-border bg-card px-3 md:min-w-[240px]">
-            <Search size={15} className="mr-2 text-muted-foreground" />
-            <input
-              value={query}
-              onChange={(e) => {
-                setQuery(e.target.value);
-                setPage(1);
-              }}
-              placeholder="Search by title, ISBN"
-              className="w-full bg-transparent text-sm outline-none placeholder:text-muted-foreground"
-            />
-          </label>
+        {/* Compact Stat cards */}
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+          <StatCard icon={Tag} label="Total Sales" value={formatINR(totalNet)} />
+          <StatCard icon={BookMarked} label="Total Books Sold" value={String(totalBooks)} />
+        </div>
 
-          <Select
-            value={viewMode}
-            onValueChange={(value) => {
-              setViewMode(value as ViewMode);
-              setPage(1);
-            }}
-          >
-            <SelectTrigger className="h-11 w-full rounded-lg bg-card md:w-40 shadow-none">
-              <SelectValue placeholder="View" />
-            </SelectTrigger>
-            <SelectContent>
-              {VIEW_MODES.map((v) => (
-                <SelectItem key={v} value={v}>
-                  {v}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+        {/* Filters & Export Card */}
+        <div className="rounded-xl border border-border bg-card p-4 md:p-5 shadow-xs">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            {/* Search Input */}
+            <label className="relative flex h-11 flex-1 items-center rounded-lg border border-border bg-card px-3 min-w-[240px] max-w-sm">
+              <Search size={15} className="mr-2 text-muted-foreground shrink-0" />
+              <input
+                value={query}
+                onChange={(e) => {
+                  setQuery(e.target.value);
+                  setPage(1);
+                }}
+                placeholder="Search by title, ISBN"
+                className="w-full bg-transparent text-sm outline-none placeholder:text-muted-foreground"
+              />
+            </label>
 
-          <Select
-            value={saleType}
-            onValueChange={(value) => {
-              setSaleType(value as SaleType);
-              setPage(1);
-            }}
-          >
-            <SelectTrigger className="h-11 w-full rounded-lg bg-card md:w-44 shadow-none">
-              <SelectValue placeholder="Sale type" />
-            </SelectTrigger>
-            <SelectContent>
-              {SALE_TYPES.map((t) => (
-                <SelectItem key={t} value={t}>
-                  {t}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+            {/* Filter Dropdowns & Export Button */}
+            <div className="flex flex-wrap items-center gap-2.5">
+              <Select
+                value={viewMode}
+                onValueChange={(value) => {
+                  setViewMode(value as ViewMode);
+                  setPage(1);
+                }}
+              >
+                <SelectTrigger className="h-11 w-36 rounded-lg bg-card shadow-none">
+                  <SelectValue placeholder="View" />
+                </SelectTrigger>
+                <SelectContent>
+                  {VIEW_MODES.map((v) => (
+                    <SelectItem key={v} value={v}>
+                      {v}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
 
-          <Select value={preset} onValueChange={(value) => applyPreset(value as Preset)}>
-            <SelectTrigger className="h-11 w-full rounded-lg bg-card md:w-36 shadow-none">
-              <SelectValue placeholder="Preset" />
-            </SelectTrigger>
-            <SelectContent>
-              {PRESETS.map((p) => (
-                <SelectItem key={p} value={p}>
-                  {p}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+              <Select
+                value={saleType}
+                onValueChange={(value) => {
+                  setSaleType(value as SaleType);
+                  setPage(1);
+                }}
+              >
+                <SelectTrigger className="h-11 w-40 rounded-lg bg-card shadow-none">
+                  <SelectValue placeholder="Sale type" />
+                </SelectTrigger>
+                <SelectContent>
+                  {SALE_TYPES.map((t) => (
+                    <SelectItem key={t} value={t}>
+                      {t}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
 
-          <label className="relative flex h-11 items-center rounded-lg border border-border bg-card px-3 md:w-40">
-            <input
-              type="date"
-              value={from}
-              onChange={(e) => handleFromChange(e.target.value)}
-              max={to}
-              className="w-full bg-transparent text-sm outline-none"
-            />
-          </label>
-          <label className="relative flex h-11 items-center rounded-lg border border-border bg-card px-3 md:w-40">
-            <input
-              type="date"
-              value={to}
-              onChange={(e) => handleToChange(e.target.value)}
-              min={from}
-              className="w-full bg-transparent text-sm outline-none"
-            />
-          </label>
-
-          <div className="relative md:ml-auto">
-            <button
-              onClick={() => setExportOpen((v) => !v)}
-              className="inline-flex h-11 items-center gap-2 rounded-lg px-4 text-sm font-semibold shadow-sm transition-opacity hover:opacity-90 disabled:opacity-40"
-              style={{ backgroundColor: "var(--brand)", color: "var(--brand-contrast)" }}
-              disabled={rows.length === 0}
-            >
-              <Download size={15} />
-              Export
-              <ChevronDown size={14} />
-            </button>
-            {exportOpen && (
-              <div className="absolute right-0 z-20 mt-2 w-48 overflow-hidden rounded-lg border border-border bg-card shadow-lg">
+              {/* Export Button with Dropdown */}
+              <div className="relative">
                 <button
-                  onClick={() => setExportOpen(false)}
-                  className="flex w-full items-center gap-2 px-3 py-2.5 text-left text-sm transition-colors hover:bg-secondary"
+                  type="button"
+                  onClick={() => setExportOpen((v) => !v)}
+                  className="inline-flex h-11 items-center gap-2 rounded-lg px-4 text-sm font-semibold shadow-sm transition-opacity hover:opacity-90 disabled:opacity-40 cursor-pointer"
+                  style={{ backgroundColor: "var(--brand)", color: "var(--brand-contrast)" }}
+                  disabled={rows.length === 0}
                 >
-                  <ScrollText size={15} className="text-muted-foreground" />
-                  Export PDF
+                  <Upload size={15} />
+                  <span>Export</span>
+                  <ChevronDown size={14} />
                 </button>
-                <button
-                  onClick={() => setExportOpen(false)}
-                  className="flex w-full items-center gap-2 px-3 py-2.5 text-left text-sm transition-colors hover:bg-secondary"
-                >
-                  <Table size={15} className="text-muted-foreground" />
-                  Export Excel
-                </button>
+                {exportOpen && (
+                  <div className="absolute right-0 z-30 mt-2 w-48 overflow-hidden rounded-lg border border-border bg-card shadow-lg py-1">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setExportOpen(false);
+                        toast.success("Downloading Sales Report (PDF)...");
+                      }}
+                      className="flex w-full items-center gap-2 px-3.5 py-2.5 text-left text-sm font-medium transition-colors hover:bg-secondary cursor-pointer"
+                    >
+                      <ScrollText size={15} className="text-muted-foreground" />
+                      <span>Export PDF</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setExportOpen(false);
+                        toast.success("Downloading Sales Report (Excel)...");
+                      }}
+                      className="flex w-full items-center gap-2 px-3.5 py-2.5 text-left text-sm font-medium transition-colors hover:bg-secondary cursor-pointer"
+                    >
+                      <Table size={15} className="text-muted-foreground" />
+                      <span>Export Excel</span>
+                    </button>
+                  </div>
+                )}
               </div>
-            )}
+            </div>
           </div>
         </div>
 
@@ -371,7 +403,7 @@ function SalesReportPage() {
             <button
               type="button"
               onClick={resetFilters}
-              className="inline-flex h-9 items-center rounded-md border border-border bg-card px-3 text-xs font-medium transition-colors hover:bg-secondary"
+              className="inline-flex h-9 items-center rounded-md border border-border bg-card px-3 text-xs font-medium transition-colors hover:bg-secondary cursor-pointer"
             >
               Clear Filters
             </button>
@@ -383,7 +415,7 @@ function SalesReportPage() {
                   setQuery("");
                   setPage(1);
                 }}
-                className="inline-flex h-9 items-center gap-1 rounded-md border border-border bg-card px-3 text-xs font-medium"
+                className="inline-flex h-9 items-center gap-1 rounded-md border border-border bg-card px-3 text-xs font-medium cursor-pointer"
               >
                 Search: {query.trim()}
                 <X size={13} className="text-muted-foreground" />
@@ -397,7 +429,7 @@ function SalesReportPage() {
                   setViewMode(DEFAULT_VIEW);
                   setPage(1);
                 }}
-                className="inline-flex h-9 items-center gap-1 rounded-md border border-border bg-card px-3 text-xs font-medium"
+                className="inline-flex h-9 items-center gap-1 rounded-md border border-border bg-card px-3 text-xs font-medium cursor-pointer"
               >
                 {viewMode}
                 <X size={13} className="text-muted-foreground" />
@@ -411,25 +443,9 @@ function SalesReportPage() {
                   setSaleType(DEFAULT_SALE_TYPE);
                   setPage(1);
                 }}
-                className="inline-flex h-9 items-center gap-1 rounded-md border border-border bg-card px-3 text-xs font-medium"
+                className="inline-flex h-9 items-center gap-1 rounded-md border border-border bg-card px-3 text-xs font-medium cursor-pointer"
               >
                 {saleType}
-                <X size={13} className="text-muted-foreground" />
-              </button>
-            )}
-
-            {(from !== defaultRange.from || to !== defaultRange.to) && (
-              <button
-                type="button"
-                onClick={() => {
-                  setPreset(DEFAULT_PRESET);
-                  setFrom(defaultRange.from);
-                  setTo(defaultRange.to);
-                  setPage(1);
-                }}
-                className="inline-flex h-9 items-center gap-1 rounded-md border border-border bg-card px-3 text-xs font-medium"
-              >
-                {`${new Date(from).toLocaleDateString("en-GB", { day: "2-digit", month: "short" })} - ${new Date(to).toLocaleDateString("en-GB", { day: "2-digit", month: "short" })}`}
                 <X size={13} className="text-muted-foreground" />
               </button>
             )}
@@ -550,9 +566,10 @@ function SalesReportPage() {
               <PaginationContent>
                 <PaginationItem>
                   <button
+                    type="button"
                     disabled={currentPage === 1}
                     onClick={() => setPage((n) => Math.max(1, n - 1))}
-                    className="flex h-9 items-center gap-1 rounded-md border border-border bg-card px-3 text-xs font-medium disabled:opacity-40"
+                    className="flex h-9 items-center gap-1 rounded-md border border-border bg-card px-3 text-xs font-medium disabled:opacity-40 cursor-pointer"
                   >
                     <ChevronLeft size={14} /> Prev
                   </button>
@@ -574,10 +591,10 @@ function SalesReportPage() {
                         style={
                           n === currentPage
                             ? {
-                                backgroundColor: "var(--brand)",
-                                color: "var(--brand-contrast)",
-                                borderColor: "transparent",
-                              }
+                              backgroundColor: "var(--brand)",
+                              color: "var(--brand-contrast)",
+                              borderColor: "transparent",
+                            }
                             : undefined
                         }
                       >
@@ -588,9 +605,10 @@ function SalesReportPage() {
                 )}
                 <PaginationItem>
                   <button
+                    type="button"
                     disabled={currentPage === totalPages}
                     onClick={() => setPage((n) => Math.min(totalPages, n + 1))}
-                    className="flex h-9 items-center gap-1 rounded-md border border-border bg-card px-3 text-xs font-medium disabled:opacity-40"
+                    className="flex h-9 items-center gap-1 rounded-md border border-border bg-card px-3 text-xs font-medium disabled:opacity-40 cursor-pointer"
                   >
                     Next <ChevronRight size={14} />
                   </button>

@@ -37,6 +37,18 @@ function WorkspaceSelector() {
       badge: "Anya Ramanathan · Pro",
     },
     {
+      id: "author",
+      title: "Author",
+      subtitle: "Writer & Content Creator",
+      description:
+        "Publish eBooks, manage manuscripts, track sales royalties, set pricing tiers, and monitor reader analytics.",
+      icon: BookOpen,
+      path: "/author",
+      color: "oklch(0.62 0.15 155)", // emerald green
+      shadow: "rgba(16, 185, 129, 0.15)",
+      badge: "Author Workspace",
+    },
+    {
       id: "library-admin",
       title: "Library Admin",
       subtitle: "Institution Administrator",
@@ -47,18 +59,6 @@ function WorkspaceSelector() {
       color: "oklch(0.55 0.13 260)", // royal blue/purple
       shadow: "rgba(79, 70, 229, 0.15)",
       badge: "IIT Delhi Portal",
-    },
-    {
-      id: "library-user",
-      title: "Library User",
-      subtitle: "Student & Reader Portal",
-      description:
-        "Browse the digital bookshelf, search catalogs, read ebooks in a premium e-reader, and track reading metrics.",
-      icon: BookOpen,
-      path: "/library-user",
-      color: "oklch(0.62 0.15 155)", // emerald green
-      shadow: "rgba(16, 185, 129, 0.15)",
-      badge: "Personal Bookshelf",
     },
     {
       id: "pb-admin",
