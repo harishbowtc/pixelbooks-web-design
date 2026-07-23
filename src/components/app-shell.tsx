@@ -30,6 +30,14 @@ import {
   BadgePercent,
   Megaphone,
   ClipboardList,
+  BookOpen,
+  Eye,
+  Code2,
+  Network,
+  FolderTree,
+  ShieldCheck,
+  UserCheck,
+  GitMerge,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { useEffect, useState, type ReactNode } from "react";
@@ -139,7 +147,22 @@ function getSections(pathname: string, adminMode?: "retail" | "library"): NavSec
         heading: "Main",
         items: [
           { label: "Dashboard", icon: LayoutDashboard, to: "/pb-admin" },
-          { label: "Manage PixelBooks", icon: BookMarked, to: "/publisher/catalogue" },
+        ],
+      },
+      {
+        heading: "Reports & Analytics",
+        items: [
+          { label: "Margin/Royalty Report", icon: Landmark, to: "/pb-admin/margin-report" },
+          {
+            label: "Analytics",
+            icon: TrendingUp,
+            to: "/pb-admin/sales-report",
+            subItems: [
+              { label: "Sales", to: "/pb-admin/sales-report", icon: BarChart3 },
+              { label: "View", to: "/pb-admin/analytics/view", icon: Eye },
+              { label: "Cart Views", to: "/pb-admin/analytics/cart-views", icon: ShoppingCart },
+            ],
+          },
         ],
       },
       {
@@ -150,25 +173,43 @@ function getSections(pathname: string, adminMode?: "retail" | "library"): NavSec
         ],
       },
       {
-        heading: "Reports",
+        heading: "Catalogue",
         items: [
-          { label: "Margin/Royalty Report", icon: Landmark, to: "/pb-admin/margin-report" },
-          { label: "Sales Report", icon: BarChart3, to: "/pb-admin/sales-report" },
+          { label: "Titles", to: "/pb-admin/titles", icon: BookOpen },
+          { label: "Bundles", to: "/pb-admin/bundles", icon: Library },
+          { label: "Categories", to: "/pb-admin/categories", icon: FolderTree },
+        ],
+      },
+      {
+        heading: "People",
+        items: [
+          { label: "Publisher/Author", to: "/pb-admin/publishers-authors", icon: Building2 },
+          { label: "Customers", to: "/pb-admin/customers", icon: Users },
+          { label: "Admin Users", to: "/pb-admin/admin-users", icon: ShieldCheck },
+        ],
+      },
+      {
+        heading: "Authors",
+        items: [
+          { label: "Author Management", to: "/pb-admin/author-management", icon: UserCheck },
+          { label: "Merge Authors", to: "/pb-admin/merge-authors", icon: GitMerge },
         ],
       },
       {
         heading: "Marketing & Growth",
         items: [
-          { label: "Analytics", icon: TrendingUp, to: "/publisher/analytics" },
-          { label: "Marketing", icon: Megaphone, to: "/publisher/support" },
-        ],
-      },
-      {
-        heading: "Content & Insights",
-        items: [
-          { label: "Ad Banners", icon: ImageIcon, to: "/publisher/ad-banners" },
-          { label: "Quizzes & Rewards", icon: Store, to: "/publisher/rewards" },
-          { label: "Audit Log", icon: ClipboardList, to: "/publisher/profile" },
+          {
+            label: "Marketing",
+            icon: Megaphone,
+            to: "/pb-admin/marketing/schema-meta",
+            subItems: [
+              { label: "Schema & Meta", to: "/pb-admin/marketing/schema-meta", icon: Code2 },
+              { label: "Sitemap", to: "/pb-admin/marketing/sitemap", icon: Network },
+            ],
+          },
+          { label: "Ad Banners", icon: ImageIcon, to: "/pb-admin/ad-banners" },
+          { label: "Quizzes & Rewards", icon: Store, to: "/pb-admin/quizzes-rewards" },
+          { label: "Audit Log", icon: ClipboardList, to: "/pb-admin/audit-log" },
         ],
       },
     ];
@@ -281,15 +322,28 @@ function Logo() {
 const COLLAPSE_KEY = "pb.sidebar.collapsed";
 
 function useCollapsed() {
-  const [collapsed, setCollapsed] = useState<boolean>(() => {
-    if (typeof window === "undefined") return false;
-    return window.localStorage.getItem(COLLAPSE_KEY) === "1";
-  });
+  const [collapsed, setCollapsed] = useState<boolean>(false);
+
   useEffect(() => {
-    if (typeof window !== "undefined")
-      window.localStorage.setItem(COLLAPSE_KEY, collapsed ? "1" : "0");
-  }, [collapsed]);
-  return { collapsed, setCollapsed };
+    if (typeof window !== "undefined") {
+      const stored = window.localStorage.getItem(COLLAPSE_KEY);
+      if (stored !== null) {
+        setCollapsed(stored === "1");
+      }
+    }
+  }, []);
+
+  const updateCollapsed = (v: boolean | ((prev: boolean) => boolean)) => {
+    setCollapsed((prev) => {
+      const next = typeof v === "function" ? v(prev) : v;
+      if (typeof window !== "undefined") {
+        window.localStorage.setItem(COLLAPSE_KEY, next ? "1" : "0");
+      }
+      return next;
+    });
+  };
+
+  return { collapsed, setCollapsed: updateCollapsed };
 }
 
 function SidebarBrand({ collapsed }: { collapsed: boolean }) {
@@ -359,54 +413,94 @@ function NavRow({
 }) {
   const Icon = item.icon;
   const roleTheme = getRoleTheme(pathname);
-  // Always expand if subItems exist, rather than relying on active state
-  const hasSubItems = item.subItems && item.subItems.length > 0;
+  const hasSubItems = Boolean(item.subItems && item.subItems.length > 0);
+  const isChildActive = hasSubItems && item.subItems!.some((sub) => isActivePath(pathname, sub.to));
+  const isParentOrChildActive = active || isChildActive;
+
+  const [expanded, setExpanded] = useState<boolean>(isParentOrChildActive);
+
+  useEffect(() => {
+    if (isChildActive) {
+      setExpanded(true);
+    }
+  }, [isChildActive]);
+
+  const handleLinkClick = (e: React.MouseEvent) => {
+    if (hasSubItems && !collapsed) {
+      e.preventDefault();
+      setExpanded((prev) => !prev);
+    } else {
+      if (onNavigate) onNavigate();
+    }
+  };
+
+  const toggleExpand = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setExpanded((prev) => !prev);
+  };
 
   const content = (
     <div className="space-y-1">
-      <Link
-        to={item.to}
-        onClick={onNavigate}
-        className={[
-          "group relative flex items-center gap-3 rounded-lg px-3 py-2.5 text-[14.5px] font-medium transition-all",
-          collapsed ? "justify-center" : "",
-          active
-            ? "text-sidebar-accent-foreground shadow-sm"
-            : "text-sidebar-foreground/85 hover:bg-secondary hover:text-sidebar-foreground",
-        ].join(" ")}
-        style={
-          active
-            ? {
-              backgroundColor: "var(--sidebar-highlight)",
-              boxShadow: "0 6px 20px -12px var(--brand-glow)",
-            }
-            : undefined
-        }
-      >
-        {active && (
-          <span
-            className="absolute left-0 top-1/2 h-6 w-[3px] -translate-y-1/2 rounded-r-full transition-all"
-            style={{ backgroundColor: "var(--brand)" }}
+      <div className="relative flex items-center">
+        <Link
+          to={item.to}
+          onClick={handleLinkClick}
+          className={[
+            "group relative flex flex-1 items-center gap-3 rounded-lg px-3 py-2.5 text-[14.5px] font-medium transition-all",
+            collapsed ? "justify-center" : "",
+            isParentOrChildActive
+              ? "text-sidebar-accent-foreground shadow-sm"
+              : "text-sidebar-foreground/85 hover:bg-secondary hover:text-sidebar-foreground",
+          ].join(" ")}
+          style={
+            isParentOrChildActive
+              ? {
+                  backgroundColor: "var(--sidebar-highlight)",
+                  boxShadow: "0 6px 20px -12px var(--brand-glow)",
+                }
+              : undefined
+          }
+        >
+          {isParentOrChildActive && (
+            <span
+              className="absolute left-0 top-1/2 h-6 w-[3px] -translate-y-1/2 rounded-r-full transition-all"
+              style={{ backgroundColor: "var(--brand)" }}
+            />
+          )}
+          <Icon
+            size={19}
+            strokeWidth={isParentOrChildActive ? 2.25 : 1.9}
+            className={isParentOrChildActive ? "" : "text-muted-foreground group-hover:text-sidebar-foreground"}
+            style={isParentOrChildActive ? { color: "var(--sidebar-highlight-icon)" } : undefined}
           />
-        )}
-        <Icon
-          size={19}
-          strokeWidth={active ? 2.25 : 1.9}
-          className={active ? "" : "text-muted-foreground group-hover:text-sidebar-foreground"}
-          style={active ? { color: "var(--sidebar-highlight-icon)" } : undefined}
-        />
-        {!collapsed && <span className="flex-1 truncate">{item.label}</span>}
-        {!collapsed && item.badge && (
-          <span
-            className="rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider"
-            style={{ backgroundColor: "var(--brand)", color: "var(--brand-contrast)" }}
+          {!collapsed && <span className="flex-1 truncate">{item.label}</span>}
+          {!collapsed && item.badge && (
+            <span
+              className="rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider"
+              style={{ backgroundColor: "var(--brand)", color: "var(--brand-contrast)" }}
+            >
+              {item.badge}
+            </span>
+          )}
+        </Link>
+        {!collapsed && hasSubItems && (
+          <button
+            type="button"
+            onClick={toggleExpand}
+            className="absolute right-2 p-1 text-muted-foreground hover:text-sidebar-foreground transition-colors rounded-md"
+            aria-label={expanded ? "Collapse menu" : "Expand menu"}
           >
-            {item.badge}
-          </span>
+            <ChevronDown
+              size={15}
+              className={`transition-transform duration-200 ${expanded ? "rotate-180" : ""}`}
+            />
+          </button>
         )}
-      </Link>
-      {!collapsed && hasSubItems && (
-        <ul className="mt-1 ml-4 space-y-1 pl-3">
+      </div>
+
+      {!collapsed && hasSubItems && expanded && (
+        <ul className="mt-1 ml-4 space-y-1 pl-2.5 border-l border-border/40">
           {item.subItems!.map((subItem) => {
             const SubIcon = subItem.icon;
             const subActive = isActivePath(pathname, subItem.to);
@@ -416,22 +510,22 @@ function NavRow({
                   to={subItem.to}
                   onClick={onNavigate}
                   className={[
-                    "flex items-center gap-3 rounded-lg px-2 py-2 text-[14.5px] font-medium transition-all",
+                    "flex items-center gap-2.5 rounded-lg px-2.5 py-1.5 text-[13.5px] font-medium transition-all",
                     subActive
-                      ? "text-sidebar-accent-foreground shadow-sm bg-[var(--sidebar-highlight)]"
-                      : "text-sidebar-foreground/85 hover:bg-secondary hover:text-sidebar-foreground",
+                      ? "text-sidebar-accent-foreground shadow-sm bg-[var(--sidebar-highlight)] font-semibold"
+                      : "text-sidebar-foreground/80 hover:bg-secondary hover:text-sidebar-foreground",
                   ].join(" ")}
                   style={
                     subActive
                       ? {
-                        boxShadow: "0 6px 20px -12px var(--brand-glow)",
-                      }
+                          boxShadow: "0 6px 20px -12px var(--brand-glow)",
+                        }
                       : undefined
                   }
                 >
                   <SubIcon
-                    size={19}
-                    strokeWidth={subActive ? 2.25 : 1.9}
+                    size={16}
+                    strokeWidth={subActive ? 2.25 : 1.8}
                     className={
                       subActive ? "" : "text-muted-foreground group-hover:text-sidebar-foreground"
                     }

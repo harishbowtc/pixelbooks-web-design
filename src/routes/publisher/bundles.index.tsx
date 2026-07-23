@@ -10,6 +10,7 @@ import {
   FileX2,
   CheckCircle2,
   Clock,
+  CircleOff,
 } from "lucide-react";
 import { AppShell } from "@/components/app-shell";
 import {
@@ -46,11 +47,14 @@ const PAGE_SIZE = 8;
 
 function StatusPill({ status }: { status: BundleStatus }) {
   const map = {
-    Rejected: { color: "var(--danger)", Icon: FileX2 },
-    Approved: { color: "var(--success)", Icon: CheckCircle2 },
-    Pending: { color: "#6b7280", Icon: Clock },
+    Published: { color: "var(--success)", Icon: CheckCircle2, label: "Published" },
+    Approved: { color: "var(--success)", Icon: CheckCircle2, label: "Approved" },
+    Rejected: { color: "var(--danger)", Icon: FileX2, label: "Rejected" },
+    Unpublished: { color: "#6b7280", Icon: CircleOff, label: "Unpublished" },
+    Pending: { color: "#d97706", Icon: Clock, label: "Pending" },
   } as const;
-  const { color, Icon } = map[status];
+  const s = map[status] ?? map.Unpublished;
+  const { color, Icon } = s;
   return (
     <span
       className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium"
@@ -60,7 +64,7 @@ function StatusPill({ status }: { status: BundleStatus }) {
       }}
     >
       <Icon size={13} />
-      {status}
+      {s.label}
     </span>
   );
 }

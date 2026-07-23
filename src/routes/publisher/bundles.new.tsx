@@ -32,12 +32,14 @@ const STEPS: { id: Step; label: string }[] = [
 ];
 
 const gradients = [
-  "linear-gradient(160deg, oklch(0.55 0.14 240), oklch(0.32 0.09 240))",
-  "linear-gradient(160deg, oklch(0.45 0.09 145), oklch(0.28 0.06 145))",
-  "linear-gradient(160deg, oklch(0.5 0.13 30), oklch(0.32 0.08 30))",
-  "linear-gradient(160deg, oklch(0.55 0.12 300), oklch(0.32 0.08 300))",
-  "linear-gradient(160deg, oklch(0.5 0.1 60), oklch(0.32 0.06 60))",
-  "linear-gradient(160deg, oklch(0.5 0.12 200), oklch(0.32 0.07 200))",
+  "linear-gradient(135deg, #6366f1, #4f46e5)",
+  "linear-gradient(135deg, #0ea5e9, #0284c7)",
+  "linear-gradient(135deg, #10b981, #059669)",
+  "linear-gradient(135deg, #f59e0b, #d97706)",
+  "linear-gradient(135deg, #8b5cf6, #7c3aed)",
+  "linear-gradient(135deg, #ec4899, #db2777)",
+  "linear-gradient(135deg, #f43f5e, #be123c)",
+  "linear-gradient(135deg, #14b8a6, #0d9488)",
 ];
 
 type Ebook = {

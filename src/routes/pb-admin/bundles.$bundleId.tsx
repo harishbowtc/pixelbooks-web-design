@@ -10,8 +10,9 @@ import {
   Copy,
   Check,
   FileX2,
-  Building2,
   CircleOff,
+  Building2,
+  User,
   Eye,
   Tag,
   HardDrive,
@@ -28,8 +29,8 @@ import {
   type Bundle,
 } from "@/lib/bundles-data";
 
-export const Route = createFileRoute("/publisher/bundles/$bundleId")({
-  component: EBookBundleDetailPage,
+export const Route = createFileRoute("/pb-admin/bundles/$bundleId")({
+  component: AdminBundleDetailPage,
 });
 
 type BundleExtra = {
@@ -47,17 +48,17 @@ type BundleExtra = {
 };
 
 const extraDefaults: BundleExtra = {
-  author: "Walter Isaacson",
+  author: "QA-TBH Publishers",
   sizeMB: "8.5",
   pages: 240,
   viewers: "120K",
-  mrp: 199,
-  summary: "A curated collection of reference materials for checking the bulk setup.",
-  tags: ["#Reference"],
-  seoTitle: "eBook Bundle — PixelBooks",
-  seoKeywords: "ebook bundle, reference guide, curated collection",
-  seoDescription: "A curated collection of reference materials.",
-  bookIds: ["nep-2020"],
+  mrp: 1999,
+  summary: "A curated collection of reference materials and educational books for bulk store setup.",
+  tags: ["#Reference", "#Education", "#CuratedCollection"],
+  seoTitle: "eBook Bundle — PixelBooks Admin",
+  seoKeywords: "ebook bundle, reference guide, curated collection, pixelbooks",
+  seoDescription: "A curated collection of reference materials for PixelBooks platform.",
+  bookIds: ["nep-2020", "meditations"],
 };
 
 const extras: Record<string, BundleExtra> = {
@@ -75,74 +76,47 @@ const extras: Record<string, BundleExtra> = {
     seoDescription: "This is a test bundle containing basic reference materials.",
     bookIds: ["nep-2020"],
   },
-  "2": {
-    author: "Walter Isaacson",
-    sizeMB: "24.2",
-    pages: 1120,
-    viewers: "2.5M",
-    mrp: 799,
-    summary:
-      "Monsoon Reads Collection features a handpicked selection of top fiction, philosophy, and reference works perfect for rainy day reading.",
-    tags: ["#Fiction", "#Philosophy", "#MonsoonReads"],
-    seoTitle: "Monsoon Reads Collection — PixelBooks",
-    seoKeywords: "monsoon reads, fiction pack, philosophy pack, rain reading",
-    seoDescription:
-      "Monsoon Reads Collection features a handpicked selection of top fiction and philosophy.",
-    bookIds: ["nep-2020", "meditations", "origin-species", "art-of-war", "republic"],
-  },
-  "3": {
-    author: "Walter Isaacson",
-    sizeMB: "15.0",
-    pages: 450,
-    viewers: "850K",
-    mrp: 999,
-    summary:
-      "A delightful pack of children's classics, storybooks and educational readings to spark imagination and growth.",
-    tags: ["#Kids", "#Stories", "#Education"],
-    seoTitle: "Kids Storytime Pack — PixelBooks",
-    seoKeywords: "kids books, storytime, children classics",
-    seoDescription:
-      "A delightful pack of children's classics, storybooks and educational readings.",
-    bookIds: [
-      "tangled-tale",
-      "origin-species",
-      "elements-style",
-      "curtiss-aviation",
-      "knowledge-time",
-      "just-shaping-letters",
-      "complete-history-music",
-      "nep-2020",
-    ],
-  },
-  "4": {
-    author: "Walter Isaacson",
-    sizeMB: "18.6",
-    pages: 940,
-    viewers: "4M+",
-    mrp: 1499,
-    summary:
-      "Curated collection of top business management, strategy, style, and history books. Perfect for entrepreneurs and business leaders.",
-    tags: ["#Business", "#Management", "#Strategy"],
-    seoTitle: "Business Essentials — PixelBooks",
-    seoKeywords: "business management, entrepreneur pack, leadership books",
-    seoDescription:
-      "Curated collection of top business management, strategy, style, and history books.",
-    bookIds: ["art-of-war", "elements-style", "wealth-nations", "common-sense"],
-  },
-  "5": {
-    author: "Walter Isaacson",
-    sizeMB: "10.4",
-    pages: 310,
+  "qa-tbh-bundle": {
+    author: "QA-TBH Publishers",
+    sizeMB: "14.2",
+    pages: 680,
     viewers: "45K",
-    mrp: 399,
+    mrp: 2100,
     summary:
-      "An evocative collection of artistic and historic poems, essays, and meditations on design and literary form.",
-    tags: ["#Poetry", "#Literature", "#Meditation"],
-    seoTitle: "Poetry Corner — PixelBooks",
-    seoKeywords: "poems, literature essays, meditations",
-    seoDescription:
-      "An evocative collection of artistic and historic poems, essays, and meditations.",
-    bookIds: ["essays-art", "just-shaping-letters", "meditations"],
+      "QA-TBH Publishers Bundle features 4 comprehensive educational guides and reference books.",
+    tags: ["#Education", "#Academic", "#QATBH"],
+    seoTitle: "QA-TBH Publishers Bundle — PixelBooks Admin",
+    seoKeywords: "qa tbh publishers, education bundle, academic guides",
+    seoDescription: "Comprehensive educational guides and reference books bundle.",
+    bookIds: ["nep-2020", "meditations", "origin-species", "art-of-war"],
+  },
+  "werley-nortreus-bundle": {
+    author: "Werley Nortreus",
+    sizeMB: "32.0",
+    pages: 1420,
+    viewers: "1.2M",
+    mrp: 14500,
+    summary:
+      "Exclusive premium collection by author Werley Nortreus, covering philosophy and classical literature.",
+    tags: ["#Philosophy", "#Literature", "#WerleyNortreus"],
+    seoTitle: "Werley Nortreus Bundle — PixelBooks Admin",
+    seoKeywords: "werley nortreus, philosophy, classic literature pack",
+    seoDescription: "Exclusive premium collection by author Werley Nortreus.",
+    bookIds: ["meditations", "republic", "common-sense"],
+  },
+  "test-bund": {
+    author: "Cengage & Pearson",
+    sizeMB: "11.5",
+    pages: 510,
+    viewers: "340K",
+    mrp: 950,
+    summary:
+      "Essential academic and higher education bundle compiled by Cengage & Pearson.",
+    tags: ["#Academic", "#Cengage", "#Pearson"],
+    seoTitle: "Test Bund — PixelBooks Admin",
+    seoKeywords: "cengage, pearson, academic pack, test bund",
+    seoDescription: "Essential academic and higher education bundle compiled by Cengage & Pearson.",
+    bookIds: ["nep-2020", "elements-style"],
   },
 };
 
@@ -152,6 +126,11 @@ function getExtra(id: string): BundleExtra {
 
 function StatusStamp({ status }: { status: BundleStatus }) {
   const map = {
+    Published: {
+      label: "PUBLISHED",
+      border: "border-emerald-500",
+      text: "text-emerald-500",
+    },
     Approved: {
       label: "APPROVED",
       border: "border-emerald-500",
@@ -162,13 +141,18 @@ function StatusStamp({ status }: { status: BundleStatus }) {
       border: "border-rose-500",
       text: "text-rose-500",
     },
-    Pending: {
-      label: "PENDING FOR APPROVAL",
+    Unpublished: {
+      label: "DRAFT",
       border: "border-gray-500",
       text: "text-gray-500",
     },
+    Pending: {
+      label: "PENDING FOR APPROVAL",
+      border: "border-amber-500",
+      text: "text-amber-500",
+    },
   } as const;
-  const s = map[status];
+  const s = map[status] ?? map.Unpublished;
   return (
     <div
       className={`flex h-20 w-20 shrink-0 rotate-12 items-center justify-center rounded-full border-[3px] p-2 text-center text-[9px] font-black uppercase tracking-widest ${s.border} ${s.text} opacity-80`}
@@ -184,7 +168,7 @@ function StatusStamp({ status }: { status: BundleStatus }) {
 
 function OverlappingCovers({ cover, initials }: { cover: string; initials: string }) {
   return (
-    <div className="relative mt-5 h-64 w-48 shrink-0 select-none">
+    <div className="relative mt-2 h-64 w-48 shrink-0 select-none self-center lg:self-start">
       {/* Back book */}
       <div
         className="absolute top-0 right-0 h-56 w-38 rounded-xl opacity-40 shadow-sm border border-white/10"
@@ -203,10 +187,11 @@ function OverlappingCovers({ cover, initials }: { cover: string; initials: strin
       />
       {/* Front book */}
       <div
-        className="absolute top-2 left-0 flex h-56 w-38 items-center justify-center rounded-xl text-base font-black text-white shadow-xl border border-white/20"
+        className="absolute top-2 left-0 flex h-56 w-38 flex-col items-center justify-center rounded-xl text-base font-black text-white shadow-xl border border-white/20"
         style={{ background: cover }}
       >
-        {initials}
+        <div className="absolute inset-0 bg-gradient-to-tr from-black/20 via-transparent to-white/10 rounded-xl" />
+        <span className="relative z-10 text-lg font-extrabold tracking-wider">{initials}</span>
       </div>
     </div>
   );
@@ -215,19 +200,21 @@ function OverlappingCovers({ cover, initials }: { cover: string; initials: strin
 function StatusPill({ status }: { status: BundleStatus }) {
   const map = {
     Published: { color: "var(--success)", Icon: CheckCircle2, label: "Published" },
-    Approved: { color: "var(--success)", Icon: CheckCircle2, label: "Approved" },
+    Approved: { color: "var(--success)", Icon: CheckCircle2, label: "Published" },
     Rejected: { color: "var(--danger)", Icon: FileX2, label: "Rejected" },
     Unpublished: { color: "#6b7280", Icon: CircleOff, label: "Unpublished" },
     Pending: { color: "#d97706", Icon: Clock, label: "Pending" },
   } as const;
+
   const s = map[status] ?? map.Unpublished;
-  const { color, Icon } = s;
+  const Icon = s.Icon;
+
   return (
     <span
       className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium"
       style={{
-        backgroundColor: `color-mix(in oklch, ${color} 12%, transparent)`,
-        color,
+        backgroundColor: `color-mix(in oklch, ${s.color} 12%, transparent)`,
+        color: s.color,
       }}
     >
       <Icon size={14} />
@@ -280,8 +267,8 @@ function CopyBundleUrlButton({ bundleId }: { bundleId: string }) {
 
 function SectionCard({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <div className="overflow-hidden rounded-xl border border-border bg-card">
-      <div className="border-b border-border px-6 py-3.5">
+    <div className="overflow-hidden rounded-xl border border-border bg-card shadow-2xs">
+      <div className="border-b border-border px-6 py-3.5 bg-muted/20">
         <p className="text-sm font-semibold text-foreground">{title}</p>
       </div>
       <div className="px-6 py-5">{children}</div>
@@ -289,7 +276,7 @@ function SectionCard({ title, children }: { title: string; children: React.React
   );
 }
 
-function EBookBundleDetailPage() {
+export function AdminBundleDetailPage() {
   const { bundleId } = Route.useParams();
   const navigate = useNavigate();
   const [bundle, setBundle] = useState<Bundle | undefined>(() => getBundleById(bundleId));
@@ -300,11 +287,11 @@ function EBookBundleDetailPage() {
         <div className="flex flex-col items-center justify-center gap-3 p-16 text-center">
           <p className="text-sm text-muted-foreground">eBook Bundle not found.</p>
           <Link
-            to="/publisher/bundles/"
+            to="/pb-admin/bundles"
             className="text-sm font-medium"
             style={{ color: "var(--brand)" }}
           >
-            ← Back to eBook Bundles
+            ← Back to Manage Bundles
           </Link>
         </div>
       </AppShell>
@@ -335,9 +322,9 @@ function EBookBundleDetailPage() {
   const savingsPercent = totalOriginalBookPrice > 0 ? Math.round((savings / totalOriginalBookPrice) * 100) : 0;
 
   const handleApprove = () => {
-    updateBundleStatus(bundle.id, "Approved");
-    setBundle((prev) => (prev ? { ...prev, status: "Approved" } : undefined));
-    toast.success("eBook Bundle has been approved successfully!");
+    updateBundleStatus(bundle.id, "Published");
+    setBundle((prev) => (prev ? { ...prev, status: "Published" } : undefined));
+    toast.success("eBook Bundle has been approved and published successfully!");
   };
 
   const handleReject = () => {
@@ -347,19 +334,19 @@ function EBookBundleDetailPage() {
   };
 
   return (
-    <AppShell title="Bundle Details" subtitle="View eBook bundle details and collections">
+    <AppShell title="Bundle Details" subtitle="View and manage eBook bundle details and approval status.">
       <div className="space-y-6 p-4 md:p-8 pb-24">
         {/* Back button */}
         <div className="mb-6 flex items-center gap-3">
           <Link
-            to="/publisher/bundles"
+            to="/pb-admin/bundles"
             className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-border bg-card text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
             aria-label="Back to Manage Bundles"
           >
             <ArrowLeft size={16} />
           </Link>
           <Link
-            to="/publisher/bundles"
+            to="/pb-admin/bundles"
             className="text-sm font-semibold text-foreground hover:text-[var(--brand)] transition-colors"
           >
             Back to Manage Bundles
@@ -471,7 +458,7 @@ function EBookBundleDetailPage() {
                         color: "var(--brand-contrast)",
                       }}
                     >
-                      <Eye size={15} />
+                      <Eye size={16} />
                       Preview Bundle
                     </button>
                     <CopyBundleUrlButton bundleId={bundle.id} />
@@ -482,25 +469,26 @@ function EBookBundleDetailPage() {
           </div>
         </div>
 
-        {/* ── eBook Bundle Collections (USER request: on top) ─────── */}
+        {/* ── eBook Bundle Collections ─────────────────────────────── */}
         <SectionCard title="eBook Bundle Collections">
           <div className="space-y-4">
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-3">
               {matchedBooks.map((b) => (
                 <div
                   key={b.id}
-                  className="w-36 shrink-0 rounded-lg border border-border/60 bg-secondary/10 p-3 flex flex-col justify-between"
+                  className="w-40 shrink-0 rounded-xl border border-border/70 bg-card p-3 flex flex-col justify-between transition-shadow hover:shadow-sm"
                 >
                   <div className="space-y-3">
                     <div
-                      className="mx-auto flex h-36 w-28 items-center justify-center rounded-md text-xs font-bold text-white shadow-sm"
+                      className="mx-auto flex h-40 w-30 items-center justify-center rounded-lg text-xs font-bold text-white shadow-sm ring-1 ring-black/10 overflow-hidden relative"
                       style={{ background: b.cover }}
                     >
-                      {b.initials}
+                      <div className="absolute inset-0 bg-gradient-to-tr from-black/20 via-transparent to-white/10" />
+                      <span className="relative z-10 text-xs font-extrabold tracking-wider">{b.initials}</span>
                     </div>
                     <div className="space-y-0.5">
                       <p className="truncate text-xs font-semibold text-foreground">{b.title}</p>
-                      <p className="text-[10px] text-muted-foreground">{b.author}</p>
+                      <p className="text-[10px] text-muted-foreground truncate">{b.author}</p>
                     </div>
                   </div>
                   <div className="mt-2 flex items-baseline gap-1.5 pt-2 border-t border-border/50">
@@ -526,7 +514,7 @@ function EBookBundleDetailPage() {
                 </span>
                 {savings > 0 && (
                   <span className="inline-flex items-center rounded-full bg-emerald-500/10 px-2.5 py-0.5 text-xs font-bold text-emerald-600 dark:text-emerald-400">
-                    Save ₹{savings.toLocaleString("en-IN", { minimumFractionDigits: 2 })} ({savingsPercent}% OFF)
+                    Discount ₹{savings.toLocaleString("en-IN", { minimumFractionDigits: 2 })} ({savingsPercent}%)
                   </span>
                 )}
               </div>
@@ -538,7 +526,7 @@ function EBookBundleDetailPage() {
         <SectionCard title="eBook Bundle Details">
           <div className="space-y-4">
             <div className="flex text-sm border-b border-border/50 pb-3">
-              <span className="w-48 shrink-0 text-muted-foreground">eBook Bundle Name:</span>
+              <span className="w-52 shrink-0 text-muted-foreground">eBook Bundle Name:</span>
               <span className="font-semibold text-foreground">{bundle.title}</span>
             </div>
             <div className="space-y-1.5 border-b border-border/50 pb-3">
@@ -551,8 +539,9 @@ function EBookBundleDetailPage() {
                 {extra.tags.map((t) => (
                   <span
                     key={t}
-                    className="rounded bg-secondary/60 px-2 py-0.5 text-xs font-medium text-foreground"
+                    className="inline-flex items-center gap-1 rounded-full border border-border px-3 py-1 text-xs font-medium text-muted-foreground bg-secondary/30"
                   >
+                    <Tag size={10} />
                     {t}
                   </span>
                 ))}
@@ -565,11 +554,11 @@ function EBookBundleDetailPage() {
         <SectionCard title="For SEO Purpose">
           <div className="space-y-4 text-sm">
             <div className="flex border-b border-border/50 pb-3">
-              <span className="w-48 shrink-0 text-muted-foreground">Meta Titles:</span>
+              <span className="w-52 shrink-0 text-muted-foreground">Meta Titles:</span>
               <span className="font-semibold text-foreground">{extra.seoTitle}</span>
             </div>
             <div className="flex border-b border-border/50 pb-3">
-              <span className="w-48 shrink-0 text-muted-foreground">Meta Keyboards:</span>
+              <span className="w-52 shrink-0 text-muted-foreground">Meta Keywords:</span>
               <span className="font-semibold text-foreground">{extra.seoKeywords}</span>
             </div>
             <div className="space-y-1.5">
@@ -580,18 +569,18 @@ function EBookBundleDetailPage() {
         </SectionCard>
 
         {/* ── Sticky Footer Actions ──────────────────────────────────── */}
-        <div className="sticky bottom-0 -mx-4 mt-6 flex items-center justify-end gap-2 border-t border-border bg-background/90 px-4 py-4 backdrop-blur md:-mx-8 md:px-8">
+        <div className="sticky bottom-0 -mx-4 mt-6 flex items-center justify-end gap-3 border-t border-border bg-background/95 px-4 py-4 backdrop-blur md:-mx-8 md:px-8 z-20">
           <button
             type="button"
             onClick={handleReject}
-            className="inline-flex h-11 items-center rounded-lg border border-border bg-background px-5 text-sm font-semibold transition-colors hover:border-destructive hover:bg-destructive hover:text-destructive-foreground"
+            className="inline-flex h-11 items-center rounded-lg border border-border bg-background px-6 text-sm font-semibold transition-colors hover:border-destructive hover:bg-destructive hover:text-destructive-foreground cursor-pointer"
           >
             Reject
           </button>
           <button
             type="button"
             onClick={handleApprove}
-            className="inline-flex h-11 items-center rounded-lg px-5 text-sm font-semibold shadow-sm transition-opacity hover:opacity-90"
+            className="inline-flex h-11 items-center rounded-lg px-6 text-sm font-semibold shadow-sm transition-opacity hover:opacity-90 cursor-pointer"
             style={{ backgroundColor: "var(--brand)", color: "var(--brand-contrast)" }}
           >
             Approve Bundle

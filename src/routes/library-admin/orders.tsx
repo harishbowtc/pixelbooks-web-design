@@ -938,13 +938,16 @@ function LibraryAdminOrdersPage() {
       <AppShell title="Order Details">
         <div className="p-4 md:p-8 space-y-6">
           {/* Back button */}
-          <button
-            onClick={() => setIsViewOpen(false)}
-            className="flex items-center gap-2 text-sm font-semibold text-slate-700 dark:text-slate-200 hover:text-foreground mb-4 cursor-pointer"
-          >
-            <ArrowLeft size={16} />
-            Back to Orders
-          </button>
+          <div className="flex items-center gap-3 mb-4">
+            <button
+              onClick={() => setIsViewOpen(false)}
+              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-border bg-card text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground cursor-pointer"
+              aria-label="Back to Orders"
+            >
+              <ArrowLeft size={16} />
+            </button>
+            <span className="text-sm font-semibold text-foreground">Back to Orders</span>
+          </div>
 
           {/* Main Card Container */}
           <div className="rounded-xl border border-border bg-card p-6 shadow-sm space-y-6">

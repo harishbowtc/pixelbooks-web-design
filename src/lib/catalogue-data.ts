@@ -9,6 +9,7 @@ export type Book = {
   status: Status;
   price: number | null; // null = Free
   author: string;
+  publisher?: string;
   cover: string; // gradient css
   initials: string;
 };
@@ -33,6 +34,7 @@ export const seedBooks: Book[] = [
     status: "Published",
     price: 3.15,
     author: "Dr. Ashok Alex",
+    publisher: "PixelBooks Press",
     cover: gradients[0],
     initials: "NEP",
   },
@@ -45,6 +47,7 @@ export const seedBooks: Book[] = [
     status: "Rejected",
     price: null,
     author: "W. J. Baltzell",
+    publisher: "Oxford University Press",
     cover: gradients[1],
     initials: "MUS",
   },

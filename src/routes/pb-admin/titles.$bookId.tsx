@@ -11,7 +11,11 @@ import {
   Copy,
   Check,
   FileX2,
+  User,
+  ChevronDown,
+  X,
   Building2,
+  Search,
   Eye,
   BookOpen,
   HardDrive,
@@ -20,7 +24,7 @@ import {
 import { AppShell } from "@/components/app-shell";
 import { seedBooks, type Status } from "@/lib/catalogue-data";
 
-export const Route = createFileRoute("/publisher/catalogue/$bookId")({
+export const Route = createFileRoute("/pb-admin/titles/$bookId")({
   component: EBookDetailPage,
 });
 
@@ -119,6 +123,40 @@ function StatusStamp({ status }: { status: Status }) {
   );
 }
 
+function AuthorAvatar({
+  author,
+  size = "md",
+}: {
+  author: string;
+  size?: "sm" | "md" | "lg";
+}) {
+  const initials = author
+    .split(" ")
+    .filter(Boolean)
+    .map((n) => n[0])
+    .join("")
+    .slice(0, 2)
+    .toUpperCase();
+
+  const sizeClasses = {
+    sm: "h-5 w-5 text-[8.5px]",
+    md: "h-6 w-6 text-[10px]",
+    lg: "h-8 w-8 text-xs",
+  }[size];
+
+  return (
+    <div
+      className={`relative flex shrink-0 items-center justify-center rounded-full border border-[var(--brand)]/30 font-extrabold shadow-2xs ${sizeClasses}`}
+      style={{
+        backgroundColor: "color-mix(in oklch, var(--brand) 15%, transparent)",
+        color: "var(--brand)",
+      }}
+    >
+      <span>{initials}</span>
+    </div>
+  );
+}
+
 function SectionCard({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div className="overflow-hidden rounded-xl border border-border bg-card">
@@ -151,7 +189,7 @@ function CopyBookUrlButton({ bookId }: { bookId: string }) {
   const [copied, setCopied] = useState(false);
 
   const handleCopy = async () => {
-    const url = `${window.location.origin}/catalogue/${bookId}`;
+    const url = `${window.location.origin}/titles/${bookId}`;
     try {
       await navigator.clipboard.writeText(url);
     } catch {
@@ -189,6 +227,158 @@ function CopyBookUrlButton({ bookId }: { bookId: string }) {
   );
 }
 
+const AVAILABLE_LIBRARIES = [
+  "Central University Digital Library",
+  "National Science & Tech Consortium",
+  "City Academic Library System",
+  "Delhi Public Library",
+  "State Institute of Technology Library",
+];
+
+function LibraryStoreAllocationCard() {
+  const [selectedLibraries, setSelectedLibraries] = useState<string[]>([]);
+  const [open, setOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const filteredLibraries = AVAILABLE_LIBRARIES.filter((lib) =>
+    lib.toLowerCase().includes(searchQuery.trim().toLowerCase()),
+  );
+
+  const toggleLibrary = (lib: string) => {
+    if (selectedLibraries.includes(lib)) {
+      setSelectedLibraries(selectedLibraries.filter((item) => item !== lib));
+    } else {
+      setSelectedLibraries([...selectedLibraries, lib]);
+    }
+  };
+
+  const removeLibrary = (lib: string) => {
+    setSelectedLibraries(selectedLibraries.filter((item) => item !== lib));
+  };
+
+  return (
+    <SectionCard title="Library Store Allocation">
+      <div className="space-y-5 pt-1">
+        {/* Field 1: Select Library */}
+        <div>
+          <span className="mb-1.5 block text-sm font-medium text-foreground">
+            Select Library
+          </span>
+          <div className="relative">
+            <button
+              type="button"
+              onClick={() => setOpen((o) => !o)}
+              className="flex h-14 w-full items-center justify-between gap-3 rounded-xl border border-border bg-card px-4 text-sm font-medium text-foreground transition-colors hover:bg-secondary/30 outline-none focus:border-[var(--brand)]"
+            >
+              <span className="text-muted-foreground">Select From Library List</span>
+              <ChevronDown
+                size={16}
+                className={`text-muted-foreground transition-transform duration-200 ${
+                  open ? "rotate-180" : ""
+                }`}
+              />
+            </button>
+
+            {/* Dropdown Menu with Sticky Search Header */}
+            {open && (
+              <div
+                className="absolute left-0 right-0 top-full z-30 mt-2 overflow-hidden rounded-xl border border-border bg-card shadow-lg"
+                onMouseLeave={() => setOpen(false)}
+              >
+                {/* Search Bar inside Dropdown */}
+                <div className="sticky top-0 z-10 border-b border-border bg-card p-2.5">
+                  <div className="relative flex items-center">
+                    <Search
+                      size={15}
+                      className="pointer-events-none absolute left-3 text-muted-foreground"
+                    />
+                    <input
+                      type="text"
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      placeholder="Search library..."
+                      className="h-10 w-full rounded-lg border border-border bg-card pl-9 pr-8 text-xs text-foreground outline-none placeholder:text-muted-foreground focus:border-[var(--brand)]"
+                      autoFocus
+                    />
+                    {searchQuery && (
+                      <button
+                        type="button"
+                        onClick={() => setSearchQuery("")}
+                        className="absolute right-3 text-muted-foreground hover:text-foreground"
+                      >
+                        <X size={13} />
+                      </button>
+                    )}
+                  </div>
+                </div>
+
+                {/* Options List */}
+                <div className="max-h-56 overflow-y-auto p-1.5 space-y-0.5">
+                  {filteredLibraries.length === 0 ? (
+                    <div className="p-3.5 text-center text-xs text-muted-foreground">
+                      No libraries found
+                    </div>
+                  ) : (
+                    filteredLibraries.map((lib) => {
+                      const isSelected = selectedLibraries.includes(lib);
+                      return (
+                        <button
+                          key={lib}
+                          type="button"
+                          onClick={() => toggleLibrary(lib)}
+                          className={`flex w-full items-center justify-between rounded-lg px-3 py-2.5 text-left text-xs font-medium transition-colors ${
+                            isSelected
+                              ? "bg-[var(--sidebar-highlight)] font-semibold text-foreground"
+                              : "text-foreground/90 hover:bg-secondary"
+                          }`}
+                        >
+                          <span className="truncate">{lib}</span>
+                          {isSelected && (
+                            <Check size={15} className="ml-2 shrink-0 text-[var(--brand)]" />
+                          )}
+                        </button>
+                      );
+                    })
+                  )}
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Field 2: Selected Libraries */}
+        <div>
+          <span className="mb-1.5 block text-sm font-medium text-foreground">
+            Selected Libraries
+          </span>
+          <div className="flex min-h-[56px] w-full flex-wrap items-center gap-2 rounded-xl border border-border bg-card p-3">
+            {selectedLibraries.length === 0 ? (
+              <span className="text-sm text-muted-foreground">No libraries selected</span>
+            ) : (
+              selectedLibraries.map((lib) => (
+                <span
+                  key={lib}
+                  className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-secondary/80 px-3 py-1.5 text-xs font-medium text-foreground transition-colors hover:bg-secondary"
+                >
+                  {lib}
+                  <button
+                    type="button"
+                    onClick={() => removeLibrary(lib)}
+                    className="text-muted-foreground transition-colors hover:text-foreground"
+                    aria-label={`Remove ${lib}`}
+                  >
+                    <X size={13} />
+                  </button>
+                </span>
+              ))
+            )}
+          </div>
+        </div>
+      </div>
+    </SectionCard>
+  );
+}
+
 /* ------------------------------------------------------------------ */
 /*  Page                                                               */
 /* ------------------------------------------------------------------ */
@@ -199,15 +389,15 @@ function EBookDetailPage() {
 
   if (!book) {
     return (
-      <AppShell title="eBook Details">
+      <AppShell title="Title Details">
         <div className="flex flex-col items-center justify-center gap-3 p-16 text-center">
-          <p className="text-sm text-muted-foreground">eBook not found.</p>
+          <p className="text-sm text-muted-foreground">Title not found.</p>
           <Link
-            to="/publisher/catalogue/"
+            to="/pb-admin/titles"
             className="text-sm font-medium"
             style={{ color: "var(--brand)" }}
           >
-            ← Back to Catalogue
+            ← Back to Titles
           </Link>
         </div>
       </AppShell>
@@ -219,22 +409,22 @@ function EBookDetailPage() {
     book.price !== null ? (book.price / (1 + extra.gstRate / 100)).toFixed(2) : null;
 
   return (
-    <AppShell title="eBook Details">
+    <AppShell title="Title Details">
       <div className="space-y-4 p-4 md:p-8">
         {/* Back button */}
         <div className="mb-6 flex items-center gap-3">
           <Link
-            to="/publisher/catalogue/"
+            to="/pb-admin/titles"
             className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-border bg-card text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
-            aria-label="Back to Catalogue"
+            aria-label="Back to Title Catalogue"
           >
             <ArrowLeft size={16} />
           </Link>
           <Link
-            to="/publisher/catalogue/"
+            to="/pb-admin/titles"
             className="text-sm font-semibold text-foreground hover:text-[var(--brand)] transition-colors"
           >
-            Back to Catalogue
+            Back to Title Catalogue
           </Link>
         </div>
 
@@ -261,18 +451,8 @@ function EBookDetailPage() {
                 {/* Badges & Entity Row */}
                 <div className="flex flex-wrap items-center gap-2.5">
                   {/* Author Chip */}
-                  <div className="inline-flex items-center gap-2 rounded-full border border-border/80 bg-card px-3 py-1 text-xs font-medium text-foreground shadow-2xs">
-                    <span
-                      className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[9px] font-bold text-white"
-                      style={{ background: book.cover }}
-                    >
-                      {book.author
-                        .split(" ")
-                        .map((n) => n[0])
-                        .join("")
-                        .slice(0, 2)
-                        .toUpperCase()}
-                    </span>
+                  <div className="inline-flex items-center gap-2 rounded-full border border-border/80 bg-card px-3 py-1 text-xs font-semibold text-foreground shadow-2xs">
+                    <AuthorAvatar author={book.author} size="sm" />
                     <span>{book.author}</span>
                   </div>
 
@@ -369,6 +549,9 @@ function EBookDetailPage() {
           </div>
         </div>
 
+        {/* ── Library Store Allocation ─────────────────────────────────── */}
+        <LibraryStoreAllocationCard />
+
         {/* ── eBook Details ──────────────────────────────────────────── */}
         <SectionCard title="eBook Details">
           <div className="space-y-0.5">
@@ -417,18 +600,7 @@ function EBookDetailPage() {
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           <SectionCard title="Author Details">
             <div className="inline-flex items-center gap-2.5 rounded-full border border-border/80 bg-card px-3.5 py-1.5 shadow-2xs">
-              <span
-                className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[10px] font-bold text-white shadow-2xs"
-                style={{ background: book.cover }}
-              >
-                {book.author
-                  .split(" ")
-                  .filter(Boolean)
-                  .map((n) => n[0])
-                  .join("")
-                  .slice(0, 2)
-                  .toUpperCase()}
-              </span>
+              <AuthorAvatar author={book.author} size="md" />
               <span className="text-sm font-semibold text-foreground">{book.author}</span>
             </div>
           </SectionCard>

@@ -10,9 +10,14 @@ This skill enforces visual consistency across all PixelBooks portals by ensuring
 ## Layout & Wrappers
 
 - **Always use `AppShell`**: Every primary workspace view must be wrapped using the `<AppShell title="[Page Title]" subtitle="[Subtitle]">` component imported from `@/components/app-shell`. Do not build independent header or sidebar structures.
+- **Page Container Spacing / 4-Sided Padding**: Every page view rendered inside `AppShell` must wrap its content in a container with proper 4-sided outer padding (e.g. `<div className="p-4 sm:p-6 md:p-8 space-y-6">` or `<div className="p-6 md:p-8">`) to ensure consistent, clean spacing on all 4 sides (top, right, bottom, left) relative to headers, sidebars, and viewport edges.
 - **Dynamic Portals**: AppShell automatically adapts navigation tabs, branding labels, and user roles based on the route prefix:
   - `/publisher` or publisher routes -> Publisher views
   - `/library-admin` -> Library Admin views
+
+## Portal Isolation & Routing Boundaries
+
+- **No Cross-Portal Linking / Redirects**: Never link, navigate, or redirect between different portal directories (`pb-admin`, `author`, `library-admin`, `publisher`). Each portal workspace is isolated; cross-portal transitions, links, or redirects between these distinct portal areas are strictly prohibited.
 
 ## Color System
 
@@ -94,3 +99,98 @@ This skill enforces visual consistency across all PixelBooks portals by ensuring
      ```tsx
      <div className="rounded-xl border border-border bg-card p-4 md:p-6 overflow-hidden shadow-sm">
      ```
+
+6. **Title Section Table Cell Layout (Catalogue & PB Admin Titles)**:
+   - Combine cover thumbnail, title, author chip, and publisher chip into a single structured cell:
+     ```tsx
+     <div className="flex items-start gap-4">
+       {/* Cover thumbnail */}
+       <div
+         className="relative flex h-16 w-12 shrink-0 flex-col items-center justify-center rounded-lg text-[10px] font-bold text-white shadow-sm ring-1 ring-black/10 overflow-hidden"
+         style={{ background: b.cover }}
+       >
+         <div className="absolute inset-0 bg-gradient-to-tr from-black/20 via-transparent to-white/10" />
+         <span className="relative z-10 text-[11px] font-extrabold tracking-wider">{b.initials}</span>
+       </div>
+
+       {/* Title & Entity Chips */}
+       <div className="min-w-0 flex-1 space-y-1.5">
+         <p className="font-semibold text-sm leading-snug text-foreground transition-colors group-hover:text-[var(--brand)]">
+           {b.title}
+         </p>
+         <div className="flex flex-wrap items-center gap-2 text-xs">
+           {/* Author Chip */}
+           <div className="inline-flex items-center gap-2 rounded-full border border-border/80 bg-card px-2.5 py-0.5 shadow-2xs">
+             <span className="flex h-4.5 w-4.5 shrink-0 items-center justify-center rounded-full text-[8px] font-bold text-white" style={{ background: b.cover }}>
+               {initials}
+             </span>
+             <span className="text-[11.5px] font-medium text-foreground">{b.author}</span>
+           </div>
+
+           {/* Publisher Chip */}
+           <div className="inline-flex items-center gap-1.5 rounded-full border border-border/60 bg-muted/60 px-2.5 py-0.5 text-[11px] font-medium text-muted-foreground">
+             <Building2 size={11} className="shrink-0 text-muted-foreground/80" />
+             <span>{b.publisher}</span>
+           </div>
+         </div>
+       </div>
+     </div>
+     ```
+
+7. **Form Fields & Searchable Dropdowns (Select Primary Author & Store Allocation Style)**:
+   - **Field Label**: Positioned above controls:
+     ```tsx
+     <span className="mb-1.5 block text-sm font-medium text-foreground">Field Label</span>
+     ```
+   - **Select Trigger**: `h-14` height with `rounded-xl` borders:
+     ```tsx
+     <button className="flex h-14 w-full items-center justify-between gap-3 rounded-xl border border-border bg-card px-4 text-sm font-medium text-foreground transition-colors hover:bg-secondary/30 outline-none focus:border-[var(--brand)]">
+       <span className="text-muted-foreground">Select option...</span>
+       <ChevronDown size={16} className="text-muted-foreground" />
+     </button>
+     ```
+   - **Search Header Inside Dropdown**: Sticky search input inside the dropdown menu container:
+     ```tsx
+     <div className="sticky top-0 z-10 border-b border-border bg-card p-2.5">
+       <div className="relative flex items-center">
+         <Search size={15} className="pointer-events-none absolute left-3 text-muted-foreground" />
+         <input type="text" placeholder="Search..." className="h-10 w-full rounded-lg border border-border bg-card pl-9 pr-8 text-xs text-foreground outline-none focus:border-[var(--brand)]" />
+       </div>
+     </div>
+     ```
+   - **Multi-Select Tags Box**:
+     ```tsx
+     <div className="flex min-h-[56px] w-full flex-wrap items-center gap-2 rounded-xl border border-border bg-card p-3">
+       {/* Tag items with X buttons */}
+     </div>
+     ```
+
+8. **"Back to [Page]" Navigation Control Style (Orders Details & Sub-Pages)**:
+   - Use a rounded square icon button (`h-9 w-9 rounded-lg border border-border bg-card`) with `ArrowLeft` icon (`size={16}`) alongside label text:
+     ```tsx
+     <div className="flex items-center gap-3 mb-4">
+       <button
+         onClick={() => handleBack()}
+         className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-border bg-card text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground cursor-pointer"
+         aria-label="Back to Orders"
+       >
+         <ArrowLeft size={16} />
+       </button>
+       <span className="text-sm font-semibold text-foreground">Back to Orders</span>
+     </div>
+     ```
+   - Or as a TanStack Router `<Link>`:
+     ```tsx
+     <div className="flex items-center gap-3 mb-4">
+       <Link
+         to="/library-admin/orders"
+         className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-border bg-card text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
+       >
+         <ArrowLeft size={16} />
+       </Link>
+       <span className="text-sm font-semibold text-foreground">Back to Orders</span>
+     </div>
+     ```
+
+
+

@@ -1,8 +1,11 @@
-export type BundleStatus = "Rejected" | "Approved" | "Pending";
+export type BundleStatus = "Published" | "Unpublished" | "Rejected" | "Pending" | "Approved";
+export type EntityRole = "Publisher" | "Author";
 
 export type Bundle = {
   id: string;
   title: string;
+  entityName: string;
+  entityRole: EntityRole;
   bookCount: number;
   status: BundleStatus;
   pricing: number;
@@ -12,63 +15,100 @@ export type Bundle = {
 };
 
 export const gradients = [
-  "linear-gradient(160deg, oklch(0.55 0.14 240), oklch(0.32 0.09 240))",
-  "linear-gradient(160deg, oklch(0.45 0.09 145), oklch(0.28 0.06 145))",
-  "linear-gradient(160deg, oklch(0.5 0.13 30), oklch(0.32 0.08 30))",
-  "linear-gradient(160deg, oklch(0.55 0.12 300), oklch(0.32 0.08 300))",
-  "linear-gradient(160deg, oklch(0.5 0.1 60), oklch(0.32 0.06 60))",
+  "linear-gradient(135deg, #6366f1, #4f46e5)",
+  "linear-gradient(135deg, #0ea5e9, #0284c7)",
+  "linear-gradient(135deg, #10b981, #059669)",
+  "linear-gradient(135deg, #f59e0b, #d97706)",
+  "linear-gradient(135deg, #8b5cf6, #7c3aed)",
+  "linear-gradient(135deg, #ec4899, #db2777)",
+  "linear-gradient(135deg, #f43f5e, #be123c)",
+  "linear-gradient(135deg, #14b8a6, #0d9488)",
 ];
 
-const seed: Bundle[] = [
+export const seedBundles: Bundle[] = [
   {
-    id: "1",
-    title: "Test eBook bundle",
-    bookCount: 1,
-    status: "Rejected",
-    pricing: 0,
-    active: true,
-    cover: gradients[0],
-    initials: "TST",
-  },
-  {
-    id: "2",
-    title: "Monsoon Reads Collection",
-    bookCount: 5,
-    status: "Approved",
-    pricing: 499,
-    active: true,
-    cover: gradients[1],
-    initials: "MRC",
-  },
-  {
-    id: "3",
-    title: "Kids Storytime Pack",
-    bookCount: 8,
-    status: "Approved",
-    pricing: 799,
-    active: false,
-    cover: gradients[2],
-    initials: "KSP",
-  },
-  {
-    id: "4",
-    title: "Business Essentials",
+    id: "qa-tbh-bundle",
+    title: "QA-TBH Publishers - Bundle",
+    entityName: "QA-TBH Publishers",
+    entityRole: "Publisher",
     bookCount: 4,
-    status: "Pending",
-    pricing: 1299,
+    status: "Rejected",
+    pricing: 1731.65,
     active: true,
-    cover: gradients[3],
-    initials: "BUS",
+    cover: "linear-gradient(135deg, #f43f5e, #be123c)",
+    initials: "QAT",
   },
   {
-    id: "5",
-    title: "Poetry Corner",
+    id: "werley-nortreus-bundle",
+    title: "Werley Nortreus - Bundle",
+    entityName: "John Doe",
+    entityRole: "Author",
     bookCount: 3,
-    status: "Rejected",
-    pricing: 249,
-    active: false,
-    cover: gradients[4],
-    initials: "POE",
+    status: "Unpublished",
+    pricing: 12035.18,
+    active: true,
+    cover: "linear-gradient(135deg, #0ea5e9, #0284c7)",
+    initials: "WNB",
+  },
+  {
+    id: "test-bund",
+    title: "Test Bund",
+    entityName: "John Doe",
+    entityRole: "Author",
+    bookCount: 2,
+    status: "Published",
+    pricing: 733.95,
+    active: true,
+    cover: "linear-gradient(135deg, #f59e0b, #d97706)",
+    initials: "TBD",
+  },
+  {
+    id: "qa-tbh-publishers-bundle-2",
+    title: "QA-TBH Publishers-Bundle",
+    entityName: "QA-TBH Publishers",
+    entityRole: "Publisher",
+    bookCount: 2,
+    status: "Pending",
+    pricing: 1785.00,
+    active: true,
+    cover: "linear-gradient(135deg, #8b5cf6, #6d28d9)",
+    initials: "QTB",
+  },
+  {
+    id: "test-bundle",
+    title: "Test Bundle",
+    entityName: "RJ Authors",
+    entityRole: "Author",
+    bookCount: 3,
+    status: "Published",
+    pricing: 1678.51,
+    active: true,
+    cover: "linear-gradient(135deg, #10b981, #047857)",
+    initials: "RJA",
+  },
+  {
+    id: "test-bun-7",
+    title: "Test Bun 7",
+    entityName: "Business Admin",
+    entityRole: "Publisher",
+    bookCount: 5,
+    status: "Published",
+    pricing: 2379.00,
+    active: true,
+    cover: "linear-gradient(135deg, #ec4899, #be185d)",
+    initials: "TB7",
+  },
+  {
+    id: "test-case",
+    title: "test case",
+    entityName: "sani",
+    entityRole: "Publisher",
+    bookCount: 2,
+    status: "Published",
+    pricing: 2257.50,
+    active: true,
+    cover: "linear-gradient(135deg, #6366f1, #4338ca)",
+    initials: "TSC",
   },
 ];
 
@@ -76,17 +116,23 @@ const LOCAL_STORAGE_KEY = "pixelbooks_bundles";
 
 export function getBundles(): Bundle[] {
   if (typeof window === "undefined") {
-    return seed;
+    return seedBundles;
   }
   const stored = localStorage.getItem(LOCAL_STORAGE_KEY);
   if (!stored) {
-    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(seed));
-    return seed;
+    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(seedBundles));
+    return seedBundles;
   }
   try {
-    return JSON.parse(stored);
+    const parsed: Bundle[] = JSON.parse(stored);
+    if (!Array.isArray(parsed) || parsed.length === 0) return seedBundles;
+    // Sync seed updates for John Doe rows
+    return seedBundles.map((sb) => {
+      const existing = parsed.find((p) => p.id === sb.id);
+      return existing ? { ...existing, entityName: sb.entityName, entityRole: sb.entityRole } : sb;
+    });
   } catch {
-    return seed;
+    return seedBundles;
   }
 }
 

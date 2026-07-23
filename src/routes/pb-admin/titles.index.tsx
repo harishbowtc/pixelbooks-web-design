@@ -10,6 +10,7 @@ import {
   XCircle,
   CircleOff,
   FileX2,
+  User,
   Building2,
   Check,
 } from "lucide-react";
@@ -23,8 +24,8 @@ import {
 } from "@/components/ui/pagination";
 import { seedBooks, type Book, type Status } from "@/lib/catalogue-data";
 
-export const Route = createFileRoute("/publisher/catalogue/")({
-  component: CataloguePage,
+export const Route = createFileRoute("/pb-admin/titles/")({
+  component: TitlesCataloguePage,
 });
 
 const STATUS_FILTERS: Array<"All" | Status> = ["All", "Published", "Unpublished", "Rejected"];
@@ -52,6 +53,40 @@ const GENRE_FILTERS = [
 ];
 
 const PAGE_SIZE = 8;
+
+function AuthorAvatar({
+  author,
+  size = "md",
+}: {
+  author: string;
+  size?: "sm" | "md" | "lg";
+}) {
+  const initials = author
+    .split(" ")
+    .filter(Boolean)
+    .map((n) => n[0])
+    .join("")
+    .slice(0, 2)
+    .toUpperCase();
+
+  const sizeClasses = {
+    sm: "h-5 w-5 text-[8.5px]",
+    md: "h-6 w-6 text-[10px]",
+    lg: "h-8 w-8 text-xs",
+  }[size];
+
+  return (
+    <div
+      className={`relative flex shrink-0 items-center justify-center rounded-full border border-[var(--brand)]/30 font-extrabold shadow-2xs ${sizeClasses}`}
+      style={{
+        backgroundColor: "color-mix(in oklch, var(--brand) 15%, transparent)",
+        color: "var(--brand)",
+      }}
+    >
+      <span>{initials}</span>
+    </div>
+  );
+}
 
 function DropdownSelect<T extends string>({
   value,
@@ -160,9 +195,8 @@ function StatusFilter({
                 onChange(s);
                 setOpen(false);
               }}
-              className={`block w-full px-4 py-2 text-left text-sm hover:bg-secondary ${
-                s === value ? "text-foreground font-medium" : "text-muted-foreground"
-              }`}
+              className={`block w-full px-4 py-2 text-left text-sm hover:bg-secondary ${s === value ? "text-foreground font-medium" : "text-muted-foreground"
+                }`}
             >
               {s}
             </button>
@@ -173,7 +207,7 @@ function StatusFilter({
   );
 }
 
-function CataloguePage() {
+function TitlesCataloguePage() {
   const navigate = useNavigate();
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState<(typeof STATUS_FILTERS)[number]>("All");
@@ -221,7 +255,7 @@ function CataloguePage() {
   }, [totalPages, currentPage]);
 
   return (
-    <AppShell title="My Catalogue" subtitle="Manage every eBook in your storefront.">
+    <AppShell title="Titles Catalogue" subtitle="Manage every eBook across the PixelBooks platform.">
       <div className="space-y-6 p-4 md:p-8">
         {/* Toolbar */}
         <div className="flex flex-col gap-3 rounded-xl border border-border bg-card p-4 lg:flex-row lg:items-center">
@@ -289,7 +323,7 @@ function CataloguePage() {
 
             {/* Add New Title Button */}
             <Link
-              to="/publisher/catalogue/new"
+              to="/pb-admin/titles/new"
               className="inline-flex h-11 items-center gap-2 rounded-lg px-4 text-xs font-semibold shadow-sm transition-opacity hover:opacity-90 shrink-0"
               style={{ backgroundColor: "var(--brand)", color: "var(--brand-contrast)" }}
             >
@@ -306,7 +340,7 @@ function CataloguePage() {
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-border text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                  <th className="py-4 pl-6 pr-4 font-semibold">Title</th>
+                  <th className="py-4 pl-6 pr-4 font-semibold">Title Details</th>
                   <th className="py-4 pr-4 font-semibold">ISBN</th>
                   <th className="py-4 pr-4 font-semibold">Status</th>
                   <th className="py-4 pr-4 font-semibold">Pricing</th>
@@ -325,39 +359,44 @@ function CataloguePage() {
                   <tr
                     key={b.id}
                     onClick={() =>
-                      navigate({ to: "/publisher/catalogue/$bookId", params: { bookId: b.id } })
+                      navigate({ to: "/pb-admin/titles/$bookId", params: { bookId: b.id } })
                     }
                     className="group border-b border-border/60 transition-colors last:border-0 cursor-pointer hover:bg-secondary/50"
                   >
                     <td className="py-4 pl-6 pr-4">
-                      <div className="flex items-center gap-4">
+                      <div className="flex items-start gap-4">
+                        {/* Cover thumbnail */}
                         <div
-                          className="flex h-14 w-11 shrink-0 items-center justify-center rounded-md text-[10px] font-bold text-white shadow-sm"
+                          className="relative flex h-16 w-12 shrink-0 flex-col items-center justify-center rounded-lg text-[10px] font-bold text-white shadow-sm ring-1 ring-black/10 overflow-hidden"
                           style={{ background: b.cover }}
                         >
-                          {b.initials}
+                          <div className="absolute inset-0 bg-gradient-to-tr from-black/20 via-transparent to-white/10" />
+                          <span className="relative z-10 text-[11px] font-extrabold tracking-wider">{b.initials}</span>
                         </div>
-                        <div className="min-w-0">
-                          <p className="font-semibold leading-snug text-foreground transition-colors group-hover:text-[var(--brand)]">
+
+                        {/* Title & Metadata */}
+                        <div className="min-w-0 flex-1 space-y-1.5">
+                          <p className="font-semibold text-sm leading-snug text-foreground transition-colors group-hover:text-[var(--brand)]">
                             {b.title}
                           </p>
-                          <div className="mt-1.5 flex flex-wrap items-center gap-2 text-xs">
-                            <div className="inline-flex items-center gap-2 rounded-full border border-border/80 bg-card px-2.5 py-0.5 shadow-2xs">
-                              <span
-                                className="flex h-4.5 w-4.5 shrink-0 items-center justify-center rounded-full text-[8px] font-bold text-white"
-                                style={{ background: b.cover }}
-                              >
-                                {b.author
-                                  .split(" ")
-                                  .map((n) => n[0])
-                                  .join("")
-                                  .slice(0, 2)
-                                  .toUpperCase()}
-                              </span>
-                              <span className="text-[11.5px] font-medium text-foreground">
+
+                          {/* Author & Publisher Chips */}
+                          <div className="flex flex-wrap items-center gap-2 text-xs">
+                            <div className="inline-flex items-center gap-2 rounded-full border border-border/80 bg-card px-2.5 py-1 shadow-2xs">
+                              <AuthorAvatar author={b.author} size="sm" />
+                              <span className="text-[11.5px] font-semibold text-foreground">
                                 {b.author}
                               </span>
                             </div>
+
+                            <div className="inline-flex items-center gap-1.5 rounded-full border border-border/60 bg-muted/60 px-2.5 py-0.5 text-[11px] font-medium text-muted-foreground">
+                              <Building2 size={11} className="shrink-0 text-muted-foreground/80" />
+                              <span>{b.publisher ?? "PixelBooks Press"}</span>
+                            </div>
+                          </div>
+
+                          {/* Format & Category */}
+                          <div className="flex items-center gap-2 text-xs">
                             <span className="rounded-md border border-border px-1.5 py-0.5 text-[10px] font-semibold text-muted-foreground">
                               {b.format}
                             </span>
@@ -408,19 +447,20 @@ function CataloguePage() {
                 key={b.id}
                 className="cursor-pointer p-4 transition-colors hover:bg-secondary/50"
                 onClick={() =>
-                  navigate({ to: "/publisher/catalogue/$bookId", params: { bookId: b.id } })
+                  navigate({ to: "/pb-admin/titles/$bookId", params: { bookId: b.id } })
                 }
               >
                 <div className="flex items-start gap-3">
                   <div
-                    className="flex h-14 w-11 shrink-0 items-center justify-center rounded-md text-[10px] font-bold text-white shadow-sm"
+                    className="relative flex h-16 w-12 shrink-0 flex-col items-center justify-center rounded-lg text-[10px] font-bold text-white shadow-sm ring-1 ring-black/10 overflow-hidden"
                     style={{ background: b.cover }}
                   >
-                    {b.initials}
+                    <div className="absolute inset-0 bg-gradient-to-tr from-black/20 via-transparent to-white/10" />
+                    <span className="relative z-10 text-[11px] font-extrabold tracking-wider">{b.initials}</span>
                   </div>
-                  <div className="min-w-0 flex-1">
+                  <div className="min-w-0 flex-1 space-y-1">
                     <p className="truncate text-sm font-semibold text-foreground">{b.title}</p>
-                    <div className="mt-1.5 flex flex-wrap items-center gap-2 text-[11px]">
+                    <div className="flex flex-wrap items-center gap-1.5 text-[11px]">
                       <div className="inline-flex items-center gap-1.5 rounded-full border border-border/80 bg-card px-2 py-0.5 shadow-2xs">
                         <span
                           className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full text-[7.5px] font-bold text-white"
@@ -435,12 +475,18 @@ function CataloguePage() {
                         </span>
                         <span className="text-[11px] font-medium text-foreground">{b.author}</span>
                       </div>
+                      <div className="inline-flex items-center gap-1 rounded-full border border-border/60 bg-muted/60 px-2 py-0.5 text-[10.5px] font-medium text-muted-foreground">
+                        <Building2 size={10} className="shrink-0 text-muted-foreground/80" />
+                        <span>{b.publisher ?? "PixelBooks Press"}</span>
+                      </div>
+                    </div>
+                    <div className="flex flex-wrap items-center gap-2 text-[11px] pt-0.5">
                       <span className="rounded-md border border-border px-1.5 py-0.5 font-semibold text-muted-foreground">
                         {b.format}
                       </span>
                       <span className="text-muted-foreground">{b.category}</span>
                     </div>
-                    <div className="mt-2.5 flex flex-wrap items-center gap-x-4 gap-y-1.5 text-xs">
+                    <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1.5 text-xs pt-1">
                       <StatusPill status={b.status} />
                       <span className="font-semibold">
                         {b.price === null ? "Free" : `₹${b.price.toFixed(2)}`}
@@ -493,10 +539,10 @@ function CataloguePage() {
                         style={
                           n === currentPage
                             ? {
-                                backgroundColor: "var(--brand)",
-                                color: "var(--brand-contrast)",
-                                borderColor: "transparent",
-                              }
+                              backgroundColor: "var(--brand)",
+                              color: "var(--brand-contrast)",
+                              borderColor: "transparent",
+                            }
                             : undefined
                         }
                       >
